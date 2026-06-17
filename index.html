@@ -1570,7 +1570,7 @@ body {
     <div class="field-row">
       <div class="field">
         <label>FiO₂ (%)</label>
-        <input type="text" inputmode="decimal" id="fio2" step="1" min="21" max="100" placeholder="21">
+        <input type="text" inputmode="decimal" id="fio2" step="1" min="21" max="100" placeholder="21" oninput="updateFiO2Hint()">
       </div>
       <div class="field">
         <label>Temperatura (°C)</label>
@@ -1593,7 +1593,7 @@ body {
       </div>
       <div class="field">
         <label>Dispositivo de O₂ actual</label>
-        <select id="o2device">
+        <select id="o2device" onchange="updateFiO2Hint()">
           <option value="">Aire ambiente / ninguno</option>
           <option value="canula">Cánula nasal</option>
           <option value="mascarilla_simple">Mascarilla simple</option>
@@ -1603,6 +1603,20 @@ body {
           <option value="vni">VNI / BiPAP</option>
           <option value="vm">Ventilación mecánica</option>
         </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Flujo O₂ (L/min) <span style="color:var(--text-mute);font-weight:400;">— cánula/mascarilla</span></label>
+        <input type="text" inputmode="decimal" id="o2flow" step="1" min="1" max="15" placeholder="—" oninput="updateFiO2Hint()">
+      </div>
+      <div class="field">
+        <label>PEEP (cmH₂O) <span style="color:var(--text-mute);font-weight:400;">— ventilador</span></label>
+        <input type="text" inputmode="decimal" id="peep" step="1" min="0" max="25" placeholder="—">
+      </div>
+      <div class="field">
+        <label>FiO₂ resuelta</label>
+        <div id="fio2hint" style="font-size:14px;color:var(--text-dim);padding-top:7px;">aire 21%</div>
       </div>
     </div>
   </div>
@@ -1873,12 +1887,39 @@ body {
     var s=st(), tot=CASES.length, mast=0, seen=0;
     CASES.forEach(function(c){var cd=s.cards[c.id]; if(cd){seen++; if(cd.box>=5)mast++;}});
     var pct=Math.round(mast/tot*100);
-    return '<div class="q-dash">'
+    var metrics='<div class="q-dash">'
       +'<div class="q-metric"><div class="q-metric-n">'+pct+'%</div><div class="q-metric-l">dominado</div></div>'
       +'<div class="q-metric"><div class="q-metric-n">'+(s.streak||0)+'</div><div class="q-metric-l">racha (dias)</div></div>'
       +'<div class="q-metric"><div class="q-metric-n">'+seen+'/'+tot+'</div><div class="q-metric-l">casos vistos</div></div>'
       +'<button class="q-reset" onclick="ethosQuizReset()">Reiniciar</button>'
       +'</div>';
+    return trampa() + metrics + analytics(s);
+  }
+  function trampa(){
+    var T=[
+      ['HAGMA enmascarada por albúmina baja','Un anión gap "normal" en un paciente hipoalbuminémico puede esconder una acidosis de aniones. Corrige SIEMPRE el AG por albúmina (+2.5 por cada 1 g/dL bajo 4).'],
+      ['Un pH normal NO es "sin trastorno"','Dos procesos opuestos pueden cancelarse y dejar el pH en rango. Calcula anión gap y delta-delta aunque el pH se vea bien.'],
+      ['EPOC cronico: el HCO3 alto ES la compensacion','En acidosis respiratoria cronica el rinon sube el HCO3 ~3.5 por cada 10 mmHg. Ese HCO3 alto no es una alcalosis metabolica agregada: comparalo con lo esperado.'],
+      ['Delta-delta en un primario respiratorio = espurio','Si el trastorno primario es respiratorio, el HCO3 esta movido por el; aplicar el delta-delta ahi da resultados falsos. El delta-delta es para acidosis metabolica de AG alto.'],
+      ['Salicilatos: el mixto clasico','Alcalosis respiratoria + acidosis metabolica de AG alto a la vez; el pH puede verse casi normal. Tinnitus + taquipnea + AG alto: piensalo.'],
+      ['Aplica Winter siempre que haya acidosis metabolica','Sin Winter te pierdes una acidosis respiratoria agregada (fatiga ventilatoria) que cambia el manejo a soporte URGENTE.']
+    ];
+    var t=T[tday()%T.length];
+    return '<div style="background:var(--bg-elev2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:11px 14px;margin-bottom:14px;"><div style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;">Trampa clinica del dia</div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;">'+esc(t[0])+'</div><div style="font-size:13px;color:var(--text-dim);line-height:1.5;">'+esc(t[1])+'</div></div>';
+  }
+  function analytics(s){
+    var DIF=[['simple','Simples'],['mixto','Mixtos'],['triple','Triples'],['especial','Especiales'],['adversarial','Adversariales']];
+    var byDif=DIF.map(function(d){
+      var cs=CASES.filter(function(c){return c.dif===d[0];}); if(!cs.length) return '';
+      var m=cs.filter(function(c){var cd=s.cards[c.id]; return cd&&cd.box>=4;}).length;
+      var p=Math.round(m/cs.length*100);
+      return '<div style="display:flex;align-items:center;gap:8px;margin:3px 0;"><span style="width:96px;font-size:12px;color:var(--text-dim);flex:none;">'+d[1]+'</span><div style="flex:1;height:8px;background:var(--bg-elev3);border-radius:4px;overflow:hidden;"><div style="height:100%;width:'+p+'%;background:var(--ok);"></div></div><span style="width:54px;text-align:right;font-size:11px;color:var(--text-mute);flex:none;">'+m+'/'+cs.length+'</span></div>';
+    }).join('');
+    var weak={};
+    CASES.forEach(function(c){var cd=s.cards[c.id]; var box=cd?cd.box:1; if(box<=2) weak[c.cat]=(weak[c.cat]||0)+1;});
+    var top=Object.keys(weak).sort(function(a,b){return weak[b]-weak[a];}).slice(0,3);
+    var weakHtml=top.length?'<div style="margin-top:10px;"><div style="font-size:11px;color:var(--text-mute);margin-bottom:5px;">A reforzar:</div>'+top.map(function(k){return '<span style="display:inline-block;font-size:11.5px;background:var(--critical-bg);color:var(--critical);border:1px solid var(--critical-border);padding:3px 9px;border-radius:99px;margin:0 5px 5px 0;">'+esc(k)+' ('+weak[k]+')</span>';}).join('')+'</div>':'';
+    return '<div class="q-card" style="margin-bottom:14px;"><div style="font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-mute);margin-bottom:8px;">Tu progreso por dificultad</div>'+byDif+weakHtml+'</div>';
   }
   function bumpStreak(s){var t=tday(); if(s.lastActive!==t){ s.streak=(s.lastActive===t-1?(s.streak||0)+1:1); s.lastActive=t; } }
   function optBtns(arr,fn){return arr.map(function(o){return '<button class="caso-opcion q-opt" data-code="'+o[0]+'" onclick="'+fn+'(\''+o[0]+'\',this)">'+esc(o[1])+'</button>';}).join('');}
@@ -4709,7 +4750,7 @@ function analyze() {
     pao2:getVal('pao2'), sao2:getVal('sao2'), hb:getVal('hb'), edad:getVal('edad'), pbar:getVal('pbar'), altitud:getVal('altitud'),
     diuresis:getVal('diuresis'),
     cetonemia: getStr('cetonemia'), sensorio: getStr('sensorio'), sampleType: getStr('sampleType'),
-    narrativa: (getStr('narrativa') || '').trim(), o2device: getStr('o2device')
+    narrativa: (getStr('narrativa') || '').trim(), o2device: getStr('o2device'), o2flow: getVal('o2flow'), peep: getVal('peep')
   };
   const c = ctxFromInputs();
 
@@ -5066,22 +5107,52 @@ function buildTxHandoff(v, c) {
 // OXIGENACIÓN E INTERCAMBIO GASEOSO (módulo aditivo; se activa con PaO₂)
 // Respaldo: Berlin 2012 · Matthay 2024 · Sarkar 2017 · Petersson 2023 · Crapo 1999 · West
 // ════════════════════════════════════════════════════════════════════
+// Resolución de FiO₂: manual > estimada por dispositivo+flujo > aire 21% (sin dispositivo) > desconocida.
+// La estimación por dispositivo de bajo flujo es aproximada; venturi/HFNC/ventilador exigen FiO₂ explícita.
+function resolveFiO2(v) {
+  if (v.fio2 != null) return { pct: v.fio2, source: 'manual', estimated: false, precise: true };
+  const d = v.o2device, fl = v.o2flow;
+  if (!d || d === '') return { pct: 21, source: 'air', estimated: false, precise: false };
+  if (d === 'canula' && fl != null) return { pct: Math.min(45, 21 + 4 * fl), source: 'cánula nasal ' + fl + ' L/min', estimated: true, precise: false };
+  if (d === 'mascarilla_simple' && fl != null) return { pct: Math.max(35, Math.min(60, 35 + (fl - 5) * 5)), source: 'mascarilla simple ' + fl + ' L/min', estimated: true, precise: false };
+  if (d === 'reservorio' && fl != null) return { pct: Math.max(60, Math.min(90, 60 + (fl - 10) * 6)), source: 'reservorio ' + fl + ' L/min', estimated: true, precise: false };
+  // Venturi / HFNC / VNI / ventilador: la FiO₂ es programada/precisa — debe ingresarse manual.
+  return { unknown: true, source: d };
+}
+function updateFiO2Hint() {
+  const el = document.getElementById('fio2hint'); if (!el) return;
+  const num = s => { const x = parseFloat(s); return isFinite(x) ? x : null; };
+  const fio2El = document.getElementById('fio2'), devEl = document.getElementById('o2device'), flowEl = document.getElementById('o2flow');
+  const dev = devEl ? devEl.value : '';
+  const fr = resolveFiO2({ fio2: fio2El ? num(fio2El.value) : null, o2device: dev, o2flow: flowEl ? num(flowEl.value) : null });
+  if (fr.unknown) {
+    const lowflow = ['canula', 'mascarilla_simple', 'reservorio'].indexOf(dev) >= 0;
+    el.innerHTML = '<span style="color:var(--attention);">' + (lowflow ? 'ingresa el flujo (L/min)' : 'ingresa la FiO₂ programada') + '</span>';
+  } else {
+    const tag = fr.source === 'manual' ? 'manual' : (fr.source === 'air' ? 'aire ambiente' : 'estimada ±');
+    el.innerHTML = '<strong>' + Math.round(fr.pct) + '%</strong> <span style="color:var(--text-mute);font-size:11px;">' + tag + '</span>';
+  }
+}
+window.updateFiO2Hint = updateFiO2Hint;
+
 function computeOxy(v) {
   if (!v || v.pao2 == null) return null;
   const pao2 = v.pao2;
-  const fio2assumed = (v.fio2 == null);
-  const fio2frac = (fio2assumed ? 21 : v.fio2) / 100;
-  const roomAir = fio2frac <= 0.24;
+  const fr = resolveFiO2(v);
+  const fio2unknown = !!fr.unknown;
+  const fio2frac = fio2unknown ? null : fr.pct / 100;
+  const fio2assumed = (fr.source === 'air' && v.fio2 == null && (!v.o2device || v.o2device === ''));
+  const roomAir = (!fio2unknown) && fio2frac <= 0.24;
   let pbar, pbarSrc;
   if (v.pbar != null) { pbar = v.pbar; pbarSrc = 'medida'; }
   else if (v.altitud != null) { pbar = 760 * Math.exp(-v.altitud / 7990); pbarSrc = 'estimada por altitud (' + v.altitud + ' m)'; }
   else { pbar = 760; pbarSrc = 'asumida a nivel del mar (760)'; }
   const PH2O = 47, R = 0.8;
   const paco2 = (v.paco2 != null ? v.paco2 : 40);
-  // Ecuación del gas alveolar completa (igual que Crapo 1999):
-  const PAO2 = fio2frac * (pbar - PH2O) - paco2 * (fio2frac + (1 - fio2frac) / R);
-  const aa = PAO2 - pao2;
-  const aA = (PAO2 > 0) ? pao2 / PAO2 : null;
+  // Ecuación del gas alveolar completa (igual que Crapo 1999). Si la FiO₂ es desconocida, no se calcula.
+  const PAO2 = fio2unknown ? null : (fio2frac * (pbar - PH2O) - paco2 * (fio2frac + (1 - fio2frac) / R));
+  const aa = (PAO2 != null) ? PAO2 - pao2 : null;
+  const aA = (PAO2 != null && PAO2 > 0) ? pao2 / PAO2 : null;
   // Referencias Crapo 1999 (Tabla 7; válidas 18–81 años, hasta 1.400 m / PB≥~645). A aire ambiente.
   const edad = (v.edad != null) ? v.edad : null;
   let aaPred = null, aaUpper = null, pao2Pred = null, pao2Lower = null;
@@ -5091,28 +5162,39 @@ function computeOxy(v) {
     pao2Pred = -31.453 - 0.2452 * edad + 0.1834 * pbar;
     pao2Lower = pao2Pred - 1.96 * 5.539;
   }
-  const aaElevated = roomAir ? (aaUpper != null ? (aa > aaUpper) : (aa > 20)) : null;
+  const aaElevated = (roomAir && aa != null) ? (aaUpper != null ? (aa > aaUpper) : (aa > 20)) : null;
   const pao2Low = roomAir ? (pao2Lower != null ? (pao2 < pao2Lower) : (pao2 < 80)) : null;
   const crapoOutOfRange = (edad != null && (edad < 18 || edad > 81)) || pbar < 645;
-  const pf = pao2 / fio2frac;
-  let pfClass;
-  if (pf > 300) pfClass = { label: 'Sin criterio de hipoxemia SDRA', key: 'ok' };
-  else if (pf > 200) pfClass = { label: 'SDRA leve', key: 'warn' };
-  else if (pf > 100) pfClass = { label: 'SDRA moderado', key: 'warn' };
-  else pfClass = { label: 'SDRA grave', key: 'crit' };
-  const sf = (v.spo2 != null) ? v.spo2 / fio2frac : null;
+  const pf = fio2unknown ? null : pao2 / fio2frac;
+  // Con FiO₂ estimada (dispositivo de bajo flujo) el P/F se redondea a la decena (no fingir precisión).
+  const pfRounded = (pf != null) ? (fr.estimated ? Math.round(pf / 10) * 10 : Math.round(pf)) : null;
+  let pfClass = null;
+  if (pf != null) {
+    if (pf > 300) pfClass = { label: 'sin hipoxemia tipo SDRA', key: 'ok', sev: 0, mort: null };
+    else if (pf > 200) pfClass = { label: 'rango leve', key: 'warn', sev: 1, mort: '~27%' };
+    else if (pf > 100) pfClass = { label: 'rango moderado', key: 'warn', sev: 2, mort: '~32%' };
+    else pfClass = { label: 'rango grave', key: 'crit', sev: 3, mort: '~45%' };
+  }
+  // PEEP / validez de la clasificación de Berlin (exige PEEP ≥5 cmH₂O).
+  const peep = (v.peep != null) ? v.peep : null;
+  const berlinValid = (pf != null) && (peep != null && peep >= 5);
+  // S/F solo es fiable con SpO₂ ≤97% (sobre eso, la meseta de la curva lo invalida).
+  const sfReliable = (v.spo2 != null && v.spo2 <= 97);
+  const sf = (!fio2unknown && sfReliable) ? v.spo2 / fio2frac : null;
+  const sfSuppressed = (v.spo2 != null && v.spo2 > 97);
   const sat = (v.sao2 != null ? v.sao2 : (v.spo2 != null ? v.spo2 : null));
   const satSrc = (v.sao2 != null ? 'SaO₂' : (v.spo2 != null ? 'SpO₂ (aprox.)' : null));
   const cao2 = (v.hb != null && sat != null) ? (1.39 * v.hb * (sat / 100) + 0.003 * pao2) : null;
   let mechanism;
-  if (!roomAir) mechanism = 'En O₂ suplementario: evalúa la oxigenación por PaO₂/FiO₂ (Berlin). El gradiente A-a se muestra como referencia, pero su "normal" por edad aplica a aire ambiente y sube con la FiO₂ — no lo sobreinterpretes.';
+  if (fio2unknown) mechanism = 'Falta la FiO₂: el paciente tiene un dispositivo de O₂ pero no se ingresó la FiO₂ (ni el flujo en cánula/mascarilla). No se asume 21% con O₂ suplementario, así que los índices que dependen de la FiO₂ (P/F, A-a) no se calculan hasta tenerla.';
+  else if (!roomAir) mechanism = 'En O₂ suplementario: evalúa la oxigenación por PaO₂/FiO₂ (Berlin). El gradiente A-a se muestra como referencia, pero su "normal" por edad aplica a aire ambiente y sube con la FiO₂ — no lo sobreinterpretes.';
   else if (aaElevated) mechanism = 'Gradiente A-a ELEVADO (sobre el límite superior por edad/altitud) → desajuste V/Q, shunt o alteración de la difusión. Si no corrige con O₂, sospechar shunt.';
   else mechanism = 'Gradiente A-a dentro de lo esperado por edad/altitud → la hipoxemia (si existe) orienta a hipoventilación o FiO₂/presión baja, no a enfermedad del intercambio.';
   const severe = [];
   if (pao2 < 60) severe.push('PaO₂ < 60 mmHg: hipoxemia grave.');
   if (v.sao2 != null && v.sao2 < 90) severe.push('SaO₂ < 90%: hipoxemia grave.');
-  if (pf <= 100) severe.push('PaO₂/FiO₂ ≤ 100: SDRA grave.');
-  return { pao2, fio2frac, fio2pct: fio2frac * 100, fio2assumed, roomAir, pbar, pbarSrc, PAO2, aa, aA, aaPred, aaUpper, aaElevated, pao2Pred, pao2Lower, pao2Low, crapoOutOfRange, edad, pf, pfClass, sf, cao2, sat, satSrc, mechanism, severe, paco2 };
+  if (pf != null && pf <= 100) severe.push('PaO₂/FiO₂ ≤ 100: oxigenación crítica.');
+  return { pao2, fio2frac, fio2pct: fio2unknown ? null : fr.pct, fio2unknown, fio2source: fr.source, fio2estimated: !!fr.estimated, fio2assumed, o2device: v.o2device, o2flow: v.o2flow, roomAir, pbar, pbarSrc, PAO2, aa, aA, aaPred, aaUpper, aaElevated, pao2Pred, pao2Lower, pao2Low, crapoOutOfRange, edad, pf, pfRounded, pfClass, peep, berlinValid, sf, sfSuppressed, cao2, sat, satSrc, mechanism, severe, paco2 };
 }
 
 function buildOxyReasoning(o) {
@@ -5130,7 +5212,7 @@ function buildOxyReasoning(o) {
   }
   steps.push(`<p style="margin:0 0 10px;"><strong>2. ¿El problema está en el pulmón?</strong><br>${p2} <span class="step-ref" onclick="openRefModal('sarkar2017')">Sarkar 2017</span> <span class="step-ref" onclick="openRefModal('petersson2023')">Petersson 2023</span></p>`);
   steps.push(`<p style="margin:0 0 10px;"><strong>3. ¿Qué tan grave es la oxigenación?</strong><br>
-    ${o.roomAir ? 'En aire ambiente comparamos la PaO₂ con la esperada por edad y altitud (Crapo).' : 'En O₂ suplementario la medida más fiable es la relación PaO₂/FiO₂.'} Tu P/F = ${f0(o.pf)} → <strong>${o.pfClass.label}</strong>. <span class="step-ref" onclick="openRefModal('berlin2012')">Berlin 2012</span>${o.sf != null ? ` Cuando no hay gasometría puede usarse SpO₂/FiO₂. <span class="step-ref" onclick="openRefModal('matthay2024')">Def. global 2023</span>` : ''}</p>`);
+    ${o.roomAir ? 'En aire ambiente comparamos la PaO₂ con la esperada por edad y altitud (Crapo).' : 'En O₂ suplementario la medida más fiable es la relación PaO₂/FiO₂.'} ${o.pf != null ? `Tu P/F = ${f0(o.pfRounded)} → <strong>${o.pfClass.label}</strong>${o.berlinValid ? ' (con PEEP ≥5 clasifica SDRA)' : ' — para clasificar SDRA hace falta PEEP ≥5'}.` : 'Falta la FiO₂ para calcular el P/F.'} <span class="step-ref" onclick="openRefModal('berlin2012')">Berlin 2012</span>${o.sf != null ? ` Cuando no hay gasometría puede usarse SpO₂/FiO₂. <span class="step-ref" onclick="openRefModal('matthay2024')">Def. global 2023</span>` : ''}</p>`);
   if (o.cao2 != null) {
     const anemia = o.cao2 < 16;
     steps.push(`<p style="margin:0 0 10px;"><strong>4. ¿Cuánto O₂ transporta realmente la sangre?</strong><br>
@@ -5140,13 +5222,87 @@ function buildOxyReasoning(o) {
     <p style="color:var(--text-mute);font-style:italic;font-size:11px;margin:6px 0 0;">Cada paso enlaza a su fuente verificada. Es un razonamiento de apoyo, no una orden: contextualízalo al paciente.</p></div>`;
 }
 
+// ── Stewart simplificado (Fencl-Stewart, Story 2004): descompone el exceso de base ──
+function computeStewart(v) {
+  if (v.na == null || v.cl == null || v.hco3 == null || v.ph == null) return null;
+  const sbe = 0.9287 * (v.hco3 - 24.4 + 14.83 * (v.ph - 7.4)); // SBE (Siggaard-Andersen)
+  const naCl = (v.na - v.cl) - 38;                              // efecto Na-Cl (SID fuerte)
+  const albEff = (v.alb != null) ? 0.25 * (42 - v.alb * 10) : 0; // albúmina (g/dL×10 = g/L)
+  const lacEff = (v.lactato != null) ? -v.lactato : 0;          // lactato
+  const uma = sbe - (naCl + albEff + lacEff);                   // aniones no medidos (SIG)
+  return { sbe, naCl, albEff, lacEff, uma, hasAlb: v.alb != null, hasLac: v.lactato != null };
+}
+function buildStewartBlock(v) {
+  const s = computeStewart(v);
+  if (!s) return '';
+  const f = x => (x >= 0 ? '+' : '') + x.toFixed(1);
+  const SC = 18;
+  const bar = (val, color) => {
+    const w = Math.min(50, Math.abs(val) / SC * 50);
+    const side = val < 0 ? 'right:50%' : 'left:50%';
+    return `<div style="position:absolute;top:3px;${side};width:${w}%;height:12px;background:${color};border-radius:3px;"></div>`;
+  };
+  const row = (label, val, color, note) => `<div style="display:flex;align-items:center;gap:8px;margin:4px 0;"><span style="width:128px;font-size:12.5px;color:var(--text-dim);flex:none;">${label}</span><div style="flex:1;position:relative;height:18px;background:var(--bg-elev3);border-radius:4px;"><div style="position:absolute;left:50%;top:0;width:1px;height:100%;background:var(--border);"></div>${bar(val, color)}</div><span style="width:50px;text-align:right;font-size:12.5px;font-weight:500;flex:none;">${f(val)}</span></div>${note ? `<div style="font-size:11px;color:var(--text-mute);margin:-2px 0 6px 136px;line-height:1.4;">${note}</div>` : ''}`;
+  const items = [];
+  if (s.naCl < -4) items.push(['Na-Cl (cloruro)', s.naCl, '#e24b4a', 'componente HIPERCLORÉMICO (acidificante): SF 0.9%, diarrea, ATR']);
+  else if (s.naCl > 4) items.push(['Na-Cl (cloruro)', s.naCl, '#378add', 'cloruro relativamente bajo (alcalinizante): vómitos, diuréticos, contracción']);
+  else items.push(['Na-Cl (cloruro)', s.naCl, '#8a94a3', null]);
+  if (s.hasAlb) { if (s.albEff > 4) items.push(['Albúmina', s.albEff, '#378add', 'hipoalbuminemia (alcalinizante): puede ENMASCARAR una acidosis de aniones']); else items.push(['Albúmina', s.albEff, s.albEff < -2 ? '#e24b4a' : '#8a94a3', null]); }
+  if (s.hasLac && Math.abs(s.lacEff) > 0.5) items.push(['Lactato', s.lacEff, '#e24b4a', s.lacEff < -4 ? 'acidosis láctica' : null]);
+  if (s.uma < -4) items.push(['Aniones no medidos', s.uma, '#ba7517', 'CETOÁCIDOS, alcoholes tóxicos, urémicos, sulfatos — busca el origen']);
+  else if (s.uma > 4) items.push(['Aniones no medidos', s.uma, '#378add', 'cationes no medidos o residual del método: correlaciona']);
+  else items.push(['Aniones no medidos', s.uma, '#8a94a3', null]);
+  const rows = items.map(n => row(n[0], n[1], n[2], n[3])).join('');
+  const sbeColor = s.sbe < -2 ? '#e24b4a' : (s.sbe > 2 ? '#378add' : 'var(--ok)');
+  return `<div class="section"><div class="comp-block"><div class="reasoning-title">Componentes del exceso de base (Stewart simplificado)</div>
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;"><span style="font-size:13px;color:var(--text-dim);">Exceso de base estándar (SBE)</span><span style="font-size:20px;font-weight:600;color:${sbeColor};">${f(s.sbe)} mEq/L</span></div>
+    <div style="font-size:11px;color:var(--text-mute);margin-bottom:8px;">← acidificante · alcalinizante →</div>
+    ${rows}
+    <div style="font-size:11.5px;color:var(--text-dim);line-height:1.55;margin-top:10px;">Descompone el componente metabólico en las fuerzas que empujan el pH (Fencl-Stewart simplificado, Story). Da la misma información que el AG corregido por albúmina, pero muestra <em>qué</em> lo causa. <span class="step-ref" onclick="openRefModal('rastegar2009')">Rastegar 2009</span> <span class="step-ref" onclick="openRefModal('cammarota2025')">Ciabattoni 2025</span></div>
+    <div style="font-size:10.5px;color:var(--text-mute);margin-top:6px;font-style:italic;">Estimación (±): los componentes y el SBE vienen de mediciones distintas, así que los "no medidos" absorben el residual del método. Correlacione con la clínica.</div>
+  </div></div>`;
+}
+
 function buildOxygenationBlock(v) {
   const o = computeOxy(v);
   if (!o) return '';
   const f1 = x => (x == null || !isFinite(x)) ? '—' : x.toFixed(1);
   const f0 = x => (x == null || !isFinite(x)) ? '—' : x.toFixed(0);
+
+  // ── FiO₂ desconocida (dispositivo de O₂ sin FiO₂/flujo): NO asumir 21% (sería peligroso) ──
+  if (o.fio2unknown) {
+    const lowflow = ['canula', 'mascarilla_simple', 'reservorio'].indexOf(o.o2device) >= 0;
+    const prompt = `<div style="background:var(--attention-bg);border:1px solid var(--attention-border);border-radius:8px;padding:12px 14px;margin-bottom:10px;color:var(--text);line-height:1.55;"><strong>Falta la FiO₂.</strong> El paciente tiene O₂ suplementario, así que <strong>no se asume 21%</strong> (sobreestimar la oxigenación sería peligroso). ${lowflow ? 'Ingresa el <strong>flujo (L/min)</strong> y estimo la FiO₂.' : 'Ingresa la <strong>FiO₂ programada</strong> del equipo.'} Entonces se calculan P/F, A-a y demás índices.</div>`;
+    let extra = '';
+    if (o.cao2 != null) extra += `<div class="comp-row"><span class="label">Contenido de O₂ (CaO₂)</span><span class="formula">1.39 × Hb ${f1(v.hb)} × ${o.satSrc} ${f0(o.sat)}% + 0.003 × PaO₂ ${f0(o.pao2)} = ${f1(o.cao2)} mL/dL <span class="step-ref" onclick="openRefModal('west_o2')">West cap. 6</span></span><span class="result ${o.cao2 < 16 ? 'borderline' : 'ok'}">${f1(o.cao2)} mL/dL</span></div>`;
+    const banner0 = o.severe.length ? `<div class="alert critical" style="margin-bottom:10px;"><div class="alert-icon">!</div><div class="alert-content"><strong>Oxigenación crítica</strong> — ${o.severe.join(' ')}</div></div>` : '';
+    return `<div class="section"><div class="comp-block"><div class="reasoning-title">Oxigenación e intercambio gaseoso</div>${banner0}${prompt}${extra}</div></div>`;
+  }
+
+  // ── Resumen prominente: P/F con barra de gravedad y ancla pronóstica ──
+  let summary = '';
+  if (o.pf != null && o.pfClass) {
+    const pin = Math.max(2, Math.min(98, (Math.min(o.pf, 500) / 500) * 100));
+    const sevColor = o.pfClass.sev === 0 ? 'var(--ok)' : (o.pfClass.sev === 1 ? '#ba7517' : (o.pfClass.sev === 2 ? '#d85a30' : '#e24b4a'));
+    const sdraName = o.pfClass.sev === 1 ? 'leve' : (o.pfClass.sev === 2 ? 'moderado' : (o.pfClass.sev === 3 ? 'grave' : ''));
+    const berlinTxt = o.berlinValid
+      ? `<span style="color:var(--ok);">PEEP ${f0(o.peep)} ≥5 → ${o.pfClass.sev > 0 ? 'clasifica SDRA <strong>' + sdraName + '</strong>' + (o.pfClass.mort ? ' (mortalidad ' + o.pfClass.mort + ')' : '') : 'sin criterio de hipoxemia SDRA'}.</span>`
+      : `<span style="color:var(--text-dim);">P/F en <strong>${o.pfClass.label}</strong>${o.pfClass.mort ? ' (mortalidad SDRA ' + o.pfClass.mort + ')' : ''} — requiere <strong>PEEP ≥5</strong> para clasificar SDRA${o.o2device === 'vm' ? '; ingresa la PEEP' : ''}.</span>`;
+    summary = `<div style="background:var(--bg-elev2);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-bottom:12px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;">
+        <span style="font-size:13px;color:var(--text-dim);">PaO₂/FiO₂ (P/F)${o.fio2estimated ? ' · FiO₂ estimada' : ''}</span>
+        <span><span style="font-size:24px;font-weight:600;color:${sevColor};">${f0(o.pfRounded)}</span> <span style="font-size:12px;color:var(--text-mute);">mmHg</span></span>
+      </div>
+      <div style="position:relative;height:13px;border-radius:7px;overflow:hidden;display:flex;margin:9px 0 2px;"><div style="flex:1;background:#e24b4a;"></div><div style="flex:1;background:#d85a30;"></div><div style="flex:1;background:#ba7517;"></div><div style="flex:2;background:var(--ok);"></div></div>
+      <div style="position:relative;height:0;"><div style="position:absolute;top:-19px;left:${pin}%;transform:translateX(-50%);font-size:11px;color:var(--text);">▲</div></div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-mute);margin-top:1px;"><span>≤100 grave</span><span>200 mod</span><span>300 leve</span><span>&gt;400</span></div>
+      <div style="font-size:12px;margin-top:10px;line-height:1.5;">${berlinTxt} <span class="step-ref" onclick="openRefModal('berlin2012')">Berlin 2012</span></div>
+    </div>`;
+  }
+
+  const fio2Tag = o.fio2estimated ? ` <span style="color:var(--text-mute);">(estimada de ${o.fio2source})</span>` : '';
   let rows = '';
-  rows += `<div class="comp-row"><span class="label">PAO₂ (gas alveolar)</span><span class="formula">FiO₂ ${f0(o.fio2pct)}% × (Pbar ${f0(o.pbar)} − 47) − PaCO₂ ${f0(o.paco2)} × [FiO₂ + (1−FiO₂)/0.8] = ${f0(o.PAO2)} mmHg <span class="step-ref" onclick="openRefModal('crapo1999')">Crapo 1999</span></span><span class="result">${f0(o.PAO2)}</span></div>`;
+  rows += `<div class="comp-row"><span class="label">PAO₂ (gas alveolar)</span><span class="formula">FiO₂ ${f0(o.fio2pct)}%${fio2Tag} × (Pbar ${f0(o.pbar)} − 47) − PaCO₂ ${f0(o.paco2)} × [FiO₂ + (1−FiO₂)/0.8] = ${f0(o.PAO2)} mmHg <span class="step-ref" onclick="openRefModal('crapo1999')">Crapo 1999</span></span><span class="result">${f0(o.PAO2)}</span></div>`;
   let aaFormula = `PAO₂ ${f0(o.PAO2)} − PaO₂ ${f0(o.pao2)} = ${f0(o.aa)} mmHg`, aaRight;
   if (o.roomAir && o.aaUpper != null) {
     aaFormula += ` · esperado p/edad+altitud ≤ ${f0(o.aaUpper)} (pred ${f0(o.aaPred)})`;
@@ -5162,14 +5318,16 @@ function buildOxygenationBlock(v) {
   if (o.roomAir && o.pao2Lower != null) {
     rows += `<div class="comp-row"><span class="label">PaO₂ vs esperado</span><span class="formula">PaO₂ ${f0(o.pao2)} · esperado p/edad+altitud ≈ ${f0(o.pao2Pred)} (límite inf. ${f0(o.pao2Lower)}) <span class="step-ref" onclick="openRefModal('crapo1999')">Crapo 1999</span></span><span class="result ${o.pao2Low ? 'mismatch' : 'ok'}">${o.pao2Low ? 'BAJO' : 'normal'}</span></div>`;
   }
-  rows += `<div class="comp-row"><span class="label">PaO₂/FiO₂ (P/F)</span><span class="formula">${f0(o.pao2)} / ${o.fio2frac.toFixed(2)} = ${f0(o.pf)} mmHg <span class="step-ref" onclick="openRefModal('berlin2012')">Berlin 2012</span></span><span class="result ${o.pfClass.key === 'crit' ? 'mismatch' : o.pfClass.key === 'warn' ? 'borderline' : 'ok'}">${o.pfClass.label}</span></div>`;
+  rows += `<div class="comp-row"><span class="label">PaO₂/FiO₂ (P/F)</span><span class="formula">${f0(o.pao2)} / ${o.fio2frac.toFixed(2)} = ${f0(o.pfRounded)} mmHg <span class="step-ref" onclick="openRefModal('berlin2012')">Berlin 2012</span></span><span class="result ${o.pfClass.key === 'crit' ? 'mismatch' : o.pfClass.key === 'warn' ? 'borderline' : 'ok'}">${o.pfClass.label}</span></div>`;
   if (o.sf != null) rows += `<div class="comp-row"><span class="label">SpO₂/FiO₂ (S/F)</span><span class="formula">${f0(v.spo2)} / ${o.fio2frac.toFixed(2)} = ${f0(o.sf)} <span class="step-ref" onclick="openRefModal('matthay2024')">Def. global 2023</span></span><span class="result ${o.sf <= 315 ? 'borderline' : 'ok'}">${o.sf <= 315 ? 'hipoxemia (≤315)' : '>315'}</span></div>`;
   if (o.aA != null) rows += `<div class="comp-row"><span class="label">Cociente a/A</span><span class="formula">PaO₂ ${f0(o.pao2)} / PAO₂ ${f0(o.PAO2)} = ${o.aA.toFixed(2)} <span class="step-ref" onclick="openRefModal('petersson2023')">Petersson 2023</span></span><span class="result ${o.aA < 0.75 ? 'borderline' : 'ok'}">${o.aA < 0.75 ? 'reducido' : 'normal'}</span></div>`;
   if (o.cao2 != null) rows += `<div class="comp-row"><span class="label">Contenido de O₂ (CaO₂)</span><span class="formula">1.39 × Hb ${f1(v.hb)} × ${o.satSrc} ${f0(o.sat)}% + 0.003 × PaO₂ ${f0(o.pao2)} = ${f1(o.cao2)} mL/dL <span class="step-ref" onclick="openRefModal('west_o2')">West cap. 6</span></span><span class="result ${o.cao2 < 16 ? 'borderline' : 'ok'}">${f1(o.cao2)} mL/dL</span></div>`;
   let banner = '';
   if (o.severe.length) banner = `<div class="alert critical" style="margin-bottom:10px;"><div class="alert-icon">!</div><div class="alert-content"><strong>Oxigenación crítica</strong> — ${o.severe.join(' ')}</div></div>`;
   let notes = `<div style="font-size:12.5px;line-height:1.55;color:var(--text-dim);margin-top:10px;"><strong>Mecanismo:</strong> ${o.mechanism} <span class="step-ref" onclick="openRefModal('sarkar2017')">Sarkar 2017</span> <span class="step-ref" onclick="openRefModal('petersson2023')">Petersson 2023</span>`;
-  if (o.fio2assumed) notes += `<br><span style="color:var(--text-mute);">⚠ FiO₂ no ingresada: se asumió 21% (aire ambiente). Ingresa la FiO₂ real para exactitud.</span>`;
+  if (o.sfSuppressed) notes += `<br><span style="color:var(--text-mute);">⚠ SpO₂ >97%: el cociente S/F NO es fiable (meseta de la curva de disociación); guíate por el P/F.</span>`;
+  if (o.fio2assumed) notes += `<br><span style="color:var(--text-mute);">Sin dispositivo de O₂ ni FiO₂: se asume aire ambiente (21%).</span>`;
+  if (o.fio2estimated) notes += `<br><span style="color:var(--text-mute);">FiO₂ estimada del dispositivo (±, depende del flujo inspiratorio y patrón respiratorio); el P/F se redondea a la decena.</span>`;
   if (o.crapoOutOfRange) notes += `<br><span style="color:var(--text-mute);">⚠ Edad o presión fuera del rango validado por Crapo (18–81 años; hasta 1.400 m / Pbar ≥ 645 mmHg): los valores esperados son una extrapolación declarada. <span class="step-ref" onclick="openRefModal('crapo1999')">Crapo 1999</span></span>`;
   notes += `<br><span style="color:var(--text-mute);">Presión barométrica ${o.pbarSrc}. Referencias de Crapo a aire ambiente. La clasificación SDRA (P/F) requiere PEEP ≥ 5 cmH₂O.</span>`;
   notes += `</div>`;
@@ -5178,7 +5336,7 @@ function buildOxygenationBlock(v) {
     <div class="reasoning-title collapsible-header">¿Por qué? — cómo llegamos a esto (toca para ver el razonamiento)</div>
     <div class="collapsible-content">${buildOxyReasoning(o)}</div>
   </div>`;
-  return `<div class="section"><div class="comp-block"><div class="reasoning-title">Oxigenación e intercambio gaseoso</div>${banner}${rows}${notes}${porque}${disc}</div></div>`;
+  return `<div class="section"><div class="comp-block"><div class="reasoning-title">Oxigenación e intercambio gaseoso</div>${banner}${summary}${rows}${notes}${porque}${disc}</div></div>`;
 }
 
 function renderResult(r) {
@@ -5223,6 +5381,7 @@ function renderResult(r) {
 
   // Oxigenación e intercambio gaseoso (aditivo; solo si hay PaO₂)
   html += buildOxygenationBlock(r.values);
+  html += buildStewartBlock(r.values);
 
   // Handoff a ETHOS·TX (si hemorragia/shock)
   html += buildTxHandoff(r.values, r.c);
@@ -6146,6 +6305,7 @@ AG corregido = AG medido + 2.5 × (4.0 − albúmina en g/dL)
 <tr><td><strong>Alcalosis respiratoria crónica</strong></td><td>HCO₃ ↓ 5 mEq por cada 10 mmHg ↓ PaCO₂</td><td>± 2 mEq/L</td></tr>
 </tbody>
 </table>
+<p style="font-size:13px;color:var(--text-dim);">Estas reglas de compensación renal provienen de los estudios clásicos de Boston (Schwartz, Brackett y Cohen — la "curva de titulación del CO₂" para la acidosis respiratoria aguda) y se resumen en las revisiones modernas. <span class="step-ref" onclick="openRefModal('brackett1965')">Brackett 1965</span> <span class="step-ref" onclick="openRefModal('palmer2023')">Palmer 2023</span></p>
 
 <h2>Fórmula de Winter — la más usada</h2>
 <p>Para acidosis metabólica:</p>
@@ -7052,7 +7212,7 @@ SIG = SIDa − SIDe
 
 <h2>La pregunta antigua, la respuesta nueva</h2>
 
-<p>Hasta 2018, ningún ensayo clínico grande había evaluado si el bicarbonato cambiaba desenlaces en pacientes críticos con acidemia severa. Lo que había era literatura observacional contradictoria, estudios fisiológicos pequeños que mostraban poca o ninguna mejoría hemodinámica, y una preocupación importante: el bicarbonato genera CO₂ (HCO₃⁻ + H⁺ → CO₂ + H₂O), y el CO₂ atraviesa membranas rápido, lo que puede <strong>acidificar el medio intracelular</strong> aunque el pH plasmático suba. El compartimiento que importa para la función celular es el intracelular, no el plasma.</p>
+<p>Hasta 2018, ningún ensayo clínico grande había evaluado si el bicarbonato cambiaba desenlaces en pacientes críticos con acidemia severa. Lo que había era literatura observacional contradictoria, estudios fisiológicos pequeños que mostraban poca o ninguna mejoría hemodinámica, y una preocupación importante: el bicarbonato genera CO₂ (HCO₃⁻ + H⁺ → CO₂ + H₂O), y el CO₂ atraviesa membranas rápido, lo que puede <strong>acidificar el medio intracelular</strong> aunque el pH plasmático suba. El compartimiento que importa para la función celular es el intracelular, no el plasma. El manejo de los buffers en la acidemia que amenaza la vida está revisado en el clásico de Adrogué y Madias. <span class="step-ref" onclick="openRefModal('adrogue1998a')">Adrogué &amp; Madias 1998 (I)</span> <span class="step-ref" onclick="openRefModal('adrogue1998b')">(II)</span></p>
 
 <p>El estudio que cambió esto es <strong>BICAR-ICU</strong> ${refTag('bicar_icu', '[Jaber et al., Lancet 2018]')}. Es el único ensayo clínico aleatorizado grande sobre el tema y vale la pena que lo entiendas en detalle.</p>
 
