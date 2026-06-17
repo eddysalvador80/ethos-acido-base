@@ -1,5 +1,5 @@
-const CACHE = "ethos-acidobase-v3_4";
-const ASSETS = [".", "index.html", "manifest.json", "icono-192.png", "icono-512.png"];
+const CACHE = "ethos-acidobase-v5_0";
+const ASSETS = [".", "index.html", "manifest.json", "icono-192.png", "icono-512.png", "apple-touch-icon.png"];
 self.addEventListener("install", function(e){
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(ASSETS); }));
@@ -11,13 +11,30 @@ self.addEventListener("activate", function(e){
 });
 self.addEventListener("fetch", function(e){
   if (e.request.method !== "GET") return;
-  e.respondWith(
-    caches.match(e.request).then(function(r){
-      return r || fetch(e.request).then(function(resp){
+  var req = e.request;
+  var isHTML = req.mode === "navigate" || (req.headers.get("accept") || "").indexOf("text/html") !== -1;
+  if (isHTML) {
+    // Network-first para el HTML: la app instalada se actualiza sola al abrir con internet;
+    // si no hay red, cae al cache (offline).
+    e.respondWith(
+      fetch(req).then(function(resp){
         var cp = resp.clone();
-        caches.open(CACHE).then(function(c){ c.put(e.request, cp); });
+        caches.open(CACHE).then(function(c){ c.put("index.html", cp); });
         return resp;
-      }).catch(function(){ return caches.match("index.html"); });
-    })
-  );
+      }).catch(function(){
+        return caches.match("index.html").then(function(r){ return r || caches.match("."); });
+      })
+    );
+  } else {
+    // Cache-first para estaticos (iconos, manifest).
+    e.respondWith(
+      caches.match(req).then(function(r){
+        return r || fetch(req).then(function(resp){
+          var cp = resp.clone();
+          caches.open(CACHE).then(function(c){ c.put(req, cp); });
+          return resp;
+        });
+      })
+    );
+  }
 });

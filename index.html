@@ -3,13 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETHOS — Módulo Ácido-Base v5.0</title>
 <meta name="theme-color" content="#0e1014">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ETHOS Ácido-Base">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icono-192.png">
-<title>ETHOS — Módulo Ácido-Base v3.4</title>
+<meta name="apple-mobile-web-app-title" content="ETHOS pH">
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function(e){console.log('SW error',e);});
+  });
+}
+</script>
+
 <!-- Fuentes del sistema (offline; sin dependencias online) -->
 <style>
 :root {
@@ -1386,12 +1395,13 @@ body {
 
 <header class="header">
   <div>
-    <div class="logo">ETHOS<span> · ácido-base</span><span class="version-badge">v2.7</span></div>
+    <div class="logo">ETHOS<span> · ácido-base</span><span class="version-badge">v5.0</span></div>
     <div class="subtitle">Apoyo clínico basado en evidencia · UCI / Pabellón / Urgencias</div>
   </div>
   <div class="main-tabs">
     <button class="main-tab active" id="tabClinica" onclick="switchView('clinica')"><span class="main-tab-icon">⚕</span>Clínica</button>
     <button class="main-tab" id="tabAprender" onclick="switchView('aprender')"><span class="main-tab-icon">📖</span>Aprender</button>
+    <button class="main-tab" id="tabPractica" onclick="switchView('practica')"><span class="main-tab-icon">🎯</span>Práctica</button>
   </div>
 </header>
 
@@ -1565,6 +1575,10 @@ body {
         <label>Temperatura (°C)</label>
         <input type="text" inputmode="decimal" id="temp" step="0.1" min="32" max="42" placeholder="36.5">
       </div>
+      <div class="field">
+        <label>Diuresis (mL/kg/h)</label>
+        <input type="text" inputmode="decimal" id="diuresis" step="0.1" min="0" max="10" placeholder="—">
+      </div>
     </div>
     <div class="field-row">
       <div class="field">
@@ -1590,6 +1604,39 @@ body {
         </select>
       </div>
     </div>
+  </div>
+
+  <div class="sidebar-section">
+    <h3>Oxigenación</h3>
+    <div class="field-row three">
+      <div class="field">
+        <label>PaO₂</label>
+        <input type="text" inputmode="decimal" id="pao2" step="1" min="20" max="700" placeholder="—">
+      </div>
+      <div class="field">
+        <label>SaO₂ (%)</label>
+        <input type="text" inputmode="decimal" id="sao2" step="1" min="40" max="100" placeholder="—">
+      </div>
+      <div class="field">
+        <label>Hb (g/dL)</label>
+        <input type="text" inputmode="decimal" id="hb" step="0.1" min="2" max="25" placeholder="—">
+      </div>
+    </div>
+    <div class="field-row three">
+      <div class="field">
+        <label>Edad (años)</label>
+        <input type="text" inputmode="decimal" id="edad" step="1" min="0" max="120" placeholder="—">
+      </div>
+      <div class="field">
+        <label>P. baromét. (mmHg)</label>
+        <input type="text" inputmode="decimal" id="pbar" step="1" min="400" max="800" placeholder="760">
+      </div>
+      <div class="field">
+        <label>Altitud (m)</label>
+        <input type="text" inputmode="decimal" id="altitud" step="1" min="0" max="5000" placeholder="0">
+      </div>
+    </div>
+    <div style="font-size:10.5px;color:var(--text-mute);margin-top:4px;line-height:1.4;">La FiO₂ se toma de "Signos vitales". Ingresa la presión barométrica medida <em>o</em> la altitud (la app la estima). El módulo de oxigenación se activa al ingresar PaO₂.</div>
   </div>
 
   <div class="sidebar-section">
@@ -1723,6 +1770,7 @@ body {
         <div class="aprender-card" onclick="goToSection('B7')"><div class="card-num">7</div><div class="card-title">Delta-delta (Δ-Δ)</div><div class="card-desc">El cálculo que desenmascara trastornos metabólicos mixtos.</div></div>
         <div class="aprender-card" onclick="goToSection('B8')"><div class="card-num">8</div><div class="card-title">Fórmulas de compensación</div><div class="card-desc">Winter y las demás. Cuándo el cuerpo compensa "bien" y cuándo no.</div></div>
         <div class="aprender-card" onclick="goToSection('B9')"><div class="card-num">9</div><div class="card-title">Detectar trastornos mixtos</div><div class="card-desc">Por qué los pacientes graves casi nunca tienen un solo trastorno.</div></div>
+        <div class="aprender-card" onclick="goToSection('MAPA')"><div class="card-num">🗺</div><div class="card-title">Mapa visual ácido-base</div><div class="card-desc">Nomograma interactivo: ubica el punto del paciente y mira la compensación moverse.</div></div>
       </div>
     </div>
 
@@ -1760,8 +1808,118 @@ body {
 </main>
 </div><!-- fin viewAprender -->
 
+<style>
+#viewPractica{max-width:780px;margin:0 auto;padding:8px 4px 48px;}
+.q-dash{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px;}
+.q-metric{background:var(--bg-elev2);border:1px solid var(--border-soft);border-radius:8px;padding:9px 16px;min-width:92px;}
+.q-metric-n{font-size:22px;font-weight:600;color:var(--text);line-height:1.1;}
+.q-metric-l{font-size:11px;color:var(--text-dim);margin-top:3px;}
+.q-reset{margin-left:auto;background:transparent;border:1px solid var(--border);color:var(--text-dim);font-size:12px;padding:8px 12px;border-radius:6px;cursor:pointer;}
+.q-reset:hover{border-color:var(--critical);color:var(--critical);}
+.q-card{background:var(--bg-elev);border:1px solid var(--border-soft);border-radius:10px;padding:18px 20px;}
+.q-meta{font-size:11.5px;color:var(--text-mute);margin-bottom:10px;letter-spacing:.02em;}
+.q-vig{font-size:15px;line-height:1.6;color:var(--text);margin:0 0 12px;}
+.q-labs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.q-lab{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;background:var(--bg-elev3);color:var(--text);padding:3px 8px;border-radius:5px;}
+.q-step{margin-top:16px;}
+.q-q{font-size:14px;font-weight:600;color:var(--text);margin-bottom:10px;}
+.q-opt{display:block;width:100%;text-align:left;margin-bottom:8px;font-size:13.5px;}
+.q-opt:disabled{cursor:default;}
+.q-rev{margin-top:18px;background:var(--bg-elev2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+.q-rev-h{font-size:11.5px;color:var(--accent);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.q-rev-list{margin:0 0 12px;padding-left:18px;font-size:14px;line-height:1.7;color:var(--text);}
+.q-rev-list b{color:var(--text);font-weight:600;}
+.q-why{font-size:14px;line-height:1.65;color:var(--text-dim);margin:0 0 10px;}
+.q-perla{font-size:14px;line-height:1.6;color:var(--text);margin:0 0 12px;padding-left:12px;border-left:3px solid var(--accent);}
+.q-cites{display:flex;flex-wrap:wrap;gap:6px;}
+.q-cite{font-size:12px;background:rgba(201,167,107,.12);color:var(--accent);padding:4px 10px;border-radius:5px;cursor:pointer;border:1px solid rgba(201,167,107,.25);}
+.q-cite:hover{background:rgba(201,167,107,.22);}
+.q-self{margin-top:16px;border-top:1px solid var(--border-soft);padding-top:14px;}
+.q-result{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px;line-height:1.55;}
+.q-result.ok{background:var(--ok-bg);border:1px solid var(--ok-border);color:var(--ok);}
+.q-result.no{background:var(--critical-bg);border:1px solid var(--critical-border);color:var(--text-dim);}
+.q-next{margin-top:14px;background:var(--accent);color:#1a1205;border:none;font-weight:600;font-size:14px;padding:11px 18px;border-radius:7px;cursor:pointer;}
+.q-next:hover{filter:brightness(1.08);}
+.q-intro{font-size:13.5px;color:var(--text-dim);line-height:1.6;margin:0 auto 16px;max-width:780px;}
+</style>
+<div class="view" id="viewPractica">
+  <p class="q-intro">Practica con <b>repeticion espaciada</b>: cada caso que aciertas sube de caja y reaparece mas tarde; el que fallas vuelve pronto. Reutiliza el banco de 50 casos validados. Tu progreso se guarda en este dispositivo (offline).</p>
+  <div id="quizBody"></div>
+</div>
+<script>
+(function(){
+  var CASES = [{"id":"PURO-01","dif":"simple","cat":"Acidosis metabólica AG alto (HAGMA)","ctx":"Mujer de 24 años con diabetes tipo 1, poliuria, dolor abdominal y respiración de Kussmaul; cetonas urinarias 4+.","labs":{"pH":7.2,"paco2":21,"hco3":8,"na":138,"cl":100,"k":5.2,"alb":4,"lactato":1,"glucosa":480,"crea":1.1},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con anión gap elevado (HAGMA)","comp":"Apropiada: PaCO₂ 21 mmHg cae dentro del rango de Winter (18–22), hay hiperventilación compensatoria adecuada; trastorno simple","sec":[],"dx":"Cetoacidosis diabética (CAD)","porque":"AG 30 muy elevado con cetonemia y glucosa 480; HCO₃ bajo con PaCO₂ que sigue la fórmula de Winter indica compensación respiratoria completa sin trastorno respiratorio agregado","perla":"Δ-ratio ≈1 confirma que solo hay un proceso AG-alto; si fuera <1 sospecharía una NAGMA agregada (p.ej. acidosis hiperclorémica por reanimación con SF)"},"cites":["ada2024","kraut_ag2007","winter1967"]},{"id":"PURO-02","dif":"simple","cat":"Acidosis metabólica AG alto (HAGMA)","ctx":"Hombre de 68 años con shock séptico de foco abdominal, hipotensión y piel moteada; lactato muy elevado.","labs":{"pH":7.29,"paco2":26,"hco3":12,"na":140,"cl":102,"k":4.6,"alb":3.6,"lactato":8.5,"glucosa":130,"crea":1.6},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con anión gap elevado (HAGMA)","comp":"Apropiada: PaCO₂ 26 mmHg dentro del rango de Winter (24–28); compensación respiratoria adecuada, trastorno simple","sec":[],"dx":"Acidosis láctica tipo A por shock séptico (hipoperfusión)","porque":"Lactato 8.5 explica todo el incremento del AG corregido por albúmina baja; Δ-ratio ~1.25 sin desviación, PaCO₂ en rango de Winter","perla":"Corregir el AG por albúmina (3.6 g/dL) sube el AG de 26 a 27; sin esa corrección se subestima la magnitud de la brecha en hipoalbuminémicos"},"cites":["kraut_lactic2014","kraut_ag2007","winter1967"]},{"id":"PURO-03","dif":"simple","cat":"Acidosis metabólica hiperclorémica (NAGMA)","ctx":"Niño de 6 años llevado por diarrea acuosa profusa de 4 días, deshidratado y con mucosas secas.","labs":{"pH":7.32,"paco2":30,"hco3":15,"na":138,"cl":115,"k":3.2,"alb":4,"lactato":1.2,"glucosa":95,"crea":0.6},"qp":"NAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica hiperclorémica con anión gap normal (NAGMA)","comp":"Apropiada: PaCO₂ 30 mmHg dentro del rango de Winter (28.5–32.5); compensación respiratoria adecuada, trastorno simple","sec":[],"dx":"Pérdida digestiva baja de bicarbonato por diarrea (acidosis hiperclorémica)","porque":"AG 8 normal con Cl⁻ 115 elevado: la caída del HCO₃ es reemplazada por cloro, patrón clásico de pérdida gastrointestinal de álcali","perla":"La hipokalemia (K 3.2) acompaña la pérdida diarreica; útil para diferenciar de ATR distal (donde el K también puede caer) calculando el gap aniónico urinario"},"cites":["batlle1988","winter1967"]},{"id":"PURO-04","dif":"simple","cat":"Acidosis metabólica hiperclorémica (NAGMA)","ctx":"Mujer de 35 años con litiasis renal recurrente, nefrocalcinosis y debilidad muscular; orina alcalina persistente.","labs":{"pH":7.34,"paco2":33,"hco3":17,"na":140,"cl":116,"k":3,"alb":4,"lactato":0.9,"glucosa":92,"crea":0.9},"qp":"NAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica hiperclorémica con anión gap normal (NAGMA)","comp":"Apropiada: PaCO₂ 33 mmHg dentro del rango de Winter (31.5–35.5); trastorno simple","sec":[],"dx":"Acidosis tubular renal distal tipo 1 (orina alcalina, hipokalemia, nefrocalcinosis)","porque":"NAGMA con K bajo, orina inapropiadamente alcalina y nefrocalcinosis; el gap aniónico urinario sería positivo por amoniogénesis defectuosa","perla":"ATR distal cursa con hipokalemia y nefrolitiasis de calcio; contrasta con ATR tipo 4 (hiperkalémica). El AG plasmático normal descarta una HAGMA agregada"},"cites":["batlle1988","palmer_rta2021","winter1967"]},{"id":"PURO-05","dif":"simple","cat":"Alcalosis metabólica","ctx":"Hombre de 55 años con vómitos persistentes por estenosis pilórica de 1 semana; signos de depleción de volumen.","labs":{"pH":7.5,"paco2":48,"hco3":36,"na":142,"cl":92,"k":3.1,"alb":4,"lactato":1,"glucosa":100,"crea":1},"qp":"ALC_MET","qc":"OK","exp":{"prim":"Alcalosis metabólica","comp":"Apropiada: PaCO₂ 48 mmHg coincide con la esperada (≈0.7×ΔHCO₃+40 ≈ 48); hipoventilación compensatoria adecuada, trastorno simple","sec":[],"dx":"Alcalosis metabólica clorurosensible por pérdida gástrica de HCl (vómitos) con contracción de volumen e hipokalemia","porque":"HCO₃ 36 con Cl⁻ 92 bajo e hipokalemia; la PaCO₂ sube apropiadamente para amortiguar la alcalemia sin sobrepasar lo esperado","perla":"Es clorurosensible (Cl⁻ urinario bajo); responde a reposición de NaCl y KCl. El leve AG de 14 es por alcalemia y depleción, no una HAGMA agregada"},"cites":["winter1967"]},{"id":"PURO-06","dif":"simple","cat":"Alcalosis metabólica","ctx":"Mujer de 72 años con insuficiencia cardíaca en tratamiento con furosemida en dosis altas; calambres y debilidad.","labs":{"pH":7.49,"paco2":46,"hco3":34,"na":140,"cl":90,"k":3,"alb":3.8,"lactato":1.1,"glucosa":110,"crea":1.3},"qp":"ALC_MET","qc":"OK","exp":{"prim":"Alcalosis metabólica","comp":"Apropiada: PaCO₂ 46 mmHg dentro del rango esperado (≈45–49); hipoventilación compensatoria adecuada, trastorno simple","sec":[],"dx":"Alcalosis metabólica por diuréticos de asa (contracción de volumen, pérdida renal de Cl⁻ y K⁺)","porque":"HCO₃ 34 con hipocloremia (Cl 90) e hipokalemia (K 3.0) en contexto de furosemida; PaCO₂ compensatoria en rango esperado y pH consistente por Henderson-Hasselbalch (calculado 7.49)","perla":"Alcalosis metabólica cloruro-sensible (cloruro urinario bajo): responde a reposición de volumen, Cl⁻ y K⁺. El AG levemente alto NO indica aniones no medidos: en alcalemia aumenta la carga negativa de la albúmina y la contracción concentra aniones; con lactato normal no hay HAGMA agregada"},"cites":["winter1967"]},{"id":"PURO-07","dif":"simple","cat":"Acidosis respiratoria aguda","ctx":"Hombre de 40 años traído por sobredosis de opioides, somnoliento, bradipneico, sin antecedentes pulmonares.","labs":{"pH":7.26,"paco2":60,"hco3":26,"na":140,"cl":103,"k":4.2,"alb":4,"lactato":1.3,"glucosa":105,"crea":1},"qp":"AC_RESP","qc":"OK","exp":{"prim":"Acidosis respiratoria aguda","comp":"Apropiada: por cada 10 mmHg de aumento de PaCO₂ sobre 40, el HCO₃ sube +1; con PaCO₂ 60 (ΔPaCO₂=20) se espera HCO₃ ≈ 26, que es exactamente el valor medido. Buffer celular agudo adecuado, trastorno simple. La cronicidad esperaría HCO₃≈31 (+3.5/10), lo que se descarta.","sec":[],"dx":"Depresión respiratoria por opioides (hipoventilación alveolar aguda)","porque":"pH bajo con PaCO₂ alta y HCO₃ apenas elevado (26): el ajuste renal aún no ocurre, solo amortiguación tisular aguda","perla":"Un HCO₃ de 26 con PaCO₂ 60 indica que el proceso es agudo; si el HCO₃ fuera ~33 pensaría en cronicidad o componente metabólico agregado"},"cites":["palmer2023"]},{"id":"PURO-08","dif":"simple","cat":"Acidosis respiratoria crónica","ctx":"Hombre de 66 años con EPOC avanzado, retenedor crónico de CO₂, en su estado basal sin descompensación aguda.","labs":{"pH":7.36,"paco2":60,"hco3":33,"na":140,"cl":95,"k":4.4,"alb":4,"lactato":1,"glucosa":100,"crea":1},"qp":"AC_RESP","qc":"OK","exp":{"prim":"Acidosis respiratoria crónica","comp":"Apropiada: por cada 10 mmHg de aumento de PaCO₂ sobre 40, el HCO₃ sube +3.5 en la forma crónica; con PaCO₂ 60 (Δ20) se espera HCO₃ ≈ 31, observado 33, dentro del rango (~31–33). Compensación renal completa, trastorno simple","sec":[],"dx":"Acidosis respiratoria crónica compensada por EPOC (retenedor crónico de CO₂)","porque":"pH casi normal (7.36, ligeramente acidémico) con PaCO₂ 60 y HCO₃ 33 indica retención renal de bicarbonato establecida en semanas; el Cl⁻ 95 baja recíprocamente. AG 12 normal, sin trastorno metabólico agregado","perla":"El pH casi normalizado pese a PaCO₂ muy alta es la firma de cronicidad; mantener objetivos de SpO₂ 88–92% para no abolir el estímulo hipóxico ventilatorio"},"cites":["palmer2023"]},{"id":"PURO-09","dif":"simple","cat":"Alcalosis respiratoria aguda","ctx":"Mujer de 28 años con crisis de pánico, hiperventilando, con parestesias peribucales y en las manos; pulmones limpios.","labs":{"pH":7.51,"paco2":26,"hco3":20,"na":140,"cl":104,"k":3.8,"alb":4,"lactato":1,"glucosa":90,"crea":0.8},"qp":"ALC_RESP","qc":"OK","exp":{"prim":"Alcalosis respiratoria aguda","comp":"Apropiada: por cada 10 mmHg de descenso de PaCO₂ bajo 40 el HCO₃ baja −2 en la forma aguda; con PaCO₂ 26 se espera HCO₃ ≈ 21, muy cercano al valor medido 20. Solo amortiguación tisular aguda, sin respuesta renal aún; trastorno simple","sec":[],"dx":"Hiperventilación aguda por crisis de ansiedad/pánico","porque":"pH alto con PaCO₂ baja y HCO₃ apenas reducido (20): el riñón aún no excreta bicarbonato, solo hay amortiguación aguda. El HCO₃ medido coincide con la predicción aguda (≈21) y no con la crónica (≈18), confirmando agudeza","perla":"Las parestesias se deben a la caída del calcio iónico por la alcalemia aguda; el HCO₃ poco reducido (20, próximo a 21) confirma agudeza frente a una alcalosis respiratoria crónica (que daría ≈18). El AG de 16 es un hallazgo menor sin correlato clínico"},"cites":["palmer2023"]},{"id":"PURO-10","dif":"simple","cat":"Alcalosis respiratoria crónica","ctx":"Mujer de 30 años, embarazo de 28 semanas sin complicaciones, gasometría de control; asintomática.","labs":{"pH":7.43,"paco2":28,"hco3":18,"na":138,"cl":108,"k":4,"alb":4,"lactato":0.9,"glucosa":85,"crea":0.6},"qp":"ALC_RESP","qc":"OK","exp":{"prim":"Alcalosis respiratoria crónica","comp":"Apropiada: por cada 10 mmHg de descenso de PaCO₂ bajo 40, el HCO₃ baja −4 a −5 en la forma crónica; con PaCO₂ 28 (descenso de 12 mmHg) se espera HCO₃ ≈ 18.0–19.2, y el valor medido de 18 cae en ese rango. Compensación renal completa con pH casi normal, trastorno simple","sec":[],"dx":"Alcalosis respiratoria crónica fisiológica del embarazo (la progesterona estimula el centro respiratorio)","porque":"pH casi normal (7.43) con PaCO₂ 28 y HCO₃ 18 refleja excreción renal de bicarbonato ya establecida; el Cl⁻ 108 sube recíprocamente para mantener la electroneutralidad con AG normal (12)","perla":"Una PaCO₂ de 28 con HCO₃ 18 y pH casi normal es el hallazgo basal esperado en el embarazo; no confundir el HCO₃ bajo con una acidosis metabólica, pues el AG es normal (12) y el pH es alcalótico, no acidótico"},"cites":["palmer2023"]},{"id":"MX-01","dif":"mixto","cat":"acidosis metabólica AG alto + acidosis respiratoria","ctx":"Hombre de 68 años con EPOC severo en shock séptico hipotenso, taquipneico pero agotado, derivado a UCI.","labs":{"pH":7.04,"paco2":60,"hco3":16,"na":138,"cl":100,"k":5.4,"alb":4,"lactato":8,"glucosa":150,"crea":2.1},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabólica con anion gap elevado (lactato)","comp":"Inapropiada/insuficiente: por Winter el PaCO₂ esperado es 30-34 mmHg, pero el medido es 60 mmHg, muy por encima del rango; el paciente NO baja el CO₂ como debería, hay acidosis respiratoria sobreañadida","sec":["Acidosis respiratoria (PaCO₂ 60 fuera del rango de Winter por fatiga muscular/EPOC + shock)"],"dx":"Acidosis mixta metabólica (láctica) + respiratoria por fatiga ventilatoria en EPOC con shock séptico","porque":"AG=22 confirma componente metabólico de gap alto; el PaCO₂ de 60 está muy por encima del esperado por Winter (30-34), lo que delata un segundo trastorno respiratorio: el pulmón no puede compensar. pH 7.04 refleja la suma de ambas acidosis.","perla":"Un PaCO₂ 'normal' o alto frente a una acidosis metabólica grave es una bandera roja: indica fallo ventilatorio inminente. Ventilar antes de que el paciente se descompense."},"cites":["kraut_lactic2014","kraut_ag2007","winter1967"]},{"id":"MX-02","dif":"mixto","cat":"acidosis metabólica AG alto + alcalosis respiratoria (SALICILATOS)","ctx":"Mujer de 24 años traída por intoxicación voluntaria con AAS; tinnitus, hiperventilación franca, náuseas.","labs":{"pH":7.5,"paco2":18,"hco3":14,"na":140,"cl":102,"k":3.6,"alb":4,"lactato":3,"glucosa":95,"crea":0.9},"qp":"ALC_RESP","qc":"ANOMALA","exp":{"prim":"Alcalosis respiratoria (estímulo directo del centro respiratorio por salicilato) — pH alcalémico domina","comp":"NO es compensación: el HCO₃ bajo (14) no es respuesta a la alcalosis respiratoria sino una acidosis metabólica de AG alto independiente; coexisten dos trastornos primarios opuestos","sec":["Acidosis metabólica con anion gap elevado (salicilato, lactato, cetoácidos)"],"dx":"Intoxicación por salicilatos: el clásico trastorno mixto alcalosis respiratoria + acidosis metabólica de AG alto","porque":"AG=24 (muy alto) indica acidosis metabólica de gap. El HCO₃ medido (14) está muy por debajo del rango de Winter esperado para el componente metabólico (27-31 mmHg de PaCO₂), y el PaCO₂ real (18) cae aún más abajo, lo que confirma una alcalosis respiratoria primaria sobreañadida. pH alcalémico (7.50) porque domina el componente respiratorio.","perla":"En todo adulto con alcalosis respiratoria + acidosis metabólica de AG alto sin causa obvia, pensar salicilatos hasta demostrar lo contrario. Pedir niveles y considerar alcalinización urinaria/diálisis."},"cites":["gabow1978","kraut_lactic2014","palmer2023"]},{"id":"MX-03","dif":"mixto","cat":"acidosis respiratoria crónica + alcalosis metabólica","ctx":"Hombre de 72 años con EPOC retenedor crónico, en tratamiento con furosemida por cor pulmonale; refiere vómitos los últimos días.","labs":{"pH":7.36,"paco2":70,"hco3":38,"na":140,"cl":90,"k":3,"alb":4,"lactato":1,"glucosa":110,"crea":1.3},"qp":"AC_RESP","qc":"ANOMALA","exp":{"prim":"Acidosis respiratoria crónica (EPOC retenedor)","comp":"Inapropiada por exceso: la compensación renal crónica esperada es ΔHCO₃ +3.5/10 mmHg de PaCO₂ sobre 40 → ΔPaCO₂=30, HCO₃ esperado = 24 + 10.5 = 34.5. El HCO₃ medido (38) supera lo esperado en ~3.5 mEq/L, delatando alcalosis metabólica sobreañadida (diuréticos + vómitos)","sec":["Alcalosis metabólica (cloro-sensible: furosemida + vómitos; Cl 90 bajo, K 3.0 bajo)"],"dx":"EPOC con acidosis respiratoria crónica complicada por alcalosis metabólica por diuréticos de asa y vómitos","porque":"El HCO₃ de 38 está por encima del esperado para una compensación crónica pura (34.5). El Cl bajo (90) y la hipokalemia (3.0) apuntan a alcalosis metabólica cloro-sensible añadida. El pH casi normal (7.36) enmascara los dos trastornos.","perla":"En el EPOC retenedor, un HCO₃ desproporcionadamente alto y un Cl bajo señalan alcalosis metabólica sobreimpuesta; corregirla (KCl, suspender/ajustar diurético) mejora el drive respiratorio."},"cites":["ada2024","palmer2023"]},{"id":"MX-04","dif":"mixto","cat":"acidosis metabólica AG alto + alcalosis metabólica (delta-ratio >2)","ctx":"Mujer de 33 años diabética con cetoacidosis que además ha vomitado profusamente durante 48 horas antes de consultar.","labs":{"pH":7.44,"paco2":40,"hco3":26,"na":140,"cl":88,"k":3.4,"alb":4,"lactato":2,"glucosa":480,"crea":1.4},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabólica con anion gap elevado (cetoacidosis diabética) — revelada por el AG y por el HCO₃ corregido (40), no por el HCO₃ medido","comp":"Engañosa: pH y HCO₃ casi normales ocultan dos trastornos metabólicos opuestos que se cancelan; el AG elevado (26) y el HCO₃ corregido (40) son las únicas pistas. No procede evaluar Winter de forma estándar porque el HCO₃ neto no ha descendido; la PaCO₂ de 40 es coherente con un pH neutro.","sec":["Alcalosis metabólica (vómitos; pérdida de HCl, Cl 88 muy bajo, cloruro-respondedora)"],"dx":"CAD con vómitos: acidosis metabólica de AG alto + alcalosis metabólica concurrente, evidenciada por HCO₃ corregido de 40 (delta-ratio degenerado por HCO₃ no descendido)","porque":"El componente acidótico se demuestra por ΔAG = AG−12 = 26−12 = 14 mEq de aniones no medidos (cetoácidos; lactato normal en 2). Si fuera una acidosis metabólica de AG alto pura, el HCO₃ debería haber caído ~14 hasta ~10; en cambio está en 26. El HCO₃ corregido (HCO₃ medido + ΔAG = 26+14 = 40) está muy por encima de 24, lo que cuantifica una alcalosis metabólica concurrente que 'rellenó' el bicarbonato. El Cl muy bajo (88) confirma la pérdida gástrica de HCl. NOTA: el delta-ratio ΔAG/ΔHCO₃ aquí es degenerado/negativo porque ΔHCO₃ = 24−26 = −2 (el HCO₃ subió en vez de bajar); en este escenario el delta-ratio no debe etiquetarse simplemente como '>2' sino interpretarse con el HCO₃ corregido.","perla":"Un HCO₃ y pH normales con AG elevado y glucosa alta NO descartan CAD: el vómito puede normalizar el bicarbonato. Calcular SIEMPRE el AG y el HCO₃ corregido (HCO₃ + ΔAG); si el corregido supera 24, hay una alcalosis metabólica sobreañadida aunque el delta-ratio salga negativo o indefinido. Tratar la CAD aunque el pH parezca tranquilizador."},"cites":["ada2024","kraut_ag2007","winter1967"]},{"id":"MX-05","dif":"mixto","cat":"alcalosis respiratoria + alcalosis metabólica","ctx":"Mujer de 58 años con sepsis y dolor (hiperventilación) y aspiración nasogástrica continua por íleo.","labs":{"pH":7.58,"paco2":28,"hco3":26,"na":140,"cl":100,"k":3.1,"alb":4,"lactato":1.5,"glucosa":120,"crea":1},"qp":"ALC_RESP","qc":"ANOMALA","exp":{"prim":"Alcalosis respiratoria (sepsis/dolor) concurrente con alcalosis metabólica — ambas elevan el pH","comp":"inapropiada como mecanismo compensatorio: ambos trastornos empujan el pH al alza, no hay compensación verdadera. Para alcalosis respiratoria aguda pura con PaCO₂ 28 (ΔPaCO₂ −12) el HCO₃ debería bajar ~2/10 → ~22; el HCO₃ medido (26) está por encima, lo que delata alcalosis metabólica añadida en vez de la caída esperada","sec":["Alcalosis metabólica (aspiración nasogástrica, pérdida de HCl; K 3.1 hipokalémico, hipocloremia relativa Cl 100)"],"dx":"Alcalemia mixta severa: alcalosis respiratoria + alcalosis metabólica por aspiración gástrica","porque":"El HCO₃ de 26 es demasiado alto para ser compensación de una alcalosis respiratoria (que lo bajaría a ~22 en forma aguda, ~19 si crónica). En lugar de descender, sube → segundo trastorno alcalótico metabólico. El pH 7.58 marcadamente alto es la suma de ambos. AG 14 levemente elevado sin acidosis metabólica clínicamente relevante (lactato 1.5 normal, sin brecha osmolar reportada).","perla":"Dos trastornos que tiran del pH en la misma dirección producen alcalemias o acidemias extremas; pH >7.55 obliga a buscar doble causa y a corregir el K (3.1) por riesgo de arritmias. La aspiración nasogástrica perpetúa la alcalosis (cloruro-sensible): reponer Cl/K/volumen es clave."},"cites":["palmer2023"]},{"id":"MX-06","dif":"triple","cat":"acidosis metabólica AG alto + acidosis metabólica hiperclorémica (delta-ratio <1) + acidosis respiratoria leve agregada (PaCO₂ > Winter)","ctx":"Hombre de 45 años con diarrea profusa de varios días y deshidratación, que desarrolla acidosis láctica por hipoperfusión.","labs":{"pH":7.22,"paco2":28,"hco3":11,"na":140,"cl":116,"k":3.5,"alb":4,"lactato":4,"glucosa":100,"crea":1.6},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabólica mixta de AG alto (láctica) + AG normal (hiperclorémica por diarrea)","comp":"Inapropiada: por Winter PaCO₂esp = 1.5×11+8 ±2 = 22.5–26.5 mmHg, pero el medido es 28 mmHg, POR ENCIMA del límite superior. Una PaCO₂ mayor que la predicha por Winter indica que la ventilación no baja el CO₂ lo suficiente → acidosis respiratoria LEVE agregada (componente respiratorio sobreañadido). No es compensación adecuada, sino un tercer trastorno (leve/limítrofe, +1.5 mmHg sobre el límite).","sec":["Acidosis metabólica hiperclorémica de AG normal (pérdida de HCO₃ por diarrea; Cl 116 elevado; delta-ratio <1)","Acidosis respiratoria leve agregada (PaCO₂ 28 > Winter máx 26.5 → ventilación insuficiente)"],"dx":"Trastorno TRIPLE en diarrea con hipoperfusión: (1) acidosis metabólica de AG alto (láctica), (2) acidosis hiperclorémica de AG normal (pérdida digestiva de bicarbonato, delta-ratio <1), y (3) acidosis respiratoria leve por respuesta ventilatoria insuficiente (PaCO₂ sobre el rango de Winter).","porque":"AG=13 (sólo ligeramente alto, coherente con lactato 4) pero HCO₃ muy bajo (11): el descenso del bicarbonato (ΔHCO₃=13) excede al aumento del AG (ΔAG=1) → delta-ratio ≈0.08 (<1), señal de NAGMA hiperclorémica coexistente (Cl 116 lo confirma). Además, la PaCO₂ medida (28) supera la esperada por Winter (22.5–26.5), de modo que la compensación respiratoria es insuficiente → tercer trastorno (acidosis respiratoria leve).","perla":"Dos perlas: (a) un delta-ratio <1 significa que el HCO₃ cayó más de lo que el AG subió → hay un componente hiperclorémico añadido (diarrea, ATR); el Cl alto es la pista directa. (b) Siempre comparar la PaCO₂ medida con el rango de Winter: si es MAYOR que el predicho (como aquí, 28 > 26.5), la compensación es inadecuada y existe una acidosis respiratoria sobreañadida, convirtiendo un trastorno mixto en triple."},"cites":["batlle1988","kraut_ag2007","winter1967"]},{"id":"MX-07","dif":"mixto","cat":"acidosis respiratoria aguda + acidosis metabólica AG alto","ctx":"Hombre de 55 años con sobredosis de opioides (depresión respiratoria) que llega hipotenso con acidosis láctica por hipoperfusión.","labs":{"pH":7.18,"paco2":65,"hco3":23,"na":138,"cl":99,"k":4.6,"alb":4,"lactato":5,"glucosa":105,"crea":1.2},"qp":"AC_RESP","qc":"ANOMALA","exp":{"prim":"Acidosis respiratoria aguda (depresión del centro respiratorio por opioides)","comp":"Inapropiada/insuficiente: en acidosis respiratoria aguda pura ΔHCO₃ sube +1/10 mmHg de PaCO₂ → con PaCO₂ 65 (ΔPaCO₂ +25) el HCO₃ esperado sería ~26-27 (cálculo exacto 26.5). El HCO₃ medido (23) es MÁS BAJO de lo esperado, delatando una acidosis metabólica de AG alto añadida","sec":["Acidosis metabólica con anion gap elevado (lactato por hipoperfusión; AG 16)"],"dx":"Sobredosis de opioides con shock: acidosis respiratoria aguda + acidosis metabólica láctica","porque":"El HCO₃ de 23 parece casi normal, pero para una hipercapnia aguda de 65 debería haber SUBIDO a ~26-27. Que esté en 23 con un AG de 16 revela una acidosis metabólica de gap concurrente que consume bicarbonato. pH 7.18 por la doble acidosis.","perla":"Un HCO₃ 'normal' frente a hipercapnia aguda significativa es realmente bajo: la regla del +1/10 ayuda a desenmascarar la acidosis metabólica escondida."},"cites":["kraut_lactic2014","palmer2023"]},{"id":"MX-08","dif":"mixto","cat":"alcalosis respiratoria + acidosis metabólica hiperclorémica (AG normal)","ctx":"Mujer de 40 años con sepsis temprana (taquipnea febril) y acidosis tubular renal proximal en seguimiento nefrológico.","labs":{"pH":7.49,"paco2":25,"hco3":19,"na":142,"cl":110,"k":3.2,"alb":4,"lactato":1.8,"glucosa":100,"crea":1.1},"qp":"ALC_RESP","qc":"ANOMALA","exp":{"prim":"Alcalosis respiratoria (sepsis temprana, taquipnea) — pH alcalémico domina","comp":"NO es solo compensación: en alcalosis respiratoria aguda pura con PaCO₂ 25 (ΔPaCO₂ -15) el HCO₃ bajaría ~2/10 → ~21. El HCO₃ medido (19) es más bajo y el Cl está elevado (110) con AG normal, indicando acidosis metabólica hiperclorémica de AG normal añadida (ATR)","sec":["Acidosis metabólica de AG normal (hiperclorémica, acidosis tubular renal; Cl 110 alto, K 3.2 bajo)"],"dx":"Sepsis con ATR de base: alcalosis respiratoria + acidosis metabólica hiperclorémica","porque":"AG normal (13) descarta acidosis con gap, pero HCO₃ bajo (19) + Cl alto (110) = acidosis hiperclorémica. La compensación de la alcalosis respiratoria no explica un HCO₃ tan bajo (esperado ~21). El pH alcalémico (7.49) indica que domina el componente respiratorio.","perla":"Cuando coexisten alcalosis respiratoria y acidosis metabólica de AG normal, el AG es normal pero el Cl está alto; vigilar la hipokalemia que ambos trastornos pueden agravar."},"cites":["batlle1988","palmer_rta2021","palmer2023"]},{"id":"MX-09","dif":"mixto","cat":"acidosis metabólica AG alto (con albúmina baja) + alcalosis metabólica","ctx":"Hombre de 64 años cirrótico (hipoalbuminemia) con sepsis y acidosis láctica que además recibió diuréticos de asa y tiene vómitos.","labs":{"pH":7.3,"paco2":32,"hco3":15,"na":140,"cl":95,"k":3,"alb":2,"lactato":6,"glucosa":130,"crea":1.8},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con anion gap elevado (láctica). El AG medido ya es alto (30); la corrección por albúmina baja no la 'revela' sino que muestra que es aún más severa (AGc 35)","comp":"Apropiada en lo respiratorio: por Winter PaCO₂esp=1.5×15+8±2 = 28.5-32.5 mmHg; el medido (32) está en rango, sin trastorno respiratorio agregado","sec":["Alcalosis metabólica (diuréticos de asa + vómitos; Cl 95 relativamente bajo, K 3.0 bajo) detectada por delta-ratio >2 sobre el AG corregido"],"dx":"Cirrótico séptico: acidosis láctica de AG alto (acentuada por hipoalbuminemia, no enmascarada) + alcalosis metabólica por diuréticos/vómitos","porque":"El AG medido (30) ya es claramente alto; al corregir por albúmina 2.0 → AG corregido = 30 + 2.5×(4-2) = 35, aún mayor. El delta-ratio con el AG corregido = (35-12)/(24-15) = 23/9 ≈ 2.56 → >2, lo que indica alcalosis metabólica concurrente que ha amortiguado la caída del HCO₃. Sin corregir por albúmina se subestimaría la magnitud del componente de gap.","perla":"En hipoalbuminemia SIEMPRE corregir el AG (+2.5 por cada 1 g/dL bajo 4.0); en un cirrótico un AG 'normal' puede ocultar una acidosis de gap, y un AG alto resulta aún mayor al corregir. El delta-ratio >2 (sobre el AGc) destapa la alcalosis añadida."},"cites":["figge1998","kraut_ag2007","winter1967"]},{"id":"MX-10","dif":"mixto","cat":"acidosis respiratoria (EPOC reagudizado) + acidosis metabólica AG alto","ctx":"Hombre de 70 años con EPOC reagudizado en falla ventilatoria que desarrolla shock cardiogénico por cor pulmonale descompensado.","labs":{"pH":7.1,"paco2":75,"hco3":22,"na":137,"cl":97,"k":5,"alb":4,"lactato":5.5,"glucosa":140,"crea":1.9},"qp":"AC_RESP","qc":"ANOMALA","exp":{"prim":"Acidosis respiratoria (EPOC reagudizado con falla ventilatoria)","comp":"Inapropiada/insuficiente: si fuera acidosis respiratoria pura, el HCO₃ esperado con PaCO₂ 75 (ΔPaCO₂ +35) sería ~27.5 (aguda +1/10) o ~36 (crónica +3.5/10). El HCO₃ medido (22) es MUCHO más bajo que cualquiera de los dos, e incluso por debajo del basal normal de 24, delatando acidosis metabólica de AG alto sobreañadida que consume el bicarbonato.","sec":["Acidosis metabólica con anion gap elevado (lactato 5.5 por shock; AG 18)"],"dx":"EPOC reagudizado en shock: acidosis respiratoria + acidosis metabólica láctica, pH severamente bajo (7.10)","porque":"Con una hipercapnia de 75, lo esperable es un HCO₃ elevado (~27.5 agudo, ~36 crónico). Que el HCO₃ esté en 22 con AG de 18 demuestra que una acidosis metabólica de gap está consumiendo el bicarbonato esperado. La doble acidosis explica el pH 7.10 crítico.","perla":"En el EPOC descompensado, un HCO₃ que NO sube pese a hipercapnia marcada es la huella de una acidosis metabólica concurrente (láctica): buscar y tratar el shock, no solo ventilar."},"cites":["kraut_lactic2014","palmer2023"]},{"id":"MX-11","dif":"mixto","cat":"alcalosis respiratoria + acidosis metabólica AG alto","ctx":"Mujer de 28 años con intoxicación por salicilatos en fase temprana: hiperventilación marcada y acidosis metabólica de gap incipiente.","labs":{"pH":7.55,"paco2":22,"hco3":19,"na":141,"cl":108,"k":3.4,"alb":4,"lactato":3.5,"glucosa":98,"crea":1},"qp":"ALC_RESP","qc":"ANOMALA","exp":{"prim":"Alcalosis respiratoria (estímulo respiratorio por salicilato) — pH alcalémico domina","comp":"NO es solo compensación: el AG está elevado (14, con tendencia a subir) y el HCO₃ (19) refleja acidosis metabólica de gap concurrente, no compensación. En alcalosis respiratoria aguda pura con PaCO₂ 22 (ΔPaCO₂ -18) el HCO₃ bajaría ~3.6 → ~20.4; el HCO₃ medido (19) está algo más bajo, y el AG elevado con lactato confirman el componente metabólico independiente","sec":["Acidosis metabólica con anion gap elevado (salicilato/lactato; AG 14)"],"dx":"Salicilatos en fase temprana: alcalosis respiratoria + acidosis metabólica de AG alto, con predominio respiratorio (pH 7.55)","porque":"El PaCO₂ muy bajo (22) y el pH 7.55 indican alcalosis respiratoria dominante. El AG de 14 (limítrofe-alto) con lactato elevado señala el inicio del componente metabólico de gap típico de salicilatos. A medida que progresa, el pH viraría hacia la acidemia.","perla":"La intoxicación por salicilatos en adultos cursa primero con alcalosis respiratoria; la acidosis metabólica de AG alto se suma después. Un AG que empieza a subir con pH aún alcalótico debe alertar y motivar niveles seriados."},"cites":["gabow1978","ada2024","kraut_lactic2014","palmer2023"]},{"id":"T1-triple-HAGMA-NAGMA-respAlk","dif":"triple","cat":"Trastorno triple: HAGMA + NAGMA + alcalosis respiratoria","ctx":"Mujer 34 años, sepsis abdominal con diarrea profusa de 3 días, taquipneica, febril, hipotensa.","labs":{"pH":7.45,"paco2":18,"hco3":12,"na":140,"cl":108,"k":3.4,"alb":4,"lactato":5.2,"glucosa":110,"crea":1.6},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabólica con anión gap elevado (HAGMA por lactato/sepsis), AG 20 (AG corregido 20, albúmina normal 4.0)","comp":"Inapropiada: Winter predice PaCO2 24-28 mmHg pero el real es 18 -> la hiperventilación EXCEDE la compensación esperada = alcalosis respiratoria primaria sobreañadida (taquipnea por sepsis/fiebre), NO simple compensación","sec":["Acidosis metabólica hiperclorémica (NAGMA) por la diarrea, desenmascarada por delta-ratio 0.67 (<1) y bicarbonato corregido (HCO3 esperado si solo HAGMA = 24-(20-12) = 16; el HCO3 real de 12 es más bajo, confirmando pérdida adicional de bicarbonato)","Alcalosis respiratoria (PaCO2 18 mmHg, por debajo del rango de Winter 24-28)"],"dx":"Triple trastorno: HAGMA láctica + NAGMA por diarrea + alcalosis respiratoria por sepsis/fiebre. pH casi normal (7.45, levemente alcalémico) que oculta tres procesos simultáneos.","porque":"El AG elevado (20) confirma HAGMA. El delta-ratio <1 (0.67) y la caída de HCO3 desproporcionada al aumento del AG revelan una NAGMA concurrente (diarrea). La PaCO2 (18) inferior al rango de Winter (24-28) prueba un componente respiratorio primario, no compensatorio.","perla":"Un pH normal o casi normal NUNCA descarta trastorno ácido-base grave: aquí coexisten tres. Siempre calcular delta-ratio y aplicar Winter aunque el pH parezca tranquilizador."},"cites":["batlle1988","kraut_lactic2014","figge1998","kraut_ag2007"]},{"id":"T2-triple-HAGMA-metAlk-respAcid","dif":"triple","cat":"Trastorno triple: HAGMA + alcalosis metabólica + acidosis respiratoria","ctx":"Hombre 68 años, EPOC reagudizado, vómitos por gastroparesia y uso crónico de diuréticos, con hipoperfusión por descompensación.","labs":{"pH":7.39,"paco2":58,"hco3":34,"na":140,"cl":84,"k":3.1,"alb":4,"lactato":3,"glucosa":130,"crea":1.4},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Trastorno mixto complejo; el AG elevado (22) marca una HAGMA (láctica por hipoperfusión)","comp":"Inapropiada como evento único: la PaCO2 de 58 supera lo esperado para la alcalosis metabólica (~47), confirmando acidosis respiratoria primaria por EPOC, no compensación","sec":["Alcalosis metabólica (vómitos + diuréticos): bicarbonato corregido 44 muy por encima de 26","Acidosis respiratoria por EPOC reagudizado (PaCO2 58 > esperada ~47)"],"dx":"Triple trastorno: HAGMA láctica + alcalosis metabólica (vómito/diurético) + acidosis respiratoria (EPOC). El HCO3 elevado y el pH casi normal enmascaran la HAGMA.","porque":"Pese al HCO3 alto, el AG de 22 obliga a buscar una acidosis metabólica de AG elevado oculta. El bicarbonato corregido de 44 revela que la alcalosis metabólica es aún mayor de lo que el HCO3 sugiere. La PaCO2 por encima de la esperada confirma el componente respiratorio acidótico.","perla":"Con HCO3 elevado, el delta-ratio se vuelve poco fiable: usar el bicarbonato corregido (HCO3 + ΔAG). Un AG alto con HCO3 alto = HAGMA escondida bajo una alcalosis metabólica."},"cites":["figge1998","kraut_ag2007","winter1967"]},{"id":"T3-triple-HAGMA-NAGMA-respAcid","dif":"triple","cat":"Trastorno triple: HAGMA + NAGMA + acidosis respiratoria","ctx":"Hombre 55 anos post-paro cardiaco reanimado, intubado con hipoventilacion, antecedente de diarrea por colitis y shock.","labs":{"pH":7.09,"paco2":48,"hco3":14,"na":137,"cl":105,"k":5,"alb":4,"lactato":8,"glucosa":160,"crea":2.1},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabolica con AG elevado (HAGMA lactica post-paro), AG 18 (lactato 8)","comp":"Inapropiada: Winter predice PaCO2 27-31 pero el real es 48 -> el pulmon NO compensa, hay acidosis respiratoria primaria (hipoventilacion/fallo ventilatorio)","sec":["Acidosis metabolica hipercloremica (NAGMA) por diarrea/reanimacion con salino: delta-ratio 0.6 (<1) y HCO3 corregido 20 (<22)","Acidosis respiratoria (PaCO2 48 muy por encima del rango de Winter 27-31)"],"dx":"Triple acidosis: HAGMA lactica + NAGMA + acidosis respiratoria. Acidemia severa (pH 7.09) con tres acidosis sumadas.","porque":"AG 18 = HAGMA. Delta-ratio 0.6 (<1) y HCO3 corregido 20 (<22) = NAGMA agregada. PaCO2 48 muy por encima de Winter (27-31) = fallo ventilatorio agregado. Tres procesos acidificantes simultaneos explican la acidemia profunda.","perla":"Cuando las tres ramas (AG, hipercloremica y respiratoria) empujan en la misma direccion acida, el pH se desploma. Aplicar Winter SIEMPRE: una PaCO2 'alta-normal' en plena acidosis metabolica es en realidad acidosis respiratoria letal."},"cites":["batlle1988","kraut_lactic2014","kraut_ag2007","winter1967"]},{"id":"DD1-deltaRatio-bajo-NAGMA-oculta","dif":"mixto","cat":"Delta-ratio <1 desenmascara NAGMA oculta sobre HAGMA","ctx":"Mujer 22 años con cetoacidosis diabética en tratamiento, recibió varios litros de suero fisiológico 0.9% y persiste con diarrea.","labs":{"pH":7.31,"paco2":29,"hco3":14,"na":140,"cl":110,"k":4,"alb":4,"lactato":1.5,"glucosa":280,"crea":1},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con AG elevado (cetoacidosis), AG 16","comp":"Apropiada: PaCO2 29 dentro del rango de Winter (27-31); el componente respiratorio es compensatorio puro, no un tercer trastorno","sec":["Acidosis metabólica hiperclorémica (NAGMA) por resucitación con salino + diarrea: delta-ratio 0.4 y bicarbonato corregido 18 (<22)"],"dx":"Mixto metabólico: HAGMA cetoacidótica + NAGMA hiperclorémica (salino/diarrea), con compensación respiratoria adecuada.","porque":"El AG solo modestamente elevado (16) NO explica la caída de HCO3 a 14: el delta-ratio de 0.4 prueba que la mayor parte del descenso de bicarbonato se debe a una acidosis hiperclorémica oculta, no a la cetoacidosis.","perla":"En CAD resucitada con suero fisiológico, el delta-ratio <1 es la regla, no la excepción: el cloruro 'normaliza' el AG mientras instala una acidosis hiperclorémica. Vigilar el delta-ratio para no dar por resuelta la acidosis."},"cites":["ada2024","batlle1988","figge1998","kraut_ag2007"]},{"id":"DD2-deltaRatio-alto-metAlk-oculta","dif":"mixto","cat":"Delta-ratio >2 desenmascara alcalosis metabólica oculta sobre HAGMA","ctx":"Hombre 60 años alcohólico con cetoacidosis alcohólica y vómitos recurrentes de varios días.","labs":{"pH":7.41,"paco2":33,"hco3":20,"na":140,"cl":96,"k":3.2,"alb":4,"lactato":2,"glucosa":90,"crea":1.1},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabólica con AG elevado (cetoacidosis alcohólica), AG 24","comp":"Inapropiada: PaCO2 real 33 < rango de Winter (36-40), lo que delata una alcalosis respiratoria sobreanadida ademas del trastorno metabolico mixto","sec":["Alcalosis metabólica (vómitos): delta-ratio 3.0 (>2); el HCO3 'pre-HAGMA' (medido 20 + dAG 12 = 32) supera 24-26, el HCO3 esta mucho mas alto de lo que la HAGMA permitiria","Alcalosis respiratoria: PaCO2 33 por debajo del rango de Winter 36-40 esperado para HCO3 20"],"dx":"Trastorno triple: HAGMA cetoacidótica + alcalosis metabólica por vómitos + alcalosis respiratoria (PaCO2 bajo Winter). El pH normal (7.41) esconde un AG marcadamente elevado.","porque":"Un AG de 24 (ΔAG=12) deberia haber bajado el HCO3 a ~12, pero esta en 20: el delta-ratio de 3 y el HCO3 'pre-HAGMA' de 32 revelan una alcalosis metabolica que 'sostiene' el bicarbonato. Ademas la PaCO2 de 33 cae por debajo del rango de Winter (36-40), evidenciando un componente respiratorio alcalotico adicional.","perla":"Cetoacidosis alcohólica + vómitos = combinación clásica de delta-ratio >2. El pH normal con AG muy alto es la pista: nunca tranquilizarse por un pH normal sin calcular el AG, el delta-delta Y comparar la PaCO2 con Winter (aqui revela un tercer trastorno respiratorio)."},"cites":["long_aka2021","figge1998","kraut_ag2007","winter1967"]},{"id":"DD3-deltaRatio-normal-HAGMA-pura","dif":"simple","cat":"Control: HAGMA pura con delta-ratio normal y compensación apropiada","ctx":"Hombre 45 años con cetoacidosis diabética inaugural, sin vómitos ni diarrea, deshidratado.","labs":{"pH":7.24,"paco2":24,"hco3":10,"na":140,"cl":102,"k":4.5,"alb":4,"lactato":1.8,"glucosa":420,"crea":1.3},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con AG elevado (cetoacidosis diabética), AG 28","comp":"Apropiada: PaCO2 24 dentro del rango de Winter (21-25); respiración de Kussmaul compensatoria correcta, sin trastorno respiratorio adicional","sec":[],"dx":"HAGMA pura por cetoacidosis diabética, sin trastornos metabólicos ni respiratorios sobreañadidos. Caso control limpio.","porque":"El delta-ratio de 1.14 (rango 1-2) indica que la caída del HCO3 se explica totalmente por el aumento del AG: una sola acidosis metabólica de AG elevado, bien compensada.","perla":"Caso de calibración: delta-ratio 1-2 + PaCO2 dentro de Winter = trastorno único bien compensado. Sirve para confirmar que la app NO sobrediagnostica trastornos mixtos cuando no los hay."},"cites":["ada2024","kraut_ag2007","winter1967"]},{"id":"HA1-hipoalb-enmascara-HAGMA","dif":"especial","cat":"Hipoalbuminemia enmascara HAGMA: AG medido normal, AG corregido elevado","ctx":"Hombre 70 años cirrótico desnutrido (albúmina 2.0) con sepsis temprana, gasometría aparentemente normal.","labs":{"pH":7.4,"paco2":40,"hco3":24,"na":140,"cl":104,"k":4.2,"alb":2,"lactato":4,"glucosa":120,"crea":1.2},"qp":"HAGMA","qc":"NA","exp":{"prim":"Acidosis metabólica de AG elevado (HAGMA láctica por sepsis) ENMASCARADA: el AG medido (12) parece normal pero el AG corregido por albúmina es 17","comp":"No valorable como trastorno descompensado; el pH y HCO3 normales son engañosos por una HAGMA temprana camuflada por la hipoalbuminemia","sec":["Coexiste una tendencia alcalinizante (probable alcalosis metabólica leve o pérdida del anión albúmina) que mantiene el HCO3 en 24 pese a la carga ácida del lactato; el dato firme es el AG corregido elevado, no un cuarto proceso definido"],"dx":"HAGMA enmascarada por hipoalbuminemia. Cada 1 g/dL de albúmina por debajo de 4.0 baja el AG ~2.5: con albúmina 2.0, el AG 'normal' de 12 corresponde a un AG corregido de 17 = acidosis de AG elevado real (lactato 4.0).","porque":"La albúmina es el principal anión no medido; en hipoalbuminemia el AG basal cae, de modo que un AG numéricamente 'normal' puede ocultar una HAGMA. La corrección [AG + 2.5×(4.0−alb)] = 12 + 2.5×2 = 17 la revela.","perla":"En todo paciente crítico, hepatópata o desnutrido, SIEMPRE corregir el AG por albúmina antes de declararlo normal. Un AG de 12 con albúmina de 2.0 esconde una acidosis. Nota: forzar el delta-gap con el AG corregido aquí puede sugerir falsamente una 'alcalosis metabólica'; con HCO3 normal el mensaje real es simplemente HAGMA enmascarada."},"cites":["ada2024","kraut_lactic2014","figge1998","kraut_ag2007"]},{"id":"HA2-hipoalb-HAGMA-con-comp-resp","dif":"especial","cat":"Hipoalbuminemia enmascara HAGMA con compensación respiratoria","ctx":"Mujer 64 años con sepsis urinaria y desnutrición (albúmina 2.2), taquipneica.","labs":{"pH":7.39,"paco2":34,"hco3":20,"na":141,"cl":108,"k":3.8,"alb":2.2,"lactato":3.5,"glucosa":140,"crea":1.5},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabólica de AG elevado (HAGMA láctica por sepsis) enmascarada: AG medido 13 (límite) pero AG corregido 17.5","comp":"Compensación respiratoria casi adecuada pero levemente excesiva: PaCO2 34 está 2 mmHg por debajo del rango de Winter (36-40), lo que estrictamente añade un componente de alcalosis respiratoria leve (taquipnea por sepsis). No es un simple 'apropiada/límite': por el criterio estricto de Winter es una sobre-compensación menor.","sec":["Alcalosis respiratoria leve sobreimpuesta (PaCO2 34 < límite inferior de Winter 36) por taquipnea séptica","El delta-ratio calculado con AG MEDIDO (0.25) sugeriría falsamente una NAGMA dominante; al corregir por albúmina el delta-ratio se normaliza (~1.4), descartando ese falso positivo"],"dx":"HAGMA láctica por sepsis enmascarada por hipoalbuminemia, con compensación respiratoria casi adecuada pero levemente excesiva (mínima alcalosis respiratoria sobreimpuesta). La corrección por albúmina es imprescindible tanto para el AG como para el delta-ratio.","porque":"Con albúmina 2.2, el AG medido de 13 subestima la carga de aniones no medidos; el AG corregido de 17.5 confirma HAGMA. El delta-ratio DEBE recalcularse con el AG corregido (0.25->1.4) para no diagnosticar una NAGMA inexistente. Además, PaCO2 34 queda bajo el límite de Winter (36), por lo que estrictamente hay un componente respiratorio alcalótico leve añadido.","perla":"La hipoalbuminemia no solo enmascara el AG: también distorsiona el delta-ratio. Recalcular el delta-ratio con el AG corregido por albúmina evita el falso diagnóstico de acidosis hiperclorémica. Y al verificar Winter, una PaCO2 apenas por debajo del rango (34 vs 36-40) ya delata taquipnea séptica con sobre-compensación respiratoria."},"cites":["batlle1988","figge1998","kraut_ag2007","winter1967"]},{"id":"HA3-hipoalb-HAGMA-mas-metAlk","dif":"triple","cat":"Hipoalbuminemia + HAGMA enmascarada + alcalosis metabólica concurrente","ctx":"Hombre 72 años oncológico desnutrido (albúmina 2.4) con sepsis y vómitos por obstrucción intestinal alta.","labs":{"pH":7.36,"paco2":40,"hco3":22,"na":140,"cl":104,"k":3,"alb":2.4,"lactato":3.8,"glucosa":150,"crea":1.7},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica de AG elevado (HAGMA láctica por sepsis) enmascarada por hipoalbuminemia: AG medido 14, AG corregido 18","comp":"Apropiada en el eje respiratorio (PaCO2 40 dentro de Winter 39-43); el trastorno adicional es metabólico, no respiratorio","sec":["Alcalosis metabólica por vómitos: con el AG corregido, el delta-ratio es 3.0 (>2) y el bicarbonato corregido 28 (>26), revelando que el HCO3 está sostenido por una alcalosis concurrente"],"dx":"Doble trastorno metabólico oculto: HAGMA enmascarada por hipoalbuminemia + alcalosis metabólica por vómitos, con respiración compensadora apropiada. El pH casi normal (7.36) esconde ambos.","porque":"Solo al corregir el AG por albúmina (de 14 a 18) aparece la HAGMA; y solo entonces el delta-ratio (3.0) y el bicarbonato corregido (28) revelan que existe además una alcalosis metabólica que mantiene el HCO3 elevado de forma desproporcionada.","perla":"El caso más traicionero: hipoalbuminemia que esconde una HAGMA Y una alcalosis metabólica simultánea. Sin corregir por albúmina, ambos trastornos pasan inadvertidos. La secuencia correcta es: 1) corregir AG por albúmina, 2) recalcular delta-ratio/bicarbonato corregido con el AG corregido, 3) aplicar Winter."},"cites":["figge1998","kraut_ag2007","winter1967"]},{"id":"ESP-01-CAD","dif":"especial","cat":"Acidosis metabólica de AG alto — Cetoacidosis diabética (CAD)","ctx":"Mujer de 24 años, diabética tipo 1, omitió insulina; poliuria, dolor abdominal, respiración de Kussmaul y aliento cetónico.","labs":{"pH":6.95,"paco2":24,"hco3":5,"na":138,"cl":99,"k":5.6,"alb":4.2,"lactato":1.8,"glucosa":540,"crea":1.3},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabólica con anión gap alto (cetoacidosis diabética grave)","comp":"Inapropiada/insuficiente: PaCO₂ esperada por Winter 13.5–17.5 mmHg, la real es 24 (6.5 mmHg por encima del límite superior esperado) → la compensación respiratoria es MENOR de la esperada, lo que añade un componente de acidosis respiratoria relativa (paciente agotándose, fatiga de músculos respiratorios o depresión del SNC). Trastorno mixto.","sec":["Acidosis respiratoria relativa por compensación insuficiente"],"dx":"CAD grave por omisión de insulina, con incapacidad de generar hiperventilación compensatoria adecuada (signo de gravedad / fatiga ventilatoria)","porque":"Δ-ratio ≈1.1–1.2 (dentro de 1–2) indica acidosis AGMA pura sin segundo trastorno metabólico; el gap osmolar normal (6) descarta alcohol tóxico; lactato normal descarta acidosis láctica como motor; glucosa 540 + cetonas + AG 34 confirman cetoacidosis. El K sérico 5.6 es engañosamente alto por el déficit de insulina (K corporal total bajo) — vigilar caída al tratar.","perla":"En CAD el potasio sérico inicial suele estar normal-alto pese a un déficit corporal masivo; al iniciar insulina cae bruscamente. Una PaCO₂ que NO baja lo esperado por Winter en una CAD grave es un signo ominoso de fatiga respiratoria inminente."},"cites":["ada2024","kraut_ag2007","winter1967"]},{"id":"ESP-02-AKA","dif":"especial","cat":"Trastorno mixto — Cetoacidosis alcohólica (AKA)","ctx":"Hombre de 47 años, alcoholismo crónico, varios días sin comer y vómitos repetidos tras una borrachera; ahora abstinente, deshidratado, taquipneico.","labs":{"pH":7.3,"paco2":30,"hco3":14,"na":137,"cl":95,"k":3.4,"alb":3.4,"lactato":3,"glucosa":78,"crea":1.1},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con anión gap alto (cetoacidosis alcohólica, predominio β-hidroxibutirato)","comp":"Apropiada: PaCO₂ real 30 dentro del rango de Winter 27–31.","sec":["Alcalosis metabólica concurrente por vómitos (Δ-ratio >1.5–2 y Cl bajo 95)"],"dx":"Cetoacidosis alcohólica con alcalosis metabólica superpuesta por vómitos; glucosa normal/baja (no hiperglucémica) es la clave diferencial frente a CAD","porque":"AG corregido por albúmina sube a 29.5 (la hipoalbuminemia ocultaba parte del gap). Δ-ratio corregido ≈1.75: el HCO₃ ha caído MENOS de lo que subió el AG → hay una alcalosis metabólica agregada (vómitos, contracción de volumen, Cl 95 bajo). Glucosa 78 con AG alto y cetosis = AKA, no CAD. Gap osmolar normal (8) y lactato sólo levemente alto descartan alcohol tóxico como causa dominante.","perla":"En AKA la cetona predominante es β-hidroxibutirato, que la tira reactiva (nitroprusiato) detecta MAL: una cetonuria 'negativa o débil' no descarta AKA. La glucemia normal o baja distingue AKA de CAD. Reponer tiamina ANTES de la dextrosa para evitar Wernicke."},"cites":["long_aka2021","kraut_ag2007","winter1967"]},{"id":"ESP-03-METANOL","dif":"especial","cat":"Acidosis AG alto con BRECHA OSMOLAR — Alcohol tóxico (metanol/etilenglicol)","ctx":"Hombre de 52 años traído por consumo de un destilado clandestino; visión borrosa ('como ver en una tormenta de nieve'), confuso, taquipneico.","labs":{"pH":7.1,"paco2":27,"hco3":8,"na":140,"cl":102,"k":4.5,"alb":4,"lactato":2.5,"glucosa":95,"crea":1.2},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabólica con anión gap muy alto (intoxicación por metanol)","comp":"Inapropiada/insuficiente: Winter predice PaCO₂ 18–22; la real es 27 → hipoventilación relativa = acidosis respiratoria sobreañadida (depresión del SNC por el tóxico). Trastorno mixto y muy peligroso.","sec":["Acidosis respiratoria sobreañadida por depresión del SNC"],"dx":"Intoxicación por metanol: AG alto (ácido fórmico) + GAP OSMOLAR elevado (32) con lactato sólo levemente alto/no concordante con la magnitud de la acidosis","porque":"La discordancia diagnóstica es el GAP OSMOLAR de 32 (normal <10): el alcohol no medido aporta osmolaridad sin contribuir aún al AG hasta metabolizarse. El lactato 2.5 NO explica un AG de 30, por lo que un anión no medido (formato) está presente. La compensación respiratoria insuficiente (PaCO₂ 27 vs 18–22 esperada) revela depresión neurológica. Síntomas visuales orientan a metanol sobre etilenglicol (este último daría cristales de oxalato y fallo renal).","perla":"GOLDMARK/MUDPILES: ante AG alto + gap osmolar alto + lactato que NO concuerda con la gravedad, sospecha alcohol tóxico hasta demostrar lo contrario. El gap osmolar puede ser normal en fases tardías (cuando el alcohol ya se metabolizó a ácido). Fomepizol y diálisis son tiempo-dependientes; los síntomas visuales son banderas de metanol."},"cites":["ross2022","kraut_lactic2014","kraut_ag2007","winter1967"]},{"id":"ESP-04-SALICILATOS","dif":"especial","cat":"Trastorno mixto clásico — Intoxicación por salicilatos (adulto)","ctx":"Mujer de 34 años con ingesta voluntaria de aspirina; acúfenos, hiperventilación marcada, náuseas, febrícula, agitación.","labs":{"pH":7.46,"paco2":19,"hco3":13,"na":140,"cl":103,"k":3.6,"alb":4.2,"lactato":2.8,"glucosa":90,"crea":1},"qp":"ALC_RESP","qc":"ANOMALA","exp":{"prim":"Trastorno mixto: alcalosis respiratoria primaria + acidosis metabólica con anión gap alto (patrón clásico de salicilismo en el adulto)","comp":"No es una simple compensación: el pH es alcalémico (7.46) pese a un HCO₃ bajo (13). La PaCO₂ real de 19 es MUY inferior a la esperada por Winter (25.5–29.5) para un HCO₃ de 13 → existe una alcalosis respiratoria PRIMARIA, no compensatoria.","sec":["Acidosis metabólica de AG alto (AG 24) por ácidos orgánicos/salicilato/cetonas/lactato"],"dx":"Intoxicación por salicilatos: estimulación directa del centro respiratorio (alcalosis respiratoria) coexistente con acidosis metabólica de AG alto","porque":"La regla de oro: en una acidosis metabólica pura el pH nunca debe ser alcalémico. Aquí pH 7.46 con HCO₃ 13 sólo se explica si una alcalosis respiratoria primaria domina. El AG de 24 confirma el componente metabólico simultáneo. Gap osmolar normal y glucosa normal descartan alcohol tóxico y CAD. El cuadro de acúfenos + hiperventilación + AG alto es patognomónico.","perla":"El doble trastorno (alcalosis respiratoria + acidosis metabólica AG alto con pH casi normal o alto) es la firma del salicilismo del adulto. Cuidado: no dar bicarbonato para 'corregir' un pH que ya es alcalémico sin alcalinizar la orina con un objetivo claro — y NUNCA intubar y permitir hipoventilación, pues la caída de la hiperventilación precipita acidemia letal y mayor paso del salicilato al SNC."},"cites":["gabow1978","ada2024","kraut_lactic2014","palmer2023"]},{"id":"ESP-05-LACTICA-SEPSIS","dif":"especial","cat":"Acidosis AG alto — Acidosis láctica por sepsis/shock (con trampa de albúmina)","ctx":"Hombre de 68 años con shock séptico de foco abdominal, hipotenso, moteado, oligúrico, en ventilación.","labs":{"pH":7.2,"paco2":24,"hco3":9,"na":136,"cl":100,"k":4.8,"alb":2.6,"lactato":9.5,"glucosa":150,"crea":2.1},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con anión gap alto por acidosis láctica tipo A (shock séptico/hipoperfusión)","comp":"Apropiada/límite: PaCO₂ real 24 está justo en el borde superior del rango de Winter (19.5–23.5); compatible con compensación adecuada, posible leve insuficiencia ventilatoria.","sec":[],"dx":"Acidosis láctica tipo A por sepsis/shock; el lactato 9.5 explica la mayor parte del anión gap","porque":"El gran aprendizaje es la corrección por albúmina: con albúmina 2.6 el AG medido (27) subestima la carga aniónica. AG corregido = 27 + 2.5×(4.0−2.6) = 30.5. El Δ-ratio SIN corregir da 1.0 (en el borde inferior, podría sugerir falsamente una NAGMA agregada), pero corregido por albúmina sube a 1.23 → en realidad es una AGMA pura. Gap osmolar normal descarta alcohol tóxico; el lactato muy alto y concordante con el AG confirma acidosis láctica.","perla":"En hipoalbuminemia (crítico, hepatópata, séptico) SIEMPRE corrige el anión gap: cada 1 g/dL de albúmina por debajo de 4.0 'esconde' ~2.5 mEq de gap. Sin corregir, se pueden diagnosticar erróneamente trastornos mixtos inexistentes o pasar por alto una AGMA. El lactato guía la resucitación; su aclaramiento es marcador pronóstico."},"cites":["kraut_lactic2014","figge1998","kraut_ag2007","winter1967"]},{"id":"ESP-06-UREMICA","dif":"especial","cat":"Acidosis AG alto — Acidosis urémica (enfermedad renal avanzada)","ctx":"Mujer de 60 años con ERC estadio 5 que omitió dos sesiones de diálisis; astenia, anorexia, frote pericárdico.","labs":{"pH":7.28,"paco2":28,"hco3":13,"na":139,"cl":104,"k":6.2,"alb":3.8,"lactato":1.5,"glucosa":100,"crea":9.8},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con anión gap alto de causa urémica (retención de sulfatos, fosfatos y aniones orgánicos)","comp":"Apropiada: PaCO₂ real 28 dentro del rango de Winter 25.5–29.5; pH calculado por Henderson-Hasselbalch 7.29 coincide con el dado 7.28.","sec":["Posible componente hiperclorémico/NAGMA leve agregado (Δ-ratio ~0.9, en el límite inferior; interpretación dependiente de la convención: con AG normal=10 el ratio ~1.1 lo haría una HAGMA prácticamente pura, por lo que NO es un segundo trastorno firme)"],"dx":"Acidosis urémica por ERC terminal y diálisis omitida; creatinina 9.8 e hiperkalemia 6.2 son los marcadores clave","porque":"Δ-ratio ≈0.9 (límite inferior de 1–2): el HCO₃ cayó algo más de lo que subió el AG, sugiriendo un posible componente hiperclorémico mixto típico de la ERC avanzada (la uremia combina pérdida tubular de bicarbonato con retención de aniones); este componente es limítrofe y depende del AG normal de referencia. Creatinina 9.8 confirma fallo renal como motor; gap osmolar normal (6) descarta alcohol tóxico; lactato 1.5 y glucosa 100 normales descartan láctica y CAD. La hiperkalemia 6.2 es la urgencia inmediata.","perla":"La acidosis urémica empieza siendo hiperclorémica (AG normal) en la ERC moderada y se convierte en AG alto en la ERC avanzada al acumularse sulfatos y fosfatos. La hiperkalemia con cambios en el ECG (T picudas) es la amenaza vital, no el pH. Indicación de diálisis urgente (AEIOU: Acidosis, Electrolitos/K, Intoxicaciones, Overload, Uremia/pericarditis)."},"cites":["ada2024","batlle1988","kraut_ag2007","winter1967"]},{"id":"ESP-07-RTA","dif":"especial","cat":"Acidosis de AG NORMAL (hiperclorémica) — Acidosis tubular renal (RTA)","ctx":"Mujer de 30 años con síndrome de Sjögren, debilidad muscular episódica, nefrolitiasis recurrente, orina persistentemente alcalina.","labs":{"pH":7.3,"paco2":34,"hco3":16,"na":140,"cl":116,"k":2.9,"alb":4.2,"lactato":1,"glucosa":92,"crea":0.9},"qp":"NAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con anión gap NORMAL (hiperclorémica) por acidosis tubular renal distal tipo 1","comp":"Apropiada: PaCO₂ real 34 dentro/borde del rango de Winter 30–34.","sec":[],"dx":"Acidosis tubular renal distal (tipo 1) asociada a Sjögren; la HIPOKALEMIA (K 2.9), la orina alcalina y la nefrolitiasis son la firma","porque":"AG = 8 (normal) descarta acidosis de gap alto: aquí el bicarbonato perdido se reemplaza por cloro → hiperclorémica (Cl 116). En la diferencial GOLDMARK de AG normal se separa por kalemia: RTA distal y proximal cursan con HIPOkalemia (K 2.9), mientras que la RTA tipo 4 cursa con HIPERkalemia. Función renal y gap osmolar normales descartan uremia y alcohol tóxico. El cálculo del anión gap URINARIO (positivo en RTA distal) confirmaría el diagnóstico frente a una diarrea (gap urinario negativo).","perla":"Ante una NAGMA, divide por el potasio: K bajo → RTA tipo 1/2 o diarrea; K alto → RTA tipo 4 (hipoaldosteronismo). El anión gap urinario distingue causa renal (positivo, RTA) de extrarrenal (negativo, diarrea). La RTA distal tipo 1 da orina inapropiadamente alcalina (pH >5.5) pese a la acidemia, nefrocalcinosis y cálculos."},"cites":["batlle1988","palmer_rta2021","winter1967"]},{"id":"ESP-08-HIPERCLOREMICA-SF","dif":"especial","cat":"Acidosis de AG NORMAL (hiperclorémica) — Reanimación con suero salino 0.9%","ctx":"Hombre de 55 años postoperado de cirugía abdominal mayor que recibió 6 litros de suero fisiológico 0.9% en 12 horas; hemodinámicamente estable.","labs":{"pH":7.3,"paco2":33,"hco3":16,"na":140,"cl":116,"k":4.2,"alb":4,"lactato":1.2,"glucosa":110,"crea":1},"qp":"NAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con anión gap NORMAL (hiperclorémica) iatrogénica por dilución/sobrecarga de cloro del suero salino 0.9%","comp":"Apropiada: PaCO₂ real 33 dentro del rango de Winter 30–34.","sec":[],"dx":"Acidosis hiperclorémica dilucional por reanimación con grandes volúmenes de NaCl 0.9% (Cl del suero 154 mEq/L); 'acidosis del suero salino'","porque":"AG normal (8) descarta gap alto. La clave es el contexto: el NaCl 0.9% aporta un exceso de cloro relativo al sodio (154/154 vs el plasma ~140/100), lo que reduce la diferencia de iones fuertes (SID de Stewart) y baja el bicarbonato. Lactato normal descarta hipoperfusión, gap osmolar y función renal normales descartan tóxicos y uremia, sin diarrea ni RTA por contexto. Es diagnóstico de exclusión apoyado en la historia de fluidoterapia.","perla":"Es la NAGMA más frecuente y olvidada en el postoperatorio y la UCI. El abordaje de Stewart la explica: el exceso de cloro reduce el SID. Suele ser benigna y autolimitada, pero un Cl muy alto puede causar vasoconstricción renal. Las soluciones balanceadas (Ringer lactato, Plasma-Lyte) la previenen. No confundirla con acidosis láctica por hipoperfusión: aquí el lactato es normal."},"cites":["batlle1988","winter1967"]},{"id":"ESP-09-ALCALOSIS-CONTRACCION","dif":"especial","cat":"Alcalosis metabólica — Alcalosis de contracción por diuréticos","ctx":"Mujer de 72 años con insuficiencia cardiaca y furosemida a dosis altas; debilidad, calambres y depleción de volumen.","labs":{"pH":7.5,"paco2":48,"hco3":36,"na":140,"cl":88,"k":3,"alb":4.4,"lactato":1,"glucosa":100,"crea":1.4},"qp":"ALC_MET","qc":"OK","exp":{"prim":"Alcalosis metabólica (de contracción) por diuréticos de asa","comp":"Apropiada: PaCO₂ esperada para compensar (0.7×ΔHCO₃+40 = 48.4; rango 46.4–50.4) coincide con la real (48). Hipoventilación compensatoria correcta.","sec":[],"dx":"Alcalosis metabólica de contracción cloro-sensible por furosemida: hipocloremia (Cl 88), hipokalemia (K 3.0) y depleción de volumen","porque":"pH alcalémico (7.50) con HCO₃ alto (36) = alcalosis metabólica primaria; HH consistente (pH calculado 7.498 ≈ 7.50). La PaCO₂ sube apropiadamente (48 dentro de 46.4–50.4) como compensación respiratoria. El AG está sólo levemente elevado (16; corregido por albúmina alta = 15) por la contracción de volumen que concentra aniones no medidos, no por una AGMA real (lactato 1, sin gap osmolar). La hipocloremia marcada y la hipokalemia son típicas de la pérdida renal por diuréticos. Es cloro-sensible (cloruro urinario bajo), responde a reposición de NaCl/KCl.","perla":"Clasifica la alcalosis metabólica por el cloruro urinario: <20 mEq/L = cloro-sensible (vómitos, diuréticos, contracción) y responde a salino; >20 mEq/L = cloro-resistente (hiperaldosteronismo, Cushing, Bartter/Gitelman) y NO responde a salino. Corrige el potasio: la hipokalemia perpetúa la alcalosis. Una PaCO₂ que no subiera lo esperado delataría una acidosis respiratoria oculta."},"cites":["winter1967"]},{"id":"ESP-10-EPOC-REAGUDIZADO","dif":"especial","cat":"Acidosis respiratoria crónica REAGUDIZADA (acute-on-chronic) — EPOC","ctx":"Hombre de 70 años con EPOC GOLD D, retenedor crónico de CO₂, ingresa por infección respiratoria con mayor disnea, somnolencia y asterixis.","labs":{"pH":7.26,"paco2":75,"hco3":33,"na":140,"cl":92,"k":4.6,"alb":4,"lactato":1.5,"glucosa":105,"crea":1.1},"qp":"AC_RESP","qc":"ANOMALA","exp":{"prim":"Acidosis respiratoria crónica reagudizada (componente agudo sobre crónico) por EPOC agudizado","comp":"Mixta en el tiempo. Para una acidosis respiratoria CRÓNICA pura con PaCO₂ 75 se esperaría HCO₃ ≈ 24 + 3.5×(75−40)/10 ≈ 36.2; para una AGUDA pura ≈ 24 + 1×(75−40)/10 ≈ 27.5. El HCO₃ real (33) cae ENTRE ambos, por debajo del esperado para crónica pura → indica un componente AGUDO sobreañadido a la basal crónica (la elevación reciente de PaCO₂ aún no ha sido tamponada renalmente por completo). Patrón acute-on-chronic confirmado.","sec":["Componente agudo de acidosis respiratoria sobre la basal crónica (reagudización)"],"dx":"EPOC agudizado por infección: retenedor crónico de CO₂ que sufre un ascenso agudo adicional de PaCO₂; la acidemia franca (7.26) y la asterixis/somnolencia reflejan narcosis por CO₂","porque":"En acidosis respiratoria crónica el HCO₃ sube ~3.5 mEq por cada 10 mmHg de PaCO₂ sobre 40 (aquí esperaríamos ~36.2); como el HCO₃ real (33) queda por debajo pero por encima del esperado para aguda pura (~27.5), parte del ascenso de PaCO₂ es agudo. El AG (15) está sólo borderline-elevado con lactato normal (1.5), sin brecha osmolar (5) → no hay AGMA significativa que justifique el déficit de HCO₃; el déficit relativo se explica mejor por el componente agudo respiratorio. La hipocloremia (92) acompaña a la retención compensatoria de bicarbonato.","perla":"Compara el HCO₃ medido con el esperado para crónica pura (3.5/10): si es menor, hay un componente agudo (reagudización); si es mayor, sospecha alcalosis metabólica sobreañadida (frecuente por diuréticos/esteroides en EPOC). Cuidado con el oxígeno excesivo: puede empeorar la hipercapnia (efecto Haldane y desbalance V/Q); titular SatO₂ 88–92%. La VNI es el tratamiento de elección de esta acidemia."},"cites":["palmer2023"]},{"id":"ESP-11-AKA-VARIANTE","dif":"especial","cat":"Trastorno triple — Cetoacidosis alcohólica con tres componentes","ctx":"Hombre de 50 años, bebedor crónico, con vómitos profusos varios días, ahora taquipneico, deshidratado y desnutrido (hipoalbuminemia).","labs":{"pH":7.34,"paco2":29,"hco3":15,"na":138,"cl":96,"k":3.2,"alb":3.2,"lactato":3.5,"glucosa":84,"crea":1.2},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con anión gap alto (cetoacidosis alcohólica)","comp":"Apropiada para el componente metabólico: PaCO₂ real 29 dentro del rango de Winter 28.5–32.5.","sec":["Alcalosis metabólica por vómitos (Δ-ratio corregido ~1.9, Cl bajo 96, K bajo 3.2)","Componente láctico añadido (lactato 3.5) que contribuye al AG alto junto a los cetoácidos"],"dx":"Trastorno TRIPLE: AGMA (cetoacidosis alcohólica + láctico) + alcalosis metabólica de contracción por vómitos; la compensación respiratoria es adecuada (no constituye un cuarto trastorno)","porque":"AG corregido por albúmina = 27 + 2.5×(4.0−3.2) = 29 (la hipoalbuminemia ocultaba parte del gap). Δ-ratio corregido ≈1.9 (en el límite >2): el HCO₃ cayó MUCHO menos de lo que subió el AG → hay una alcalosis metabólica agregada (vómitos). El AG alto tiene doble origen: cetoácidos (β-hidroxibutirato) y lactato 3.5. Glucosa normal (84) descarta CAD; gap osmolar normal (9) descarta alcohol tóxico significativo. El pH casi normal (7.34) con tres trastornos ilustra cómo se pueden 'cancelar' entre sí.","perla":"Un pH normal o casi normal NO descarta enfermedad acidobásica grave: aquí coexisten tres trastornos que se compensan. Siempre calcula AG corregido por albúmina y Δ-ratio; un Δ-ratio >2 con cetoacidosis y vómitos delata la alcalosis metabólica oculta. Reponer tiamina antes de glucosa, corregir K antes de que la realimentación lo desplome."},"cites":["long_aka2021","kraut_lactic2014","figge1998","kraut_ag2007"]},{"id":"ADV-01-pHnormal-mixto","dif":"adversarial","cat":"pH normal que oculta trastorno mixto","ctx":"Mujer de 58 a con cetoacidosis diabetica en tratamiento que ademas ha vomitado por 2 dias; consulta con pH aparentemente normal.","labs":{"pH":7.4,"paco2":24,"hco3":14.5,"na":140,"cl":95,"k":4.2,"alb":4,"lactato":1.5,"glucosa":420,"crea":1.1},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabolica con AG elevado (AGMA, cetoacidosis)","comp":"INAPROPIADA: PaCO2 24 esta POR DEBAJO del rango de Winter (27.75-31.75) -> alcalosis respiratoria sobreagregada; ademas el HCO3 corregido de 33 (HCO3 14.5 + delta-AG 18.5) es muy superior al normal, lo que delata alcalosis metabolica concurrente (vomitos)","sec":["Alcalosis respiratoria","Alcalosis metabolica (perdida de H+ por vomito)"],"dx":"Trastorno triple con pH NORMAL (cetoacidosis AGMA + alcalosis metabolica por vomito + alcalosis respiratoria)","porque":"El pH 7.40 dentro de rango es una trampa clasica: la app NUNCA debe rotular 'equilibrio acido-base normal' porque el AG de 30.5 y el HCO3 corregido de 33 revelan un AGMA severo enmascarado por dos procesos alcalinizantes que lo cancelan. La PaCO2 de 24 por debajo de Winter confirma el tercer trastorno (respiratorio).","perla":"pH normal + AG elevado = trastorno mixto hasta demostrar lo contrario. Siempre calcular AG y HCO3 corregido aunque el pH parezca normal."},"cites":["ada2024","kraut_ag2007","winter1967"]},{"id":"ADV-02-inconsistencia-HH","dif":"adversarial","cat":"Inconsistencia interna por Henderson-Hasselbalch (error de muestra)","ctx":"Paciente postoperatorio estable; el laboratorio reporta pH 7.20 pero PaCO2 y HCO3 son normales (muestra venosa mal rotulada o error de transcripcion).","labs":{"pH":7.2,"paco2":40,"hco3":24,"na":140,"cl":104,"k":4,"alb":4,"lactato":1,"glucosa":95,"crea":0.9},"qp":"ERROR","qc":"NA","exp":{"prim":"NINGUNO valido: los datos son internamente incoherentes","comp":"No interpretable","sec":[],"dx":"ERROR DE MUESTRA / inconsistencia analitica: con PaCO2 40 y HCO3 24 el pH calculado por Henderson-Hasselbalch es 7.40 (no 7.20). [H+] implicito por pH 7.20 = 63 nmol/L, pero 24xPaCO2/HCO3 = 40 nmol/L. Discrepancia de 0.20 unidades de pH.","porque":"Caso de seguridad: la app DEBE detectar que el triplete pH-PaCO2-HCO3 no satisface Henderson-Hasselbalch (consistenciaHH=false) y advertir error preanalitico en lugar de inventar un diagnostico de 'acidosis sin compensacion'. Es el unico caso donde la inconsistencia ES el punto.","perla":"Antes de interpretar, validar coherencia interna: pH y [H+] deben concordar con 24xPaCO2/HCO3. Si no, sospechar muestra venosa, burbuja de aire, o error de transcripcion."},"cites":["safp2024"]},{"id":"ADV-03-borde-Winter","dif":"adversarial","cat":"Compensacion justo en el borde del rango de Winter","ctx":"Varon de 35 a con diarrea profusa y deshidratacion; gasometria con PaCO2 que cae dentro del rango esperado de Winter, cerca del borde.","labs":{"pH":7.28,"paco2":27,"hco3":12,"na":140,"cl":104,"k":3.4,"alb":4,"lactato":1.2,"glucosa":100,"crea":1},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabolica con AG elevado","comp":"APROPIADA: PaCO2 27 cae dentro del rango de Winter (esperado 26, rango 24-28). El borde inferior es exactamente 24, de modo que una PaCO2 de 24 SEGUIRIA siendo compensacion simple (limite); solo una PaCO2 < 24 indicaria alcalosis respiratoria sobreagregada.","sec":[],"dx":"Acidosis metabolica con AG elevado, simple, con compensacion respiratoria adecuada","porque":"Prueba la zona gris de Winter: el caso es SIMPLE (PaCO2 dentro de +-2) pero esta cerca del borde, de modo que un redondeo erroneo o un rango mal codificado haria que la app lo llame mixto. Verifica que la app use +-2 correctamente y no sobrediagnostique un segundo trastorno.","perla":"El rango de Winter es +-2; PaCO2 en el borde exacto (24 o 28) sigue siendo compensacion simple. No agregar trastornos respiratorios por diferencias de 1-2 mmHg dentro del rango."},"cites":["kraut_ag2007","winter1967"]},{"id":"ADV-04-resp-cronica-coef","dif":"adversarial","cat":"Acidosis respiratoria cronica: coeficiente 3.5 vs 4 por 10 mmHg","ctx":"Varon de 68 a con EPOC avanzado, retenedor cronico de CO2, en su basal estable.","labs":{"pH":7.34,"paco2":70,"hco3":36,"na":140,"cl":96,"k":4.3,"alb":4,"lactato":1,"glucosa":110,"crea":0.9},"qp":"AC_RESP","qc":"OK","exp":{"prim":"Acidosis respiratoria cronica","comp":"APROPIADA si se usa coef 4/10. Con PaCO2 70 (dPaCO2 = +30 sobre 40): regla 3.5/10 predice HCO3 esperado 24 + 10.5 = 34.5; regla 4/10 predice 24 + 12 = 36. El HCO3 medido de 36 concuerda con 4/10 (totalmente compensado) pero con 3.5/10 sugeriria una leve alcalosis metabolica agregada (1.5 mEq de exceso).","sec":[],"dx":"Acidosis respiratoria cronica compensada (EPOC), SIN trastorno metabolico agregado si se aplica el coeficiente 4/10","porque":"Prueba que el coeficiente importa: con 3.5/10 la app falsamente agregaria 'alcalosis metabolica'; con 4/10 lo clasifica como simple compensado. El caso esta calibrado para caer en ese punto de bifurcacion. Verifica que la app documente que tipica acidosis respiratoria cronica usa 3.5-4/10 y no sobrediagnostique.","perla":"En acidosis respiratoria cronica el HCO3 sube 3.5-4 mEq por cada 10 mmHg de PaCO2. Usar el extremo del rango y no etiquetar un segundo trastorno por pocas unidades."},"cites":["palmer2023"]},{"id":"ADV-05-extremo-pH-bajo","dif":"adversarial","cat":"Valor extremo pH <7.0 con fatiga respiratoria","ctx":"Mujer de 24 a con acidosis lactica por shock septico, agotamiento muscular y respiracion claudicante.","labs":{"pH":6.93,"paco2":24,"hco3":5,"na":138,"cl":100,"k":5.6,"alb":3.8,"lactato":14,"glucosa":130,"crea":2.3},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabolica con AG elevado severa (lactica)","comp":"INAPROPIADA: PaCO2 esperado por Winter es 13.5-17.5, pero el medido es 24 (POR ENCIMA del rango) -> compensacion respiratoria insuficiente = acidosis respiratoria sobreagregada por fatiga/agotamiento ventilatorio.","sec":["Acidosis respiratoria (fatiga muscular respiratoria)"],"dx":"Acidosis mixta metabolica (lactica) + respiratoria; pH extremo 6.93 con falla de la compensacion -> emergencia, considerar via aerea/ventilacion","porque":"Prueba valores extremos (pH <7.0, HCO3 5) y la trampa de que en acidosis severa la 'compensacion' aparentemente alta (PaCO2 24 puede parecer baja al ojo) en realidad es INSUFICIENTE. La app debe reconocer que un PaCO2 de 24 con HCO3 de 5 significa fatiga respiratoria, no compensacion adecuada.","perla":"En acidosis metabolica grave, un PaCO2 que 'no baja lo suficiente' anuncia paro inminente. Comparar siempre con Winter, no asumir compensacion por ver hiperventilacion."},"cites":["kraut_lactic2014","kraut_ag2007","winter1967"]},{"id":"ADV-06-alcalosis-posthipercapnica","dif":"adversarial","cat":"Alcalosis metabolica posthipercapnica (post-hipocapnia tras correccion de CO2)","ctx":"Varon de 72 a con EPOC retenedor cronico, intubado y ventilado, al que se normalizo rapidamente la PaCO2; ahora alcaloemico.","labs":{"pH":7.52,"paco2":46,"hco3":36,"na":140,"cl":88,"k":3.3,"alb":4.2,"lactato":1,"glucosa":105,"crea":1},"qp":"ALC_MET","qc":"OK","exp":{"prim":"Alcalosis metabolica","comp":"APROPIADA: la respuesta esperada a la alcalosis metabolica es hipoventilacion con ascenso del PaCO2. PaCO2 esperado aprox 0.7 x HCO3 + 20 = 45.2 (+/-5), o equivalentemente 40 + 0.7 x dHCO3 = 40 + 0.7 x 12 = 48.4 (rango aprox 44-52). El PaCO2 medido 46 cae dentro del rango esperado, por lo que la hipoventilacion compensadora es adecuada. (Nota: la formula del caso original '0.7 x dHCO3 + 40 = 48.4' es correcta; el valor 46 medido es algo menor que 48.4 pero dentro de tolerancia +/-2 a 5.)","sec":[],"dx":"Alcalosis metabolica posthipercapnica: el rinon del retenedor cronico mantenia HCO3 elevado y al corregir bruscamente la PaCO2 quedo el exceso de bicarbonato 'huerfano'. Cloro-responsiva (Cl 88 bajo, hipokalemia K 3.3).","porque":"Escenario clinico clasico de UCI/anestesia que la app debe nombrar especificamente. Prueba el reconocimiento de alcalosis metabolica con PaCO2 que NO baja (sube como compensacion) y la formula de compensacion de alcalosis metabolica, que muchas apps omiten o confunden con falta de compensacion. Tambien prueba que la app NO marque falsamente un delta-ratio negativo ni una acidosis de AG inexistente.","perla":"Tras corregir rapido una hipercapnia cronica, el HCO3 renal elevado persiste dias -> alcalosis posthipercapnica. Corregir lento la PaCO2 y reponer Cl/K. El delta-ratio NO debe calcularse como si fuera una acidosis (ΔHCO3 aqui es positivo)."},"cites":["winter1967"]},{"id":"ADV-07-triple-pHnormal-albumina","dif":"adversarial","cat":"Trastorno triple bajo pH normal + trampa de albumina baja","ctx":"Cirrotico de 60 a, septico, con diureticos y vomitos; albumina muy baja, pH aparentemente normal.","labs":{"pH":7.41,"paco2":30,"hco3":19,"na":142,"cl":96,"k":3.2,"alb":2.5,"lactato":4.5,"glucosa":120,"crea":1.4},"qp":"HAGMA","qc":"ANOMALA","exp":{"prim":"Acidosis metabolica con AG elevado (lactica/septica)","comp":"INAPROPIADA: PaCO2 esperado por Winter 34.5-38.5, medido 30 (POR DEBAJO) -> alcalosis respiratoria agregada. Ademas delta-ratio 3.75 (>2) con AG corregido -> alcalosis metabolica oculta (vomitos/diureticos, K 3.2 concordante).","sec":["Alcalosis metabolica (vomitos, diureticos)","Alcalosis respiratoria (sepsis/cirrosis)"],"dx":"Trastorno TRIPLE con pH normal: AGMA lactico + alcalosis metabolica + alcalosis respiratoria. La albumina de 2.5 enmascara el AG (AG sin corregir 27, corregido 30.75).","porque":"Doble trampa: pH normal Y albumina baja. Si la app no corrige el AG por albumina subestima la severidad del AGMA. El delta-ratio es mas robusto con AG corregido (3.75). Verifica que la app: (1) no diga 'normal', (2) corrija AG por albumina, (3) detecte los tres trastornos.","perla":"En hipoalbuminemia, cada 1 g/dL de albumina por debajo de 4.0 baja el AG ~2.5 mEq. Sin corregir, un AGMA grave parece leve. Aqui el AGMA ya es franco sin corregir (27), pero la correccion lo eleva a 30.75 y endurece el delta-ratio."},"cites":["kraut_lactic2014","figge1998","kraut_ag2007","winter1967"]},{"id":"ADV-08-extremo-pH-alto","dif":"adversarial","cat":"Valor extremo pH >7.6 con AGMA oculto","ctx":"Mujer de 45 años con crisis de pánico/hiperventilación intensa que además ingirió una sobredosis de salicilatos.","labs":{"pH":7.63,"paco2":22,"hco3":22,"na":140,"cl":95,"k":3.5,"alb":4,"lactato":2,"glucosa":105,"crea":1},"qp":"ALC_RESP","qc":"ANOMALA","exp":{"prim":"Alcalosis respiratoria aguda","comp":"inapropiada para un cuadro respiratorio puro: para alcalosis respiratoria aguda dPaCO2=-18 -> dHCO3 esperado=-3.6 -> HCO3 esperado ~20.4. El HCO3 medido (22) está MÁS ALTO que ese 20.4, lo cual es paradójico si hubiera una AGMA bajando HCO₃; la resolución es que coexisten una alcalosis respiratoria + una AGMA, y el AG de 23 lo confirma","sec":["Acidosis metabólica con AG elevado (intoxicación por salicilatos)"],"dx":"pH extremo 7.63 por alcalosis respiratoria aguda + acidosis metabólica con AG elevado oculta (cuadro clásico de intoxicación por salicilatos). El HCO₃ normal-bajo con AG de 23 lo delata.","porque":"Prueba pH extremo alto (>7.6) y la trampa de que un HCO₃ 'casi normal' (22) con AG muy elevado (23) esconde un AGMA. La app no debe quedarse en 'alcalosis respiratoria pura' por ver alcaloemia; debe calcular AG y detectar el componente metabólico ácido. Delta-ratio 5.5 confirma la incongruencia (HCO₃ mucho más alto del que predeciría una AGMA aislada).","perla":"Salicilatos = alcalosis respiratoria + AGMA simultáneas. Un AG elevado con HCO₃ normal y alcaloemia debe disparar la sospecha. Siempre calcular AG aunque domine la alcalosis."},"cites":["gabow1978","palmer2023"]},{"id":"ADV-09-borde-delta-ratio","dif":"adversarial","cat":"Delta-ratio en el borde (distinguir AGMA puro de mixto NAGMA/alcalosis)","ctx":"Varón de 50 años con cetoacidosis alcohólica; gasometría con delta-ratio en zona limítrofe.","labs":{"pH":7.3,"paco2":30,"hco3":14.5,"na":140,"cl":100,"k":3.8,"alb":4,"lactato":3,"glucosa":90,"crea":1.1},"qp":"HAGMA","qc":"OK","exp":{"prim":"Acidosis metabólica con AG elevado","comp":"APROPIADA: PaCO2 esperado por Winter 27.75-31.75, medido 30 dentro del rango -> compensación respiratoria adecuada.","sec":[],"dx":"Acidosis metabólica con AG elevado, simple (cetoacidosis alcohólica), con compensación adecuada. Delta-ratio 1.42 confirma proceso único: la caída del HCO3 se explica por el aumento del AG, sin NAGMA ni alcalosis metabólica agregadas.","porque":"Prueba la interpretación del delta-ratio en su zona normal limítrofe (1-2). Si la app usara umbrales mal calibrados (p.ej. <1.5 = mixto), llamaría a este caso erróneamente NAGMA agregado. Verifica que clasifica 1.42 como AGMA puro y NO sobrediagnostique un segundo trastorno metabólico.","perla":"Delta-ratio 1-2 = AGMA puro; <1 sugiere NAGMA agregada; >2 sugiere alcalosis metabólica o acidosis respiratoria crónica preexistente. Valores cerca de 1 o de 2 son zona de juicio clínico, no de corte rígido."},"cites":["long_aka2021","batlle1988","kraut_ag2007","winter1967"]}];
+  var LS='ethos_ab_quiz_v1', DAY=86400000, IV=[0,0,1,3,7,16];
+  function load(){try{return JSON.parse(localStorage.getItem(LS))||{};}catch(e){return {};}}
+  function save(s){try{localStorage.setItem(LS,JSON.stringify(s));}catch(e){}}
+  function st(){var s=load(); if(!s.cards)s.cards={}; if(s.streak==null)s.streak=0; return s;}
+  function tday(){return Math.floor(Date.now()/DAY);}
+  function isDue(card,t){ if(!card)return true; return (t-(card.lastDay||0))>=(IV[card.box]||0); }
+  function pick(s){
+    var t=tday();
+    var r=CASES.map(function(c){var cd=s.cards[c.id];return {c:c,box:cd?cd.box:1,due:isDue(cd,t),last:cd?(cd.lastDay||0):-1};});
+    var d=r.filter(function(x){return x.due;}); if(!d.length)d=r;
+    d.sort(function(a,b){return a.box-b.box||a.last-b.last;});
+    if(d.length>1 && window._qlast && d[0].c.id===window._qlast) return d[1].c;
+    return d[0].c;
+  }
+  var PRIM=[['HAGMA','Acidosis metabolica de anion gap ALTO (HAGMA)'],['NAGMA','Acidosis metabolica de AG normal (hipercloremica / NAGMA)'],['ALC_MET','Alcalosis metabolica'],['AC_RESP','Acidosis respiratoria'],['ALC_RESP','Alcalosis respiratoria'],['ERROR','Muestra inconsistente (error de muestra)']];
+  var COMP=[['OK','Concuerda con lo esperado, compensacion apropiada (trastorno simple)'],['ANOMALA','No concuerda, sugiere un segundo trastorno']];
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function chips(l){var o=['pH '+l.pH,'PaCO2 '+l.paco2,'HCO3 '+l.hco3,'Na '+l.na,'Cl '+l.cl,'K '+l.k];if(l.alb!=null)o.push('Alb '+l.alb);if(l.lactato!=null)o.push('Lactato '+l.lactato);if(l.glucosa!=null)o.push('Gluc '+l.glucosa);if(l.crea!=null)o.push('Crea '+l.crea);return o.map(function(x){return '<span class="q-lab">'+esc(x)+'</span>';}).join('');}
+  function boxOf(id){var s=st();return (s.cards[id]||{box:1}).box;}
+  function dash(){
+    var s=st(), tot=CASES.length, mast=0, seen=0;
+    CASES.forEach(function(c){var cd=s.cards[c.id]; if(cd){seen++; if(cd.box>=5)mast++;}});
+    var pct=Math.round(mast/tot*100);
+    return '<div class="q-dash">'
+      +'<div class="q-metric"><div class="q-metric-n">'+pct+'%</div><div class="q-metric-l">dominado</div></div>'
+      +'<div class="q-metric"><div class="q-metric-n">'+(s.streak||0)+'</div><div class="q-metric-l">racha (dias)</div></div>'
+      +'<div class="q-metric"><div class="q-metric-n">'+seen+'/'+tot+'</div><div class="q-metric-l">casos vistos</div></div>'
+      +'<button class="q-reset" onclick="ethosQuizReset()">Reiniciar</button>'
+      +'</div>';
+  }
+  function bumpStreak(s){var t=tday(); if(s.lastActive!==t){ s.streak=(s.lastActive===t-1?(s.streak||0)+1:1); s.lastActive=t; } }
+  function optBtns(arr,fn){return arr.map(function(o){return '<button class="caso-opcion q-opt" data-code="'+o[0]+'" onclick="'+fn+'(\''+o[0]+'\',this)">'+esc(o[1])+'</button>';}).join('');}
+  function render(){
+    var c=pick(st()); window._q={c:c,s1:null,s2:null,done:false}; window._qlast=c.id;
+    var h=dash()+'<div class="q-card">'
+      +'<div class="q-meta">'+esc(c.cat)+' &middot; dificultad: '+esc(c.dif)+' &middot; caja '+boxOf(c.id)+'/5</div>'
+      +'<p class="q-vig">'+esc(c.ctx)+'</p>'
+      +'<div class="q-labs">'+chips(c.labs)+'</div>'
+      +'<div class="q-step"><div class="q-q">1 &middot; Cual es el trastorno primario?</div><div id="q-s1">'+optBtns(PRIM,'ethosQuizS1')+'</div></div>'
+      +'<div id="q-s2wrap"></div><div id="q-reveal"></div></div>';
+    document.getElementById('quizBody').innerHTML=h;
+  }
+  function lock(id,correct,chosen){var cont=document.getElementById(id); if(!cont)return;
+    [].forEach.call(cont.querySelectorAll('.q-opt'),function(b){b.disabled=true;var cc=b.getAttribute('data-code'); if(cc===correct)b.classList.add('correct'); else if(cc===chosen)b.classList.add('wrong');});}
+  window.ethosQuizS1=function(code,btn){ if(window._q.s1!=null)return; window._q.s1=code; var c=window._q.c; lock('q-s1',c.qp,code);
+    if(c.qp==='ERROR'){ reveal(); return; }
+    document.getElementById('q-s2wrap').innerHTML='<div class="q-step"><div class="q-q">2 &middot; Aplica la compensacion esperada (Winter / regla respiratoria). La medida concuerda?</div><div id="q-s2">'+optBtns(COMP,'ethosQuizS2')+'</div></div>'; };
+  window.ethosQuizS2=function(code,btn){ if(window._q.s2!=null)return; window._q.s2=code; var c=window._q.c; lock('q-s2',c.qc,code); reveal(); };
+  function reveal(){ var c=window._q.c, e=c.exp;
+    var cites=(c.cites||[]).map(function(k){var r=(typeof REFS!=='undefined'&&REFS[k])?REFS[k].short:k; return '<span class="q-cite" onclick="openRefModal(\''+k+'\')">'+esc(r)+'</span>';}).join('');
+    var sec=(e.sec&&e.sec.length)?('<li><b>Secundario(s):</b> '+e.sec.map(esc).join('; ')+'</li>'):'<li><b>Trastorno simple</b> (sin secundarios)</li>';
+    var h='<div class="q-rev"><div class="q-rev-h">Respuesta experta</div><ul class="q-rev-list"><li><b>Primario:</b> '+esc(e.prim)+'</li><li><b>Compensacion:</b> '+esc(e.comp)+'</li>'+sec+(e.dx?'<li><b>Diagnostico:</b> '+esc(e.dx)+'</li>':'')+'</ul>'
+      +(e.porque?'<p class="q-why"><b>Por que:</b> '+esc(e.porque)+'</p>':'')
+      +(e.perla?'<p class="q-perla"><b>Perla clinica:</b> '+esc(e.perla)+'</p>':'')
+      +(cites?'<div class="q-cites">'+cites+'</div>':'')
+      +'<div class="q-self"><div class="q-q">3 &middot; Compara con tu razonamiento: identificaste el cuadro completo (incluidos los secundarios)?</div><button class="caso-opcion q-opt" onclick="ethosQuizSelf(true)">Si, lo tenia</button><button class="caso-opcion q-opt" onclick="ethosQuizSelf(false)">No del todo</button></div></div>';
+    document.getElementById('q-reveal').innerHTML=h; }
+  window.ethosQuizSelf=function(self){ if(!window._q||window._q.done)return; window._q.done=true; var c=window._q.c;
+    var s1ok=(window._q.s1===c.qp); var s2ok=(c.qp==='ERROR')?true:(window._q.s2===c.qc); var pass=s1ok&&s2ok&&self;
+    var s=st(); var cd=s.cards[c.id]||{box:1}; var oldBox=cd.box; cd.box=pass?Math.min(5,cd.box+1):1; cd.lastDay=tday(); s.cards[c.id]=cd; bumpStreak(s); save(s);
+    var msg=pass?('Dominado un paso mas: caja '+oldBox+' a '+cd.box+(cd.box>=5?' (dominado!)':' &middot; vuelve en '+IV[cd.box]+' dia(s)')):('Vuelve a la caja 1 &middot; lo repasaras pronto.'+(s1ok?'':' Primario fallado.')+(s2ok?'':' Compensacion fallada.'));
+    var rev=document.getElementById('q-reveal');
+    rev.innerHTML+='<div class="q-result '+(pass?'ok':'no')+'">'+msg+'</div><button class="q-next" onclick="ethosQuizNext()">Siguiente caso &rarr;</button>'; };
+  window.ethosQuizNext=function(){ render(); };
+  window.ethosQuizReset=function(){ if(confirm('Reiniciar todo tu progreso del quiz en este dispositivo?')){ try{localStorage.removeItem(LS);}catch(e){} render(); } };
+  window.renderQuiz=function(){ if(document.getElementById('quizBody')) render(); };
+})();
+</script>
+
 <div class="footer">
-  ETHOS · módulo ácido-base v2.7 · pestaña "Aprender" + visualizaciones + casos prácticos · No reemplaza juicio clínico
+  ETHOS · módulo ácido-base v5.0 · pestaña "Aprender" + visualizaciones + casos prácticos · No reemplaza juicio clínico
 </div>
 
 </div>
@@ -1804,6 +1962,102 @@ body {
 // REFERENCIAS BIBLIOGRÁFICAS — estructura completa para modal
 // ════════════════════════════════════════════════════════════════════
 const REFS = {
+  'kdigo2012': {
+    short: 'KDIGO AKI Guideline, Kidney Int Suppl 2012',
+    autores: 'KDIGO Acute Kidney Injury Work Group',
+    titulo: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury (Sección 2, Tabla 2)',
+    revista: 'Kidney International Supplements',
+    año: '2012',
+    tipo: 'Guía de práctica clínica',
+    poblacion: 'Adultos y pediátricos con/en riesgo de injuria renal aguda',
+    hallazgo: 'Estadificación de AKI por diuresis (Tabla 2): Estadio 1 = <0.5 mL/kg/h por 6–12 h; Estadio 2 = <0.5 mL/kg/h por ≥12 h; Estadio 3 = <0.3 mL/kg/h por ≥24 h o anuria ≥12 h. Definición de AKI: diuresis <0.5 mL/kg/h por 6 h.',
+    limitaciones: 'El criterio de diuresis está MENOS validado que la creatinina; requiere juicio clínico sobre diuréticos, balance de fluidos y peso (obesidad). No definido si es promedio o persistente.',
+    url: 'https://doi.org/10.1038/kisup.2011.32'
+  },
+  'berlin2012': {
+    short: 'ARDS Definition Task Force, JAMA 2012',
+    autores: 'ARDS Definition Task Force (Ranieri VM, Rubenfeld GD, Thompson BT, et al.)',
+    titulo: 'Acute respiratory distress syndrome: the Berlin Definition',
+    revista: 'JAMA',
+    año: '2012',
+    tipo: 'Definición de consenso',
+    poblacion: 'Adultos con insuficiencia respiratoria hipoxémica aguda',
+    hallazgo: 'Clasifica el SDRA por PaO₂/FiO₂ (con PEEP ≥ 5 cmH₂O): leve 200–300, moderado 100–200, grave ≤ 100 mmHg. Mortalidad asociada 27% / 32% / 45%.',
+    limitaciones: 'Requiere PEEP ≥ 5 cmH₂O; validez predictiva de mortalidad modesta (AUC 0.577). Usa PaO₂/FiO₂, no SpO₂.',
+    url: 'https://doi.org/10.1001/jama.2012.5669'
+  },
+  'matthay2024': {
+    short: 'Matthay et al., AJRCCM 2024',
+    autores: 'Matthay MA, Arabi Y, Arroliga AC, et al.',
+    titulo: 'A New Global Definition of Acute Respiratory Distress Syndrome',
+    revista: 'American Journal of Respiratory and Critical Care Medicine',
+    año: '2024',
+    tipo: 'Definición de consenso (global)',
+    poblacion: 'Adultos; entornos con y sin recursos avanzados',
+    hallazgo: 'Amplía Berlin: admite SpO₂/FiO₂ ≤ 315 (si SpO₂ ≤ 97%) como criterio de hipoxemia, cánula de alto flujo ≥ 30 L/min y ecografía pulmonar. Útil cuando no hay gasometría o en altitud/recursos limitados.',
+    limitaciones: 'Mayor sensibilidad puede incluir falsos positivos; pendiente validación prospectiva.',
+    url: 'https://doi.org/10.1164/rccm.202303-0558WS'
+  },
+  'sarkar2017': {
+    short: 'Sarkar et al., Lung India 2017',
+    autores: 'Sarkar M, Niranjan N, Banyal PK',
+    titulo: 'Mechanisms of hypoxemia',
+    revista: 'Lung India',
+    año: '2017',
+    tipo: 'Revisión',
+    poblacion: 'General',
+    hallazgo: 'Cinco mecanismos de hipoxemia: desajuste V/Q (el más común), shunt, limitación de la difusión, hipoventilación y baja FiO₂/presión inspirada. El gradiente A-a los distingue: normal en hipoventilación/baja FiO₂; elevado en V/Q, shunt y difusión.',
+    limitaciones: 'Revisión narrativa.',
+    url: 'https://doi.org/10.4103/0970-2113.197116'
+  },
+  'petersson2023': {
+    short: 'Petersson & Glenny, Semin Respir Crit Care Med 2023',
+    autores: 'Petersson J, Glenny RW',
+    titulo: 'Gas Exchange in the Lung',
+    revista: 'Seminars in Respiratory and Critical Care Medicine',
+    año: '2023',
+    tipo: 'Revisión de fisiología',
+    poblacion: 'General',
+    hallazgo: 'Principios del intercambio gaseoso pulmonar; ecuación del gas alveolar, gradiente A-a y métricas que cuantifican la desviación del intercambio ideal (a/A, A-a, P/F).',
+    limitaciones: 'Revisión narrativa.',
+    url: 'https://doi.org/10.1055/s-0043-1770060'
+  },
+  'crapo1999': {
+    short: 'Crapo et al., AJRCCM 1999',
+    autores: 'Crapo RO, Jensen RL, Hegewald M, Tashkin DP',
+    titulo: 'Arterial blood gas reference values for sea level and an altitude of 1,400 meters',
+    revista: 'American Journal of Respiratory and Critical Care Medicine',
+    año: '1999',
+    tipo: 'Estudio de valores de referencia',
+    poblacion: 'No fumadores sanos (n=339), 18–81 años, nivel del mar y 1.400 m',
+    hallazgo: 'Ecuaciones de referencia de PaO₂ y de la diferencia A-aPO₂ que incorporan edad y presión barométrica. Permiten estimar el A-a normal ajustado por altitud.',
+    limitaciones: 'Validado hasta 1.400 m: sobre esa altitud el valor normal del A-a es una extrapolación que debe declararse.',
+    url: 'https://doi.org/10.1164/ajrccm.160.5.9806006'
+  },
+  'west_o2': {
+    short: 'West & Luks, Respiratory Physiology',
+    autores: 'West JB, Luks AM',
+    titulo: 'Respiratory Physiology: The Essentials',
+    revista: 'Wolters Kluwer (texto de referencia)',
+    año: '2021',
+    tipo: 'Texto de fisiología',
+    poblacion: 'Fisiología respiratoria general',
+    hallazgo: 'Contenido arterial de O₂: CaO₂ = 1.39 × Hb × (Sat/100) + 0.003 × PaO₂. West (cap. 6, "Gas Transport by the Blood") usa 1.39 mL O₂/g Hb: "One gram of pure Hb can combine with 1.39 ml O2". Los valores 1.34/1.36 son mediciones más antiguas que descontaban la Hb no funcional (p. ej. metahemoglobina).',
+    limitaciones: 'Confirmado contra el texto en NotebookLM (cuenta gmail, cap. 6). El valor 1.39 coincide con el O₂Cap del analizador de Eddy (1.39 × 9.2 = 12.8 vs 12.7).',
+    url: ''
+  },
+  'figge1998': {
+    short: 'Figge et al., Crit Care Med 1998',
+    autores: 'Figge J, Jabor A, Kazda A, Fencl V',
+    titulo: 'Anion gap and hypoalbuminemia',
+    revista: 'Critical Care Medicine',
+    año: '1998',
+    tipo: 'Estudio fisicoquímico',
+    poblacion: 'Adultos; modelo del equilibrio de cargas',
+    hallazgo: 'La albúmina es el principal anión no medido: cada 1 g/dL de descenso reduce el anión gap ≈ 2.5 mEq/L. Funda el AG corregido por albúmina [AG + 2.5×(4.0 − alb)], necesario para no enmascarar una acidosis de AG alto en pacientes hipoalbuminémicos.',
+    limitaciones: 'No corrige por otros aniones (fosfato) ni por cationes no medidos.',
+    url: 'https://doi.org/10.1097/00003246-199811000-00019'
+  },
   'cjasn2023': {
     short: 'Achanti & Szerlip, CJASN 2023',
     autores: 'Achanti A, Szerlip HM',
@@ -1827,18 +2081,6 @@ const REFS = {
     hallazgo: 'La alcalosis respiratoria es el trastorno ácido-base más común en hepatopatía (hiperamonemia/encefalopatía, síndrome hepatopulmonar, ascitis/hidrotórax). Un pH/BE normal NO excluye trastornos metabólicos: en cirrosis estable la alcalosis hipoalbuminémica se contrapesa con acidosis hiperclorémica/dilucional. El hígado depura 30–70% del lactato; su caída eleva el lactato aun sin hipoperfusión. En el paciente crítico el equilibrio se inclina a acidosis metabólica (lactato + aniones no medidos).',
     limitaciones: 'Revisión narrativa; el análisis cuantitativo usa el modelo fisicoquímico (Stewart), no implementado en ETHOS.',
     url: 'https://doi.org/10.1016/j.jhep.2017.06.023'
-  },
-  'bicaricu2018': {
-    short: 'Jaber et al. (BICAR-ICU), Lancet 2018',
-    autores: 'Jaber S, Paugam C, Futier E, et al.',
-    titulo: 'Sodium bicarbonate therapy for patients with severe metabolic acidaemia in the intensive care unit (BICAR-ICU)',
-    revista: 'The Lancet',
-    año: '2018',
-    tipo: 'Ensayo clínico aleatorizado, multicéntrico, abierto, fase 3',
-    poblacion: 'Adultos en UCI con acidemia metabólica severa (pH ≤7.20, PaCO₂ ≤45, HCO₃ ≤20) + SOFA ≥4 o lactato ≥2',
-    hallazgo: 'En la población general el bicarbonato NO mejoró el desenlace primario (muerte a 28 d + falla orgánica a 7 d: 66% vs 71%, p=0.24). En el estrato prespecificado con AKI (AKIN 2-3) SÍ hubo beneficio: desenlace primario 70% vs 82% (p=0.046) y mortalidad a 28 d 46% vs 63% (p=0.017). Redujo la necesidad de terapia de reemplazo renal (35% vs 52%). Meta de pH >7.30 con bicarbonato 4.2%.',
-    limitaciones: 'Abierto (sin enmascaramiento). Excluyó cetoacidosis y pérdidas digestivas/urinarias de bicarbonato. Beneficio en subgrupo prespecificado; más alcalosis metabólica, hipernatremia e hipocalcemia (no graves).',
-    url: 'https://doi.org/10.1016/S0140-6736(18)31080-8'
   },
   'haltit2020': {
     short: 'HALT-IT, Lancet 2020',
@@ -1884,8 +2126,8 @@ const REFS = {
     año: '2010',
     tipo: 'ECA internacional, doble ciego, controlado con placebo (n=20 211)',
     poblacion: 'Pacientes de trauma con hemorragia significativa o riesgo de ella',
-    hallazgo: 'El ácido tranexámico (1 g en 10 min + 1 g en 8 h) administrado ≤3 h del trauma reduce la muerte por sangrado (~28% el día de la lesión) y la mortalidad por toda causa. Administrado >3 h del trauma AUMENTA la muerte por sangrado: el tiempo es crítico. CONTRASTE: en trauma y HPP el TXA SÍ; en hemorragia digestiva NO (HALT-IT).',
-    limitaciones: 'Mayoría de centros de bajos/medianos recursos; no estratificó por gravedad inicial.',
+    hallazgo: 'El ensayo primario CRASH-2 (Lancet 2010, este DOI) mostró reducción de la mortalidad por toda causa (RR 0.91; IC95% 0.85–0.97) y de la muerte por sangrado (RR 0.85; 0.76–0.96). El umbral de las 3 horas (TXA ≤3 h reduce la muerte por sangrado; >3 h la AUMENTA) proviene del REANÁLISIS exploratorio de tiempo: CRASH-2 collaborators, Lancet 2011;377:1096–1101 (doi:10.1016/S0140-6736(11)60278-X), NO del artículo de 2010. CONTRASTE: en trauma y HPP el TXA SÍ; en hemorragia digestiva NO (HALT-IT).',
+    limitaciones: 'Mayoría de centros de bajos/medianos recursos; no estratificó por gravedad inicial. El dato del tiempo (≤3 h vs >3 h) es de un análisis exploratorio posterior (2011), no del primario.',
     url: 'https://doi.org/10.1016/S0140-6736(10)60835-5'
   },
   'rcog_pph': {
@@ -1969,8 +2211,8 @@ const REFS = {
     tipo: 'Revisión educativa (NEJM Review)',
     poblacion: 'Adultos general',
     hallazgo: 'Método del exceso de base estándar (SBE) como alternativa a HCO₃ para evaluar componente metabólico. Algoritmos para identificar trastornos mixtos.',
-    limitaciones: 'Marco conceptual; no compara directamente con método HH en outcomes clínicos.',
-    url: 'https://www.nejm.org/doi/10.1056/NEJMra1711577'
+    limitaciones: 'Marco conceptual; no compara directamente con método HH en outcomes clínicos. Cita completa: N Engl J Med 2018;378(15):1419-1428.',
+    url: 'https://www.nejm.org/doi/full/10.1056/NEJMra1711860'
   },
   'ada2024': {
     short: 'ADA/EASD 2024',
@@ -1980,45 +2222,21 @@ const REFS = {
     año: '2024',
     tipo: 'Guía oficial / Consenso',
     poblacion: 'Adultos con DM1 y DM2',
-    hallazgo: 'Diagnóstico CAD (glucemia ≥200, cetonemia +, HCO₃ <18, pH <7.30). Criterios severidad por pH/HCO₃/sensorio. Manejo: insulina 0.1 U/kg/h sin bolo, K⁺ reglas estrictas, bicarbonato SOLO si pH <6.9.',
-    limitaciones: 'Recomendaciones específicas pueden basarse en evidencia limitada (consenso experto en ciertos puntos).',
-    url: 'https://diabetesjournals.org/care/article/47/8/1257/156213/Hyperglycemic-Crises-in-Adults-With-Diabetes-A'
-  },
-  'bicar-icu': {
-    short: 'BICAR-ICU, Jaber 2018',
-    autores: 'Jaber S, Paugam C, Futier E, et al',
-    titulo: 'Sodium bicarbonate therapy for patients with severe metabolic acidaemia in the intensive care unit (BICAR-ICU)',
-    revista: 'Lancet',
-    año: '2018',
-    tipo: 'RCT multicéntrico fase 3, abierto',
-    poblacion: '389 adultos UCI con acidemia severa (pH ≤7.20, PaCO₂ ≤45, HCO₃ ≤20)',
-    hallazgo: 'Sin diferencia en mortalidad28d en población general (HR ajustado significativo: 0.73). En subgrupo a-priori con AKIN 2-3 (n=182): ARR mortalidad 28d -17.7% (IC 95% -33.0 a -2.3), p=0.016. NNT 6. Reducción significativa de necesidad de TRR.',
-    limitaciones: 'Estudio abierto. Excluyó CAD, intoxicaciones, acidosis hiperclorémica pura. Subgrupo AKIN-2/3 fue análisis preespecificado pero hallazgo principal de mortalidad fue en este subgrupo.',
-    url: 'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(18)31080-8/fulltext'
-  },
-  'kdigo2012': {
-    short: 'KDIGO 2012',
-    autores: 'KDIGO AKI Work Group',
-    titulo: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury',
-    revista: 'Kidney International Supplements',
-    año: '2012',
-    tipo: 'Guía oficial',
-    poblacion: 'Adultos con AKI',
-    hallazgo: 'Define KDIGO 1 (Cr ↑0.3 en 48h o 1.5-1.9× basal o UO <0.5 mL/kg/h × 6-12h), KDIGO 2 (2-2.9× basal o UO <0.5 × 12h), KDIGO 3 (≥3× basal, Cr ≥4.0, TRR, o UO <0.3 × 24h o anuria 12h).',
-    limitaciones: 'Guía 2012, no se ha actualizado mayormente. Algunos criterios requieren creatinina basal conocida.',
-    url: 'https://kdigo.org/guidelines/acute-kidney-injury/'
+    hallazgo: 'Diagnóstico CAD (consenso 2024): glucemia ≥200 mg/dL o diabetes previa; β-hidroxibutirato ≥3.0 mmol/L o cetonuria ≥2+; pH <7.30 y/o HCO₃ <18 mmol/L. El consenso 2024 ELIMINÓ la brecha aniónica como criterio diagnóstico de primera línea y prioriza el β-hidroxibutirato. Manejo: insulina 0.1 U/kg/h (habitualmente SIN bolo; bolo 0.1 U/kg solo si se anticipa retraso del acceso venoso), reglas estrictas de K⁺, bicarbonato solo si pH <7.0 (texto literal del consenso: "bicarbonate administration should be considered if the acidosis is severe, i.e., pH <7.0"). NOTA DE SEGURIDAD: el umbral <6.9 correspondía al consenso 2009, NO al 2024.',
+    limitaciones: 'Recomendaciones específicas pueden basarse en evidencia limitada (consenso experto en ciertos puntos). Los criterios de los ADA Standards of Care 2026 (Tabla 16.1) derivan de este consenso.',
+    url: 'https://diabetesjournals.org/care/article/47/8/1257/156808/Hyperglycemic-Crises-in-Adults-With-Diabetes-A'
   },
   'extrip2023': {
-    short: 'EXTRIP / Ghannoum 2023',
-    autores: 'Ghannoum M, Berling I, et al',
-    titulo: 'Recommendations for the role of extracorporeal treatments in poisoning (EXTRIP Workgroup)',
-    revista: 'Critical Care / Clinical Toxicology',
+    short: 'EXTRIP etilenglicol (Ghannoum/Gosselin), Crit Care 2023',
+    autores: 'Ghannoum M, Gosselin S, et al (EXTRIP Workgroup)',
+    titulo: 'Extracorporeal treatment for ethylene glycol poisoning: systematic review and recommendations from the EXTRIP workgroup',
+    revista: 'Critical Care 2023;27:56',
     año: '2023',
     tipo: 'Guía consenso EXTRIP',
-    poblacion: 'Adultos con intoxicación por alcoholes tóxicos (metanol, etilenglicol)',
-    hallazgo: 'Criterios para iniciar ECTR (extracorporeal treatment): pH ≤7.15, falla orgánica, alteración visual (metanol), falla renal (etilenglicol), niveles séricos altos. Fomepizol: carga 15 mg/kg, mantenimiento 10 mg/kg c/12h × 4, luego 15 mg/kg c/12h.',
-    limitaciones: 'Recomendaciones basadas mayormente en evidencia observacional. Algunos puntos son consenso experto.',
-    url: 'https://ccforum.biomedcentral.com/articles/10.1186/s13054-022-04300-w'
+    poblacion: 'Adultos con intoxicación por etilenglicol (la guía de METANOL es un documento EXTRIP separado, 2015)',
+    hallazgo: 'Criterios para iniciar terapia extracorpórea (ECTR/diálisis) en ETILENGLICOL: etilenglicol >50 mmol/L o gap osmolar >50; glicolato >12 mmol/L o brecha aniónica >27 (recomendado), o glicolato 8–12 mmol/L / AG 23–27 (sugerido); o rasgos clínicos graves (coma, convulsiones, lesión renal aguda). Antídoto: fomepizol (carga 15 mg/kg). NOTA: "pH ≤7.15" como criterio único NO figura en estas recomendaciones; la guía de metanol (Roberts 2015) es un documento separado.',
+    limitaciones: 'Recomendaciones basadas mayormente en evidencia observacional. Para metanol, citar el documento EXTRIP 2015 (Roberts DM et al., Crit Care Med). El inicio de ECTR y el fomepizol se deciden con toxicología.',
+    url: 'https://doi.org/10.1186/s13054-022-04227-2'
   },
   'yunos2012': {
     short: 'Yunos, JAMA 2012',
@@ -2028,21 +2246,21 @@ const REFS = {
     año: '2012',
     tipo: 'Estudio prospectivo before-after (n=1533)',
     poblacion: 'Adultos UCI',
-    hallazgo: 'Estrategia restrictiva de Cl⁻ (Plasma-Lyte, Ringer lactato) vs liberal (SF 0.9%): reducción de AKI (14% vs 8.4%) y TRR (6% vs 2.6%). Estudio fundacional que cambió práctica anestésica.',
-    limitaciones: 'Diseño before-after (no aleatorizado). Hallazgos confirmados posteriormente por SMART (2018).',
-    url: 'https://jamanetwork.com/journals/jama/fullarticle/1383823'
+    hallazgo: 'Estrategia restrictiva de Cl⁻ (Plasma-Lyte, Ringer lactato) vs liberal (SF 0.9%): reducción de AKI/RIFLE injury+failure (14% vs 8.4%, P<.001) y del uso de terapia de reemplazo renal (10% vs 6.3%, P=.005). Estudio fundacional que cambió práctica anestésica.',
+    limitaciones: 'Diseño before-after (no aleatorizado). Hallazgos confirmados posteriormente por SMART (2018). Cita: JAMA 2012;308(15):1566-72.',
+    url: 'https://doi.org/10.1001/jama.2012.13356'
   },
   'gold2025': {
-    short: 'GOLD 2025',
+    short: 'GOLD 2026',
     autores: 'GOLD Committee',
-    titulo: 'Global Strategy for Prevention, Diagnosis and Management of COPD: 2025 Report',
+    titulo: 'Global Strategy for Prevention, Diagnosis and Management of COPD: 2026 Report (v1.3, dic-2025)',
     revista: 'Global Initiative for Chronic Obstructive Lung Disease',
-    año: '2025',
+    año: '2026',
     tipo: 'Guía oficial internacional',
     poblacion: 'Adultos con EPOC',
-    hallazgo: 'Manejo exacerbación: oxígeno restringido (SpO₂ 88-92%), VNI temprana, broncodilatadores combinados, corticoide sistémico 5 días, antibiótico si Anthonisen ≥2/3.',
-    limitaciones: 'Guía consenso; recomendaciones específicas con distintos niveles de evidencia.',
-    url: 'https://goldcopd.org/2025-gold-report/'
+    hallazgo: 'Manejo exacerbación: oxígeno restringido (SpO₂ 88-92%), VNI temprana, broncodilatadores combinados, corticoide sistémico 5 días, antibiótico si Anthonisen ≥2/3. GOLD 2026 refuerza la detección precoz, las terapias biológicas, la multimorbilidad y la salud digital.',
+    limitaciones: 'Guía consenso; recomendaciones específicas con distintos niveles de evidencia. Actualiza el reporte GOLD 2025 (revisión anual).',
+    url: 'https://goldcopd.org/2026-gold-report-and-pocket-guide/'
   },
   'ssc2021': {
     short: 'Surviving Sepsis 2021',
@@ -2053,7 +2271,7 @@ const REFS = {
     tipo: 'Guía consenso internacional',
     poblacion: 'Adultos con sepsis / shock séptico',
     hallazgo: 'Reanimación inicial: 30 mL/kg cristaloide primera hora si hipoperfusión. Antibiótico amplio espectro <1h si shock séptico. Lactato como guía complementaria (no objetivo único). Noradrenalina 1ª línea. Sugerencia débil contra bicarbonato rutinario en acidosis láctica con pH ≥7.15.',
-    limitaciones: 'Recomendaciones con distintos grados de evidencia. Algunas sugerencias condicionales.',
+    limitaciones: 'Recomendaciones con distintos grados de evidencia. Algunas sugerencias condicionales. ACTUALIZACIÓN: en 2026 se publicó la Surviving Sepsis Campaign 2026 (Intensive Care Medicine 2026;52:863–936, doi:10.1007/s00134-026-08361-1; 129 statements, 46 nuevos). Revisar objetivos de PA, antibióticos y reanimación al actualizar la app.',
     url: 'https://link.springer.com/article/10.1007/s00134-021-06506-y'
   },
   'smart2018': {
@@ -2117,25 +2335,25 @@ const REFS = {
     url: 'https://thorax.bmj.com/content/71/Suppl_2/ii1'
   },
   'pitfalls': {
-    short: 'Pitfalls of lactate',
-    autores: 'Vallée F, Vallet B, Mathe O, et al',
+    short: 'Hernández et al., ICM 2018 (ten pitfalls of lactate)',
+    autores: 'Hernández G, Bellomo R, Bakker J',
     titulo: 'The ten pitfalls of lactate clearance in sepsis',
-    revista: 'Intensive Care Medicine',
-    año: '2019',
+    revista: 'Intensive Care Medicine 2018;45(1):82–85',
+    año: '2018',
     tipo: 'Revisión conceptual',
     poblacion: 'Pacientes críticos',
-    hallazgo: 'Lactato no es objetivo único de reanimación. Múltiples causas no-hipóxicas (estrés adrenérgico, depuración hepática reducida, metformina, etc.). Su normalización puede retrasarse y no debe forzarse.',
+    hallazgo: 'Lactato no es objetivo único de reanimación. Múltiples causas no-hipóxicas (estrés adrenérgico, depuración hepática reducida, metformina, etc.). Su normalización puede retrasarse y no debe forzarse ("an illusion and a folly").',
     limitaciones: 'Revisión narrativa.',
-    url: 'https://link.springer.com/article/10.1007/s00134-019-05803-x'
+    url: 'https://doi.org/10.1007/s00134-018-5213-x'
   },
   'cammarota2025': {
-    short: 'Cammarota et al., J Clin Med 2025',
-    autores: 'Cammarota A, Pesenti T, Mongodi S, Massari A, Rinaldi C, Colombo D, Castagna S',
+    short: 'Ciabattoni et al., J Clin Med 2025',
+    autores: 'Ciabattoni A, Chiumello D, Mancusi S, Pozzi T, Monte A, Rocco C, Coppola S',
     titulo: 'Acid-Base Status in Critically Ill Patients: Physicochemical vs. Traditional Approach',
-    revista: 'Journal of Clinical Medicine',
+    revista: 'Journal of Clinical Medicine 2025;14(9):3227',
     año: '2025',
     tipo: 'Cohorte prospectivo observacional unicéntrico',
-    poblacion: 'Adultos críticos sedados y ventilados (n=171), Hospital San Paolo, Italia',
+    poblacion: 'Adultos críticos ventilados (n=172), Hospital San Paolo, Milán, Italia',
     hallazgo: 'Comparación directa entre método tradicional (SBE) y método de Stewart (SIDa/SIG) al ingreso a UCI y a las 24 h. Concordancia entre métodos muy pobre (κ=0.07–0.08): el 36% de pacientes clasificados con acidosis metabólica por Stewart no lo era por SBE, y viceversa. SBE mostró mejor capacidad predictiva de acidemia/alcalemia en modelo multivariado ajustado por albúmina, PaCO₂, fluidos y creatinina. SIDa normal: 38–42 mEq/L.',
     limitaciones: 'Unicéntrico, sin desenlace clínico duro (mortalidad/disfunción orgánica). Excluyó RRT y diuréticos. No es un ensayo de intervención.',
     url: 'https://www.mdpi.com/2077-0383/14/9/3227'
@@ -2213,6 +2431,186 @@ const REFS = {
     hallazgo: 'Mortalidad 90d: 26.4% balanceado (Plasma-Lyte 148) vs 27.2% saline, HR ajustado 0.97 (IC 95% 0.90–1.05), p=0.47. NO mostró beneficio del balanceado. Subgrupo TCE (n=486): mortalidad 31.3% balanceado vs 21.1% saline, HR 1.48 (IC 1.03–2.12), p interacción=0.02 → señal de daño en TCE. SOFA neurológico día 7 peor con balanceado (32.1% vs 26.0%, OR 1.40, IC 1.18–1.66). Sin diferencia en TRR, AKI, ventilación, mortalidad UCI/hospitalaria.',
     limitaciones: 'Alta proporción de cirugía electiva (48%) reduce gravedad global y poder. Volumen mediano de fluido bajo (1.5 L día 1; 2.9 L acumulado 3 días). 68% recibió fluidos antes de la aleatorización (mayoría cristaloides), lo que puede haber diluido el efecto. Probó solo Plasma-Lyte; otros balanceados (Ringer lactato) no evaluados.',
     url: 'https://doi.org/10.1001/jama.2021.11684'
+  },
+  'berend2014': {
+    short: 'Berend et al., NEJM 2014 (enfoque fisiológico)',
+    autores: 'Berend K, de Vries APJ, Gans ROB',
+    titulo: 'Physiological Approach to Assessment of Acid–Base Disturbances',
+    revista: 'New England Journal of Medicine 2014;371(15):1434–1445',
+    año: '2014',
+    tipo: 'Revisión NEJM (marco diagnóstico)',
+    poblacion: 'Adultos general',
+    hallazgo: 'Marco fisiológico de 8 pasos para el diagnóstico ácido-base, base del enfoque tradicional de bicarbonato/Boston que implementa ETHOS: trastorno primario, compensación esperada, brecha aniónica corregida, delta-delta y trastornos mixtos. Referencia esqueleto de cualquier interpretador gasométrico moderno.',
+    limitaciones: 'Revisión narrativa/educativa.',
+    url: 'https://doi.org/10.1056/NEJMra1003327'
+  },
+  'seifter2014': {
+    short: 'Seifter, NEJM 2014 (ácido-base + electrolitos)',
+    autores: 'Seifter JL',
+    titulo: 'Integration of Acid–Base and Electrolyte Disorders',
+    revista: 'New England Journal of Medicine 2014;371(19):1821–1831',
+    año: '2014',
+    tipo: 'Revisión NEJM',
+    poblacion: 'Adultos general',
+    hallazgo: 'Integra el equilibrio ácido-base con los electrolitos: brecha aniónica, delta-delta, gap osmolar y detección de trastornos mixtos y triples. Sustenta la lógica con que ETHOS busca el trastorno que pueda faltar en cuadros complejos.',
+    limitaciones: 'Revisión narrativa.',
+    url: 'https://doi.org/10.1056/NEJMra1215672'
+  },
+  'kraut_ag2007': {
+    short: 'Kraut & Madias, CJASN 2007 (brecha aniónica)',
+    autores: 'Kraut JA, Madias NE',
+    titulo: 'Serum Anion Gap: Its Uses and Limitations in Clinical Medicine',
+    revista: 'Clinical Journal of the American Society of Nephrology 2007;2(1):162–174',
+    año: '2007',
+    tipo: 'Revisión de referencia',
+    poblacion: 'Adultos general',
+    hallazgo: 'Referencia definitiva de la brecha aniónica: usos, límites, corrección por albúmina y, en particular, documenta que el cociente ΔAG/ΔHCO₃ NO es fijo 1:1 — clave para no sobre-diagnosticar trastornos mixtos con el delta-delta.',
+    limitaciones: 'Revisión narrativa.',
+    url: 'https://doi.org/10.2215/CJN.03020906'
+  },
+  'kraut_lactic2014': {
+    short: 'Kraut & Madias, NEJM 2014 (acidosis láctica)',
+    autores: 'Kraut JA, Madias NE',
+    titulo: 'Lactic Acidosis',
+    revista: 'New England Journal of Medicine 2014;371(24):2309–2319',
+    año: '2014',
+    tipo: 'Revisión NEJM',
+    poblacion: 'Adultos críticos',
+    hallazgo: 'Revisión canónica de la acidosis láctica (tipo A vs B), fisiopatología, diagnóstico y manejo. Es el trastorno ácido-base con mayor mortalidad; respalda la rama de lactato del motor de ETHOS.',
+    limitaciones: 'Revisión narrativa.',
+    url: 'https://doi.org/10.1056/NEJMra1309483'
+  },
+  'batlle1988': {
+    short: 'Batlle et al., NEJM 1988 (brecha aniónica urinaria)',
+    autores: 'Batlle DC, Hizon M, Cohen E, Gutterman C, Gupta R',
+    titulo: 'The use of the urinary anion gap in the diagnosis of hyperchloremic metabolic acidosis',
+    revista: 'New England Journal of Medicine 1988;318(10):594–599',
+    año: '1988',
+    tipo: 'Estudio clínico',
+    poblacion: 'Adultos con acidosis metabólica hiperclorémica',
+    hallazgo: 'Funda la brecha aniónica urinaria (UAG = Na+K−Cl) para distinguir la causa de una NAGMA: UAG NEGATIVA → pérdida digestiva de HCO₃ (respuesta renal apropiada, NH₄⁺ aumentado); UAG POSITIVA → acidosis tubular renal (defecto de acidificación). Respalda la enseñanza de ETHOS sobre NAGMA/ATR.',
+    limitaciones: 'No válida si hay aniones no medidos en orina (cetonas, hipurato) o depleción de volumen marcada.',
+    url: 'https://doi.org/10.1056/NEJM198803103181002'
+  },
+  'winter1967': {
+    short: 'Albert, Dell & Winters, Ann Intern Med 1967 (fórmula de Winter)',
+    autores: 'Albert MS, Dell RB, Winters RW',
+    titulo: 'Quantitative displacement of acid-base equilibrium in metabolic acidosis',
+    revista: 'Annals of Internal Medicine 1967;66(2):312–322',
+    año: '1967',
+    tipo: 'Estudio fisiológico (fuente primaria)',
+    poblacion: 'Adultos con acidosis metabólica',
+    hallazgo: 'Fuente PRIMARIA de la "fórmula de Winter(s)" que ETHOS usa para la compensación respiratoria esperada en acidosis metabólica: PaCO₂ esperada = 1.5 × HCO₃ + 8 ± 2. Da trazabilidad científica al motor de cálculo.',
+    limitaciones: 'Derivada de un rango acotado de HCO₃; pierde exactitud en acidosis muy graves.',
+    url: 'https://doi.org/10.7326/0003-4819-66-2-312'
+  },
+  'ross2022': {
+    short: 'Ross et al., Emerg Med Clin N Am 2022 (alcoholes tóxicos / gap osmolar)',
+    autores: 'Ross JA, Borek HA, Holstege CP, King JD',
+    titulo: 'Toxic Alcohol Poisoning',
+    revista: 'Emergency Medicine Clinics of North America 2022;40(2):327–341',
+    año: '2022',
+    tipo: 'Revisión clínica',
+    poblacion: 'Adultos con sospecha de intoxicación por metanol/etilenglicol',
+    hallazgo: 'Revisión moderna del diagnóstico y manejo de alcoholes tóxicos. Detalla el gap osmolar (cálculo y umbral >10) como pivote diagnóstico precoz —antes de que suba la brecha aniónica— y sus límites (un gap osmolar normal no descarta intoxicación tardía). Respalda el cálculo de gap osmolar de ETHOS.',
+    limitaciones: 'Revisión narrativa; el gap osmolar tiene amplia variabilidad de la línea de base.',
+    url: 'https://doi.org/10.1016/j.emc.2022.01.012'
+  },
+  'adrogue1998a': {
+    short: 'Adrogué & Madias, NEJM 1998 (manejo, 1ª parte)',
+    autores: 'Adrogué HJ, Madias NE',
+    titulo: 'Management of Life-Threatening Acid-Base Disorders (First of Two Parts)',
+    revista: 'New England Journal of Medicine 1998;338(1):26–34',
+    año: '1998',
+    tipo: 'Revisión NEJM (manejo)',
+    poblacion: 'Adultos con acidemia grave',
+    hallazgo: 'Clásico del manejo de la acidemia grave (acidosis metabólica y respiratoria): indicaciones y riesgos de la terapia con bicarbonato/buffers y metas de pH. Primera parte de dos.',
+    limitaciones: 'Revisión narrativa de 1998; integrar con BICAR-ICU 2018 para la indicación moderna del bicarbonato.',
+    url: 'https://doi.org/10.1056/NEJM199801013380106'
+  },
+  'adrogue1998b': {
+    short: 'Adrogué & Madias, NEJM 1998 (manejo, 2ª parte)',
+    autores: 'Adrogué HJ, Madias NE',
+    titulo: 'Management of Life-Threatening Acid-Base Disorders (Second of Two Parts)',
+    revista: 'New England Journal of Medicine 1998;338(2):107–111',
+    año: '1998',
+    tipo: 'Revisión NEJM (manejo)',
+    poblacion: 'Adultos con alcalemia grave',
+    hallazgo: 'Segunda parte del clásico: manejo de la alcalosis metabólica y respiratoria graves. Se cita junto con la Parte 1.',
+    limitaciones: 'Revisión narrativa de 1998.',
+    url: 'https://doi.org/10.1056/NEJM199801083380207'
+  },
+  'emmett1977': {
+    short: 'Emmett & Narins, Medicine 1977 (uso clínico del AG)',
+    autores: 'Emmett M, Narins RG',
+    titulo: 'Clinical Use of the Anion Gap',
+    revista: 'Medicine (Baltimore) 1977;56(1):38–54',
+    año: '1977',
+    tipo: 'Revisión seminal',
+    poblacion: 'Adultos general',
+    hallazgo: 'Trabajo SEMINAL del uso clínico de la brecha aniónica y germen del concepto de delta-gap que ETHOS usa para detectar trastornos mixtos. Fuente histórica primaria.',
+    limitaciones: 'Histórica (1977); los rangos de referencia del AG han bajado con los métodos modernos de cloruro.',
+    url: 'https://doi.org/10.1097/00005792-197756010-00002'
+  },
+  'brackett1965': {
+    short: 'Brackett, Cohen & Schwartz, NEJM 1965 (regla de Boston aguda)',
+    autores: 'Brackett NC Jr, Cohen JJ, Schwartz WB',
+    titulo: 'Carbon Dioxide Titration Curve of Normal Man',
+    revista: 'New England Journal of Medicine 1965;272:6–12',
+    año: '1965',
+    tipo: 'Estudio fisiológico (fuente primaria)',
+    poblacion: 'Adultos sanos',
+    hallazgo: 'Fuente PRIMARIA original de las "reglas de Boston" de compensación renal en la acidosis respiratoria AGUDA (curva de titulación del CO₂) que ETHOS aplica. Da trazabilidad histórica a las fórmulas de compensación.',
+    limitaciones: 'Estudio de 1965 en pocos sujetos sanos.',
+    url: 'https://doi.org/10.1056/NEJM196501072720102'
+  },
+  'palmer_rta2021': {
+    short: 'Palmer, Kelepouris & Clegg, Adv Ther 2021 (ATR)',
+    autores: 'Palmer BF, Kelepouris E, Clegg DJ',
+    titulo: 'Renal Tubular Acidosis and Management Strategies: A Narrative Review',
+    revista: 'Advances in Therapy 2021;38(2):949–968',
+    año: '2021',
+    tipo: 'Revisión (acceso abierto)',
+    poblacion: 'Adultos con acidosis tubular renal',
+    hallazgo: 'Revisión moderna de la acidosis tubular renal (tipos 1, 2 y 4): diagnóstico por acidificación urinaria/brecha aniónica urinaria, clasificación por K⁺ y tratamiento. Complementa a Batlle 1988 y respalda la tipificación de NAGMA/ATR de ETHOS.',
+    limitaciones: 'Revisión narrativa.',
+    url: 'https://doi.org/10.1007/s12325-020-01587-5'
+  },
+  'long_aka2021': {
+    short: 'Long, Lentz & Gottlieb, J Emerg Med 2021 (cetoacidosis alcohólica)',
+    autores: 'Long B, Lentz S, Gottlieb M',
+    titulo: 'Alcoholic Ketoacidosis: Etiologies, Evaluation, and Management',
+    revista: 'Journal of Emergency Medicine 2021;61(6):658–665',
+    año: '2021',
+    tipo: 'Revisión clínica',
+    poblacion: 'Adultos con cetoacidosis alcohólica / del ayuno',
+    hallazgo: 'Revisión del diagnóstico y manejo de la cetoacidosis alcohólica/del ayuno: glucosa normal o baja, β-hidroxibutirato elevado, frecuente trastorno mixto. Respalda la rama AKA/ayuno de ETHOS (que la diferencia de la CAD diabética).',
+    limitaciones: 'Revisión narrativa.',
+    url: 'https://doi.org/10.1016/j.jemermed.2021.09.007'
+  },
+  'gabow1978': {
+    short: 'Gabow et al., Arch Intern Med 1978 (patrón ácido-base en salicilatos)',
+    autores: 'Gabow PA, Anderson RJ, Potts DE, Schrier RW',
+    titulo: 'Acid-base disturbances in the salicylate-intoxicated adult',
+    revista: 'Archives of Internal Medicine 1978;138(10):1481–1484',
+    año: '1978',
+    tipo: 'Estudio clínico (serie de casos)',
+    poblacion: 'Adultos con intoxicación por salicilatos',
+    hallazgo: 'Estudio clásico que documentó el trastorno ácido-base MIXTO de la intoxicación por salicilatos en el adulto (alcalosis respiratoria + acidosis metabólica de AG alto): solo ~25% tenía alcalosis respiratoria pura. Respalda la tarjeta de patrón de salicilatos de ETHOS.',
+    limitaciones: 'Serie de 1978; sin DOI (referencia por PMID 708168).',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/708168/'
+  },
+  'bering2023': {
+    short: 'Bering & DiBaise, Nutr Clin Pract 2023 (acidosis D-láctica)',
+    autores: 'Bering J, DiBaise JK',
+    titulo: 'Short bowel syndrome: Complications and management',
+    revista: 'Nutrition in Clinical Practice 2023;38(Suppl 1):S46–S58',
+    año: '2023',
+    tipo: 'Revisión clínica',
+    poblacion: 'Adultos con síndrome de intestino corto',
+    hallazgo: 'Cubre la acidosis D-láctica del síndrome de intestino corto (encefalopatía D-láctica, AG alto con L-lactato normal), la "D" del mnemotécnico GOLDMARK de ETHOS, hasta ahora sin fuente dedicada.',
+    limitaciones: 'Revisión narrativa.',
+    url: 'https://doi.org/10.1002/ncp.10978'
   }
 };
 function refTag(key, text) {
@@ -2550,13 +2948,13 @@ function inferWhyKey(stepText) {
 // leccion = id de sección de Aprender (goToSection); ref = clave de REFS (refTag).
 const WHY_LINKS = {
   fomepizol:{leccion:'C16',ref:'extrip2023'}, hemodialisis_toxico:{leccion:'C16',ref:'extrip2023'},
-  intoxicacion_urgente:{leccion:'C16',ref:'extrip2023'}, salicilatos_patron:{leccion:'C16',ref:'extrip2023'},
+  intoxicacion_urgente:{leccion:'C16',ref:'ross2022'}, salicilatos_patron:{leccion:'C16',ref:'gabow1978'},
   insulina_cad:{leccion:'C14',ref:'ada2024'}, insulina_iniciar:{leccion:'C14',ref:'ada2024'},
   glucosa_5pct:{leccion:'C14',ref:'ada2024'}, no_bicarbonato_cad:{leccion:'C14',ref:'ada2024'},
   bicarbonato_cad_severo:{leccion:'C14',ref:'ada2024'}, foco_septico:{leccion:'C14',ref:'ssc2021'},
   monitorizacion_cad:{leccion:'C14',ref:'ada2024'}, resolucion_cad:{leccion:'C14',ref:'ada2024'},
   ehh_fluidos:{leccion:'C14',ref:'ada2024'}, insulina_ehh:{leccion:'C14',ref:'ada2024'}, ehh_desencadenante:{leccion:'C14',ref:'ada2024'},
-  estrato_bicar_aplicable:{leccion:'C10',ref:'bicaricu2018'}, no_bicarbonato_hipercloremica:{leccion:'C10'},
+  estrato_bicar_aplicable:{leccion:'C10',ref:'bicar_icu'}, no_bicarbonato_hipercloremica:{leccion:'C10'},
   vni_epoc:{leccion:'C12',ref:'btsvni'}, oxigeno_epoc:{leccion:'C12',ref:'gold2025'},
   broncodilatadores:{leccion:'C12',ref:'gold2025'}, corticoide_epoc:{leccion:'C12',ref:'gold2025'},
   antibiotico_anthonisen:{leccion:'C12',ref:'gold2025'},
@@ -2568,7 +2966,7 @@ const WHY_LINKS = {
   alcalosis_resp_causa:{leccion:'C13',ref:'scheiner2017'},
   intubacion_acidosis:{leccion:'C12'}, via_aerea_sensorio:{leccion:'C12'}, via_aerea:{leccion:'C12'},
   drive_respiratorio:{leccion:'C12',ref:'palmer2023'}, hipoxemia_refractaria:{leccion:'C12',ref:'esicm-ards'},
-  lactoacidosis_causa:{leccion:'C15',ref:'ssc2021'}, hpp_obstetrica:{ref:'woman2017'}
+  lactoacidosis_causa:{leccion:'C15',ref:'kraut_lactic2014'}, hpp_obstetrica:{ref:'woman2017'}
 };
 
 function renderWhyBlock(whyKey, stepIdx) {
@@ -2605,11 +3003,11 @@ window.toggleWhy = function(id, btn) {
 const GLOSSARY = {
   'anion gap': {
     titulo: 'Anion Gap (AG)',
-    contenido: '<p><strong>Definición:</strong> diferencia entre cationes y aniones medidos en plasma: <em>AG = Na⁺ − (Cl⁻ + HCO₃⁻)</em>. Refleja la concentración de aniones <strong>no medidos</strong> (principalmente albúmina, sulfatos, fosfatos, y aniones orgánicos como lactato o cetoácidos).</p><p><strong>Rango normal:</strong> 6-12 mEq/L (varía por laboratorio). Para el cálculo del delta-delta se usa 12 (límite superior de la normalidad), igual que el motor de ETHOS.</p><p><strong>Por qué importa:</strong> un AG elevado señala presencia de un ácido orgánico (lactato, cetoácidos, alcoholes tóxicos, salicilatos, urea). Es la pista más útil para clasificar acidosis metabólica en HAGMA (AG alto) vs NAGMA (AG normal).</p><p><strong>Corrección por albúmina:</strong> por cada 1 g/dL de descenso de albúmina, sumar 2.5 al AG calculado. Pacientes críticos con albúmina baja (sepsis, cirrosis) tienen AG aparente bajo que enmascara la severidad real.</p>'
+    contenido: '<p><strong>Definición:</strong> diferencia entre cationes y aniones medidos en plasma: <em>AG = Na⁺ − (Cl⁻ + HCO₃⁻)</em>. Refleja la concentración de aniones <strong>no medidos</strong> (principalmente albúmina, sulfatos, fosfatos, y aniones orgánicos como lactato o cetoácidos).</p><p><strong>Rango normal:</strong> 6-12 mEq/L (varía por laboratorio). Para el cálculo del delta-delta se usa 12 (límite superior de la normalidad), igual que el motor de ETHOS.</p><p><strong>Por qué importa:</strong> un AG elevado señala presencia de un ácido orgánico (lactato, cetoácidos, alcoholes tóxicos, salicilatos, urea). Es la pista más útil para clasificar acidosis metabólica en HAGMA (AG alto) vs NAGMA (AG normal).</p><p><strong>Corrección por albúmina:</strong> por cada 1 g/dL de descenso de albúmina, sumar 2.5 al AG calculado. Pacientes críticos con albúmina baja (sepsis, cirrosis) tienen AG aparente bajo que enmascara la severidad real.</p><p style="margin-top:8px;color:var(--text-dim);"><strong>Fuentes:</strong> <span class="step-ref" onclick="openRefModal(\'kraut_ag2007\')">Kraut &amp; Madias, CJASN 2007</span> · <span class="step-ref" onclick="openRefModal(\'emmett1977\')">Emmett &amp; Narins 1977</span> · corrección por albúmina <span class="step-ref" onclick="openRefModal(\'figge1998\')">Figge 1998</span></p>'
   },
   'winter': {
     titulo: 'Fórmula de Winter',
-    contenido: '<p><strong>Definición:</strong> calcula la PaCO₂ <em>esperada</em> como compensación respiratoria en acidosis metabólica:</p><p style="text-align:center;font-family:JetBrains Mono;background:var(--bg-elev3);padding:8px;border-radius:4px;">PaCO₂ esp. = 1.5 × HCO₃⁻ + 8 (± 2)</p><p><strong>Para qué sirve:</strong> permite identificar trastornos respiratorios sobreagregados a una acidosis metabólica. Si la PaCO₂ medida es <em>mayor</em> que la esperada → hay acidosis respiratoria concomitante. Si es <em>menor</em> → alcalosis respiratoria concomitante.</p><p><strong>Ejemplo:</strong> HCO₃ 7 → PaCO₂ esperada = 18.5 ± 2 (rango 16.5-20.5). Si PaCO₂ medida es 20, hay compensación apropiada. Si fuera 30, habría acidosis respiratoria agregada (¡muy grave!).</p><p><strong>Limitación:</strong> asume tiempo suficiente para compensación (horas en aguda, días en crónica). En primeras horas de acidosis aguda, la compensación puede no haberse desarrollado completamente.</p>'
+    contenido: '<p><strong>Definición:</strong> calcula la PaCO₂ <em>esperada</em> como compensación respiratoria en acidosis metabólica:</p><p style="text-align:center;font-family:JetBrains Mono;background:var(--bg-elev3);padding:8px;border-radius:4px;">PaCO₂ esp. = 1.5 × HCO₃⁻ + 8 (± 2)</p><p><strong>Para qué sirve:</strong> permite identificar trastornos respiratorios sobreagregados a una acidosis metabólica. Si la PaCO₂ medida es <em>mayor</em> que la esperada → hay acidosis respiratoria concomitante. Si es <em>menor</em> → alcalosis respiratoria concomitante.</p><p><strong>Ejemplo:</strong> HCO₃ 7 → PaCO₂ esperada = 18.5 ± 2 (rango 16.5-20.5). Si PaCO₂ medida es 20, hay compensación apropiada. Si fuera 30, habría acidosis respiratoria agregada (¡muy grave!).</p><p><strong>Limitación:</strong> asume tiempo suficiente para compensación (horas en aguda, días en crónica). En primeras horas de acidosis aguda, la compensación puede no haberse desarrollado completamente.</p><p style="margin-top:8px;color:var(--text-dim);"><strong>Fuente:</strong> <span class="step-ref" onclick="openRefModal(\'winter1967\')">Albert, Dell &amp; Winters, Ann Intern Med 1967</span> — fuente primaria de la fórmula.</p>'
   },
   'delta-delta': {
     titulo: 'Delta-Delta (Δ-Δ)',
@@ -2625,7 +3023,7 @@ const GLOSSARY = {
   },
   'goldmark': {
     titulo: 'GOLDMARK — Causas de HAGMA',
-    contenido: '<p><strong>Mnemotécnico</strong> para diagnóstico diferencial de acidosis metabólica con anion gap elevado (HAGMA):</p><ul style="padding-left:0;list-style:none;"><li><strong>G</strong> — Glycols (etilenglicol, propilenglicol)</li><li><strong>O</strong> — Oxoproline (uso crónico de paracetamol)</li><li><strong>L</strong> — L-lactato (acidosis láctica)</li><li><strong>D</strong> — D-lactato (síndrome intestino corto)</li><li><strong>M</strong> — Methanol</li><li><strong>A</strong> — Aspirin (salicilatos)</li><li><strong>R</strong> — Renal failure (urémica)</li><li><strong>K</strong> — Ketoacidosis (DM, alcohólica, ayuno)</li></ul><p style="margin-top:10px;"><strong>Patrón clave:</strong> ante HAGMA, pensar en GOLDMARK <em>antes</em> de asumir lactoacidosis. La combinación con lactato y osmolar gap orienta al diagnóstico (ej: AG alto + lactato bajo + osmolar gap alto = alcohol tóxico hasta demostrar lo contrario).</p>'
+    contenido: '<p><strong>Mnemotécnico</strong> para diagnóstico diferencial de acidosis metabólica con anion gap elevado (HAGMA):</p><ul style="padding-left:0;list-style:none;"><li><strong>G</strong> — Glycols (etilenglicol, propilenglicol)</li><li><strong>O</strong> — Oxoproline (uso crónico de paracetamol)</li><li><strong>L</strong> — L-lactato (acidosis láctica)</li><li><strong>D</strong> — D-lactato (síndrome intestino corto)</li><li><strong>M</strong> — Methanol</li><li><strong>A</strong> — Aspirin (salicilatos)</li><li><strong>R</strong> — Renal failure (urémica)</li><li><strong>K</strong> — Ketoacidosis (DM, alcohólica, ayuno)</li></ul><p style="margin-top:10px;"><strong>Patrón clave:</strong> ante HAGMA, pensar en GOLDMARK <em>antes</em> de asumir lactoacidosis. La combinación con lactato y osmolar gap orienta al diagnóstico (ej: AG alto + lactato bajo + osmolar gap alto = alcohol tóxico hasta demostrar lo contrario).</p><p style="margin-top:8px;color:var(--text-dim);"><strong>Fuentes por causa:</strong> L-lactato <span class="step-ref" onclick="openRefModal(\'kraut_lactic2014\')">Kraut &amp; Madias 2014</span> · D-lactato <span class="step-ref" onclick="openRefModal(\'bering2023\')">Bering 2023</span> · cetoacidosis alcohólica/ayuno <span class="step-ref" onclick="openRefModal(\'long_aka2021\')">Long 2021</span> · salicilatos <span class="step-ref" onclick="openRefModal(\'gabow1978\')">Gabow 1978</span> · alcoholes tóxicos <span class="step-ref" onclick="openRefModal(\'ross2022\')">Ross 2022</span></p>'
   },
   'henderson-hasselbalch': {
     titulo: 'Validación Henderson-Hasselbalch',
@@ -3074,8 +3472,8 @@ function compensation(dxKey, ph, paco2, hco3) {
       expected:exp, measured:paco2,
       status: st,
       interp: st === 'ok' ? 'Compensación respiratoria apropiada' :
-              st === 'borderline' ? (diff > 0 ? 'PaCO₂ algo mayor a la esperada — posible componente respiratorio (limítrofe; correlacione clínicamente)'
-                                              : 'PaCO₂ algo menor a la esperada — posible componente respiratorio (limítrofe; correlacione clínicamente)') :
+              st === 'borderline' ? (diff > 0 ? 'PaCO₂ algo mayor a la esperada — posible ACIDOSIS respiratoria agregada (limítrofe, no concluyente: correlacione)'
+                                              : 'PaCO₂ algo menor a la esperada — posible ALCALOSIS respiratoria agregada (limítrofe, no concluyente: correlacione)') :
               diff > 0 ? 'PaCO₂ MAYOR a esperada — acidosis respiratoria agregada' :
                          'PaCO₂ MENOR a esperada — alcalosis respiratoria agregada',
       ref:'cjasn2023'
@@ -3091,8 +3489,8 @@ function compensation(dxKey, ph, paco2, hco3) {
       expected:exp, measured:paco2,
       status: st,
       interp: st === 'ok' ? 'Compensación respiratoria apropiada' :
-              st === 'borderline' ? (diff > 0 ? 'PaCO₂ algo mayor a la esperada — posible componente respiratorio (limítrofe)'
-                                              : 'PaCO₂ algo menor a la esperada — posible componente respiratorio (limítrofe)') :
+              st === 'borderline' ? (diff > 0 ? 'PaCO₂ algo mayor a la esperada — posible ACIDOSIS respiratoria agregada (limítrofe, no concluyente: correlacione)'
+                                              : 'PaCO₂ algo menor a la esperada — posible ALCALOSIS respiratoria agregada (limítrofe, no concluyente: correlacione)') :
               diff > 0 ? 'PaCO₂ MAYOR — acidosis respiratoria concomitante' :
                          'PaCO₂ MENOR — alcalosis respiratoria concomitante'
     };
@@ -3152,10 +3550,31 @@ function calcDeltaDelta(agCorr, hco3, lactato) {
   const dHco3 = 24 - hco3;
   const dd = dAg - dHco3;
   const ratio = dHco3 !== 0 ? dAg / dHco3 : null;   // cociente Δ-Δ (método estándar)
+  // Veredicto por el método de la RESTA (delta gap, corte ±6)
+  let gapVerdict;
+  if (Math.abs(dd) <= 6) gapVerdict = 'puro';
+  else if (dd > 6) gapVerdict = 'alcalosis';
+  else gapVerdict = 'nagma';
+  // Veredicto por el COCIENTE (Berend 2014): <1 → NAGMA agregada · 1–2 → puro · >2 → alcalosis/HCO₃ basal alto
+  // SÓLO válido si ΔHCO₃ > 0 (HCO₃ bajo = hay acidosis metabólica). Con HCO₃ alto (alcalosis), el ΔHCO₃ es
+  // negativo y el cociente carece de sentido (daría una "NAGMA" espuria). En ese caso se usa solo la resta.
+  let ratioVerdict = null;
+  if (ratio !== null && isFinite(ratio) && dHco3 > 0) {
+    if (ratio < 1) ratioVerdict = 'nagma';
+    else if (ratio > 2) ratioVerdict = 'alcalosis';
+    else ratioVerdict = 'puro';
+  }
   let interp, status;
-  if (Math.abs(dd) <= 6) { interp='AG alto puro'; status='ok'; }
-  else if (dd > 6) { interp='Sospecha ALCALOSIS METABÓLICA CONCOMITANTE'; status='mismatch'; }
-  else { interp='Sospecha NAGMA CONCOMITANTE'; status='mismatch'; }
+  if (ratioVerdict && ratioVerdict !== gapVerdict) {
+    // Caso límite: los dos métodos discrepan → no afirmar "puro" con falsa confianza
+    const extra = (gapVerdict === 'nagma' || ratioVerdict === 'nagma')
+      ? 'NAGMA agregada (p. ej. hiperclorémica por SF 0,9% o dilucional)'
+      : 'alcalosis metabólica agregada (o HCO₃ basal alto)';
+    interp = 'LIMÍTROFE — métodos discordantes (resta vs cociente): sospecha ' + extra + '. Correlacione Cl⁻, fluidos y clínica.';
+    status = 'mismatch';
+  } else if (gapVerdict === 'puro') { interp = 'AG alto puro'; status = 'ok'; }
+  else if (gapVerdict === 'alcalosis') { interp = 'Sospecha ALCALOSIS METABÓLICA CONCOMITANTE'; status = 'mismatch'; }
+  else { interp = 'Sospecha NAGMA CONCOMITANTE'; status = 'mismatch'; }
   return { dAg, dHco3, dd, ratio, interp, status };
 }
 
@@ -3198,6 +3617,17 @@ function detectCAD(ph, hco3, glic, cetonemia, sensorio, agCorr, c) {
       sev='moderada'; sevLabel='CAD LEVE-MODERADA';
     }
     return { confirmed: true, dxKey:'cad', dxPrimary:'Cetoacidosis diabética (CAD)', sev, sevLabel };
+  }
+
+  // Caso 1b: CAD ENMASCARADA por alcalosis concomitante (vómitos, taquipnea) → pH NO acidémico.
+  // El dogma es diagnosticar CAD por el AG alto + cetonas + hiperglicemia, NO por el pH:
+  // una alcalosis metabólica/respiratoria puede normalizar o elevar el pH y ocultar la CAD.
+  if (hyperglic && ketonsFuertes && agAlto && hco3 < 18 && !acidosisMet) {
+    const sev = (hco3 < 10) ? 'severa' : 'moderada';
+    return { confirmed: true, dxKey:'cad', enmascarada: true,
+      dxPrimary:'Cetoacidosis diabética (CAD) — enmascarada por alcalosis concomitante',
+      sev,
+      sevLabel:'CAD ENMASCARADA por alcalosis (pH no acidémico; la confirman el AG alto + cetonas + hiperglicemia)' };
   }
 
   // Caso 2: criterios parciales — devolvemos para que alertas lo señalen
@@ -3291,7 +3721,7 @@ function detectLactoAcidosis(lactato, dxKey) {
 // ════════════════════════════════════════════════════════════════════
 
 // Síntesis del cuadro: una frase que integra dx primario + concomitantes + contexto crítico
-function buildSintesis(dxKey, dxPrimary, sev, cadInfo, ehhInfo, concomitantes, c, v, agInfo) {
+function buildSintesis(dxKey, dxPrimary, sev, cadInfo, ehhInfo, concomitantes, c, v, agInfo, compBorderline, limitrofes, cuadroComplejo) {
   const partes = [];
 
   // Trastorno primario + severidad
@@ -3318,6 +3748,20 @@ function buildSintesis(dxKey, dxPrimary, sev, cadInfo, ehhInfo, concomitantes, c
     partes.push(`con ${concomStr.join(' y ')}`);
   }
 
+  // Componentes LIMÍTROFES (zona gris del umbral): se nombran como "posible … no concluyente" SOLO cuando el
+  // cuadro ya es mixto (hay ≥1 concomitante confirmado), para no pasar por alto un 3.er trastorno NI sobre-
+  // diagnosticar en un trastorno puro (ahí el limítrofe queda en la alerta inferior, no en el titular). Validación 50 casos.
+  if (limitrofes && limitrofes.length > 0 && concomitantes.length >= 1) {
+    const lim = limitrofes.map(t => {
+      if (/acidosis respiratoria/i.test(t)) return 'acidosis respiratoria';
+      if (/alcalosis respiratoria/i.test(t)) return 'alcalosis respiratoria';
+      if (/acidosis metab/i.test(t)) return 'acidosis metabólica';
+      if (/alcalosis metab/i.test(t)) return 'alcalosis metabólica';
+      return 'un componente adicional';
+    });
+    partes.push(`— posible además ${[...new Set(lim)].join(' y ')} <strong>limítrofe (no concluyente)</strong>`);
+  }
+
   // Contexto crítico activo (solo lo más relevante)
   const ctxCriticos = [];
   if (c.shock || (v.pam !== null && v.pam < 65)) ctxCriticos.push('shock');
@@ -3333,11 +3777,15 @@ function buildSintesis(dxKey, dxPrimary, sev, cadInfo, ehhInfo, concomitantes, c
   }
 
   // Compensación / completitud
-  if (concomitantes.length === 0 && dxKey !== 'normal' && dxKey !== 'mixed_compensated') {
-    partes.push(`con compensación apropiada`);
+  if (concomitantes.length === 0 && limitrofes && limitrofes.length === 0 && dxKey !== 'normal' && dxKey !== 'mixed_compensated') {
+    partes.push(compBorderline ? `con compensación respiratoria en el límite (insuficiente; ajustable, sobre todo en VM)` : `con compensación apropiada`);
   }
 
-  return partes.join(' ') + '.';
+  let s = partes.join(' ') + '.';
+  if (cuadroComplejo) {
+    s += ' <strong style="color:#d29922;">⚠ Patrón mixto complejo:</strong> con ≥3 trastornos o fuerzas opuestas, el método de bicarbonato (Winter/Δ-Δ) pierde fiabilidad — <strong>busque activamente el trastorno que pueda faltar</strong> y correlacione con la clínica (considere el enfoque fisicoquímico de Stewart).';
+  }
+  return s;
 }
 
 function buildAlerts(v, c, sample, dxKey, sev, agInfo, cadInfo, ehhInfo, toxAlcInfo, concomitantes, cadPartial, ehhPartial) {
@@ -3362,6 +3810,19 @@ function buildAlerts(v, c, sample, dxKey, sev, agInfo, cadInfo, ehhInfo, toxAlcI
   if (v.ph !== null && v.ph > 7.60) {
     alerts.push({ level:'critical', title:'Alkalemia crítica',
       text:`pH ${v.ph}. Riesgo de arritmias, convulsiones, tetania hipocalcémica. Vigilar K⁺, Ca²⁺ ionizado.` });
+  }
+
+  // ── Diuresis / oliguria (KDIGO 2012, Tabla 2) ──
+  if (v.diuresis !== null) {
+    const diur = v.diuresis;
+    const dret = c.diuretico ? ' Ojo: diurético presente — el criterio de orina pierde valor (KDIGO advierte considerar fármacos y balance de fluidos).' : '';
+    if (diur < 0.3) {
+      alerts.push({ level:'critical', title:'Oliguria grave',
+        text:`Diuresis ${diur} mL/kg/h. Compatible con <strong>KDIGO estadio 3</strong> si se mantiene ≥24 h (o anuria ≥12 h). Marcador de hipoperfusión / injuria renal: priorice restaurar la perfusión y busque la causa.${dret} <span class="step-ref" onclick="openRefModal('kdigo2012')">KDIGO 2012</span>` });
+    } else if (diur < 0.5) {
+      alerts.push({ level:'attention', title:'Oliguria',
+        text:`Diuresis ${diur} mL/kg/h (&lt;0.5). Compatible con <strong>KDIGO estadio 1</strong> (≥6–12 h) o <strong>estadio 2</strong> (≥12 h). Vigile perfusión y función renal; reevalúe la respuesta.${dret} <span class="step-ref" onclick="openRefModal('kdigo2012')">KDIGO 2012</span>` });
+    }
   }
 
   // ── CONTEXTO: SHOCK (toggle o detectado por PAM) ───────────────
@@ -3490,6 +3951,12 @@ function buildAlerts(v, c, sample, dxKey, sev, agInfo, cadInfo, ehhInfo, toxAlcI
       text:`AG corr = ${agInfo.agCorr.toFixed(1)}. Casi siempre indica trastorno mixto (acidosis AG alto + alcalosis metabólica concomitante).` });
   }
 
+  // ── AG levemente elevado + lactato: posible componente láctico (sin sobrediagnosticar) ──
+  if (agInfo && agInfo.agCorr > 12 && agInfo.agCorr <= 16 && v.lactato !== null && v.lactato > 2) {
+    alerts.push({ level:'info', title:'AG levemente elevado — posible componente láctico',
+      text:`AG corr ${agInfo.agCorr.toFixed(1)} (limítrofe) con lactato ${v.lactato}: posible componente LEVE de acidosis metabólica de AG alto por lactato (hipoperfusión / hipoxia / sepsis). No es NAGMA. Trate la causa del lactato; un AG limítrofe no basta, por sí solo, para etiquetar un trastorno mayor.` });
+  }
+
   // ── Gap osmolar elevado NO cubierto por la sospecha de alcohol tóxico (AG no elevado / aislado) ──
   // detectToxicAlcohol solo usa el OG cuando el AG ya es alto; un OG elevado aislado quedaría mudo.
   if (v.osmolgap !== null && v.osmolgap >= 10 && !(toxAlcInfo && toxAlcInfo.suspicion === 'high')) {
@@ -3550,7 +4017,7 @@ function buildAlerts(v, c, sample, dxKey, sev, agInfo, cadInfo, ehhInfo, toxAlcI
           text:`pH <7.20 + AKI (${_aki}), pero patrón compatible con acidosis hiperclorémica pura. BICAR-ICU excluyó esta población; privilegie cristaloides balanceados.` });
       } else {
         alerts.push({ level:'attention', title:'Estrato BICAR-ICU aplicable',
-          text:`pH <7.20 + AKI (${_aki}) + acidosis metabólica NO hiperclorémica + NO CAD. Considerar bicarbonato 4.2% (125-250 mL en 30 min) objetivo pH ≥7.30. NNT 6 mortalidad 28 d. ${ refTag('bicar-icu','BICAR-ICU 2018') }` });
+          text:`pH <7.20 + AKI (${_aki}) + acidosis metabólica NO hiperclorémica + NO CAD. Considerar bicarbonato 4.2% (125-250 mL en 30 min) objetivo pH ≥7.30. NNT 6 mortalidad 28 d. ${ refTag('bicar_icu','BICAR-ICU 2018') }` });
       }
     } else {
       alerts.push({ level:'info', title:'Bicarbonato — fuera de BICAR-ICU',
@@ -3724,7 +4191,7 @@ function copdAecopdSteps(v, c) {
   } else if (v.ph !== null && v.ph >= 7.25 && v.ph < 7.35 && v.paco2 !== null && v.paco2 > 45) {
     steps.push({ priority:true, text: `<strong>VNI (BiPAP) precoz — indicación establecida.</strong> pH 7.25-7.35 + PaCO₂ &gt;45 + falla ventilatoria + cooperación. IPAP 12-15, EPAP 4-6, titule según PaCO₂. Reevalúe a 1-2 h: si el pH no sube, la FR no baja o el sensorio se deteriora → intubación. ${refTag('btsvni','BTS/ICS')}` });
   } else if (v.paco2 !== null && v.paco2 > 45 && deterioro) {
-    steps.push({ priority:true, text: `<strong>Considere prueba de VNI temprana aunque el pH sea "normal".</strong> Hipercapnia (PaCO₂ ${v.paco2}) con ${dets.join(' + ')}: el pH puede estar amortiguado por una alcalosis metabólica concomitante y subestimar la gravedad real. No espere a que el pH caiga &lt;7.35 ni a fatiga franca — pruebe VNI si protege vía aérea y coopera, con reevaluación estrecha en 1-2 h. ${refTag('btsvni','BTS/ICS')}${refTag('gold2025','GOLD 2025')}` });
+    steps.push({ priority:true, text: `<strong>Prueba de VNI vigilada, con bajo umbral de intubación.</strong> Hipercapnia (PaCO₂ ${v.paco2}) con ${dets.join(' + ')}: el pH puede estar amortiguado por una alcalosis metabólica concomitante y subestimar la gravedad real. Las guías indican VNI con más fuerza en acidosis respiratoria con pH &lt;7.35, pero aquí el sensorio comprometido y el patrón ventilatorio sugieren fracaso inminente. <strong>Pruebe VNI si protege vía aérea, coopera y no hay contraindicación</strong>; intube precozmente si empeora el sensorio, no tolera la VNI, hay secreciones abundantes, inestabilidad o deterioro gasométrico. Reevalúe en 1-2 h. ${refTag('btsvni','BTS/ICS')}${refTag('gold2025','GOLD 2025')}` });
   }
   steps.push({ text: `<strong>Broncodilatadores:</strong> salbutamol 2.5-5 mg + ipratropio 0.5 mg nebulizados c/4-6 h. <strong>Corticoide:</strong> prednisona 40 mg VO × 5 días o equivalente IV. ${refTag('gold2025','GOLD 2025')}` });
   steps.push({ text: `<strong>Antibiótico</strong> si Anthonisen ≥2/3 (disnea ↑, volumen de esputo ↑, purulencia) o neumonía documentada. Amoxicilina/clavulanato 1ª línea; cubra Pseudomonas si hay factores de riesgo. ${refTag('gold2025','GOLD 2025')}` });
@@ -3805,7 +4272,7 @@ function planPrincipal(v, c, dxKey, cadInfo, ehhInfo, toxAlcInfo, agInfo, hiperc
       steps.push({ text: `<strong>Acidosis hiperclorémica — probablemente iatrogénica por SF 0.9%.</strong> Especialmente común tras reanimación con grandes volúmenes en pabellón. Evidencia favorece balanceados (Plasma-Lyte, Ringer) para prevenir y manejar. ${refTag('smart2018','SMART')}${refTag('yunos2012','Yunos JAMA 2012')}` });
       steps.push({ text: `<strong>Si requiere más fluidos: balanceado.</strong> Si no, corrige espontáneamente en 24-48 h con función renal normal. NO use bicarbonato sódico rutinariamente (empeora Cl⁻ y aumenta Na⁺).` });
     } else {
-      steps.push({ text: `<strong>Acidosis metabólica hiperclorémica (AG normal) — defina el origen.</strong> Diferencial: pérdidas digestivas de HCO₃⁻ (diarrea, fístula, derivación urinaria), acidosis tubular renal (ATR) o iatrogénica por SF 0.9%. El <strong>gap aniónico urinario</strong> orienta: negativo → pérdida digestiva; positivo → ATR (defecto de acidificación renal). El <strong>K⁺ tipifica la ATR</strong>: ${v.k !== null && v.k < 3.5 ? `K⁺ ${v.k} bajo → ATR tipo 1 (distal) o tipo 2 (proximal)` : (v.k !== null && v.k > 5.0 ? `K⁺ ${v.k} alto → ATR tipo 4 (hipoaldosteronismo; frecuente en diabético/nefropatía)` : 'K⁺ bajo → ATR tipo 1/2; K⁺ alto → ATR tipo 4 (hipoaldosteronismo)')}.` });
+      steps.push({ text: `<strong>Acidosis metabólica hiperclorémica (AG normal) — defina el origen.</strong> Diferencial: pérdidas digestivas de HCO₃⁻ (diarrea, fístula, derivación urinaria), acidosis tubular renal (ATR) o iatrogénica por SF 0.9%. El <strong>gap aniónico urinario</strong> orienta: negativo → pérdida digestiva; positivo → ATR (defecto de acidificación renal). El <strong>K⁺ tipifica la ATR</strong>: ${v.k !== null && v.k < 3.5 ? `K⁺ ${v.k} bajo → ATR tipo 1 (distal) o tipo 2 (proximal)` : (v.k !== null && v.k > 5.0 ? `K⁺ ${v.k} alto → ATR tipo 4 (hipoaldosteronismo; frecuente en diabético/nefropatía)` : 'K⁺ bajo → ATR tipo 1/2; K⁺ alto → ATR tipo 4 (hipoaldosteronismo)')}. <span class="step-ref" onclick="openRefModal('batlle1988')">Batlle 1988 (gap aniónico urinario)</span> <span class="step-ref" onclick="openRefModal('palmer_rta2021')">ATR: Palmer 2021</span>` });
       steps.push({ text: `<strong>Tratamiento según causa:</strong> si es por SF, balanceados y se autocorrige; si es por pérdida digestiva o ATR, el bicarbonato/citrato SÍ es razonable (en NAGMA, a diferencia de la acidosis de AG alto). Corrija K⁺.` });
     }
     return steps;
@@ -3926,7 +4393,7 @@ function planModificadores(v, c, dxKey, cadInfo) {
   if (!cadInfo && (dxKey === 'ac_met' || dxKey === 'ac_mix') && v.ph !== null && v.ph <= 7.20) {
     const aki = (c.kdigo >= 2) || (v.crea !== null && v.crea >= 2.0);
     if (aki) {
-      steps.push({ text: `<strong>Considere bicarbonato de sodio (acidemia severa + AKI).</strong> En acidemia metabólica severa (pH ≤7.20) CON lesión renal aguda (AKIN/KDIGO 2-3), el bicarbonato 4.2% IV (meta pH >7.30) redujo la mortalidad a 28 días y la necesidad de terapia de reemplazo renal. En la población general NO mejoró desenlaces, así que no es una medida rutinaria. Vigile alcalosis metabólica, hipernatremia e hipocalcemia. No aplica a cetoacidosis. ${refTag('bicaricu2018','BICAR-ICU 2018')}` });
+      steps.push({ text: `<strong>Considere bicarbonato de sodio (acidemia severa + AKI).</strong> En acidemia metabólica severa (pH ≤7.20) CON lesión renal aguda (AKIN/KDIGO 2-3), el bicarbonato 4.2% IV (meta pH >7.30) redujo la mortalidad a 28 días y la necesidad de terapia de reemplazo renal. En la población general NO mejoró desenlaces, así que no es una medida rutinaria. Vigile alcalosis metabólica, hipernatremia e hipocalcemia. No aplica a cetoacidosis. ${refTag('bicar_icu','BICAR-ICU 2018')}` });
     }
   }
 
@@ -4238,6 +4705,8 @@ function analyze() {
     osmolgap:getVal('osmolgap'),
     fr:getVal('fr'), fc:getVal('fc'), spo2:getVal('spo2'), pam:getVal('pam'),
     fio2:getVal('fio2'), temp:getVal('temp'),
+    pao2:getVal('pao2'), sao2:getVal('sao2'), hb:getVal('hb'), edad:getVal('edad'), pbar:getVal('pbar'), altitud:getVal('altitud'),
+    diuresis:getVal('diuresis'),
     cetonemia: getStr('cetonemia'), sensorio: getStr('sensorio'), sampleType: getStr('sampleType'),
     narrativa: (getStr('narrativa') || '').trim(), o2device: getStr('o2device')
   };
@@ -4271,13 +4740,38 @@ function analyze() {
   if (cadInfo) { dxKey = 'cad'; dxPrimary = cadInfo.sevLabel; }
   else if (ehhInfo) { dxKey = 'ehh'; dxPrimary = ehhInfo.dxPrimary; }
 
+  // REGLA DE ORO (Figge 1998; cjasn2023): un AG corregido elevado ES una acidosis metabólica de AG
+  // alto, AUNQUE el pH/HCO₃ estén en rango. Si el primario salió "normal" o "mixto compensado" pero el
+  // AG corregido está elevado, hay una HAGMA OCULTA equilibrada por un proceso alcalinizante concomitante.
+  // No decir "sin trastorno aparente": eso pasa por alto una acidosis real (sobre todo en hipoalbuminemia).
+  let hiddenHagma = false;
+  if ((dxKey === 'normal' || dxKey === 'mixed_compensated') && agInfo && agInfo.agCorr > 15) {
+    dxKey = 'ac_met'; hiddenHagma = true;
+    dxPrimary = 'Acidosis metabólica de AG alto OCULTA'
+      + (agInfo.corrApplied ? ' (desenmascarada al corregir el AG por albúmina baja: AG corr ' + agInfo.agCorr.toFixed(1) + ')' : ' (AG ' + agInfo.agCorr.toFixed(1) + ')')
+      + ' — el pH está en rango porque la equilibra un proceso alcalinizante concomitante; no es "sin trastorno"';
+  }
+
   // 6. Compensación
   let compDxKey = (dxKey === 'cad' || dxKey === 'ehh') ? 'ac_met' : dxKey;
   // Trastorno mixto compensado (pH normal): evaluar la compensación contra el trastorno
   // metabólico implícito en el HCO₃, para no perder el componente respiratorio (p.ej. alcalosis resp).
   if (dxKey === 'mixed_compensated') {
-    if (hco3 < 22) compDxKey = 'ac_met';
-    else if (hco3 > 26) compDxKey = 'al_met';
+    // pH casi-normal con PaCO₂/HCO₃ anormales: distinguir un trastorno RESPIRATORIO bien compensado (crónico,
+    // el HCO₃ alto/bajo ES la compensación renal) de un VERDADERO mixto (HCO₃ más allá de lo esperado → hay un
+    // componente metabólico sobreañadido). Comparar el HCO₃ con la compensación crónica esperada (validación 50 casos).
+    if (paco2 > 45) {
+      const expCron = 24 + 3.5*(paco2-40)/10;
+      if (hco3 > expCron + 4) { compDxKey = 'al_met'; dxPrimary = 'Acidosis respiratoria con alcalosis metabólica sobreañadida (pH equilibrado por fuerzas opuestas)'; }
+      else { compDxKey = 'ac_resp'; dxPrimary = 'Acidosis respiratoria crónica (pH casi normalizado por compensación renal)'; }
+    } else if (paco2 < 35) {
+      const expCron = 24 - 5*(40-paco2)/10;
+      if (hco3 < expCron - 4) { compDxKey = 'ac_met'; dxPrimary = 'Alcalosis respiratoria con acidosis metabólica sobreañadida (pH equilibrado por fuerzas opuestas)'; }
+      else { compDxKey = 'al_resp'; dxPrimary = 'Alcalosis respiratoria crónica (pH casi normalizado por compensación renal)'; }
+    } else {
+      if (hco3 < 22) { compDxKey = 'ac_met'; dxPrimary = 'Acidosis metabólica (pH en rango)'; }
+      else if (hco3 > 26) { compDxKey = 'al_met'; dxPrimary = 'Alcalosis metabólica (pH en rango)'; }
+    }
   }
   const compInfo = compensation(compDxKey, ph, paco2, hco3);
 
@@ -4299,11 +4793,23 @@ function analyze() {
   // 7. Delta-delta — solo aplica ante acidosis metabólica de AG alto. Si el PRIMARIO ya es una
   // alcalosis metabólica (al_met/al_mix), un "concomitante de alcalosis" por Δ-Δ es espurio (un AG
   // levemente alto en alcalosis no es una acidosis de AG alto). Un HAGMA concomitante real se cuenta por agCorr>18.
-  const dd = (agInfo && dxKey !== 'al_met' && dxKey !== 'al_mix') ? calcDeltaDelta(agInfo.agCorr, hco3, v.lactato) : null;
+  // Tampoco con un primario RESPIRATORIO: el HCO₃ está movido por la compensación renal y/o por el propio
+  // trastorno respiratorio, así que el Δ-Δ (que asume HCO₃ basal 24) da veredictos espurios (p.ej. "alcalosis"
+  // cuando una acidosis respiratoria sostuvo el HCO₃). En ese caso el componente metabólico se evalúa por el AG
+  // (HAGMA si agCorr elevado) y por la comparación de compensación, no por Δ-Δ.
+  const dd = (agInfo && dxKey !== 'al_met' && dxKey !== 'al_mix' && dxKey !== 'ac_resp' && dxKey !== 'al_resp')
+    ? calcDeltaDelta(agInfo.agCorr, hco3, v.lactato) : null;
 
   // 8. Concomitantes
   const concomitantes = [];
-  if (compInfo.metabolic && compInfo.metabolic.status === 'mismatch') concomitantes.push(compInfo.metabolic.interp);
+  // En una HAGMA oculta CON alcalosis metabólica enmascarante (Δ-Δ>6), el HCO₃ está inflado por esa alcalosis;
+  // Winter espera entonces una PaCO₂ mayor y marca una "alcalosis respiratoria" espuria. Se omite SOLO en ese
+  // caso preciso (no afecta los trastornos respiratorios reales, p.ej. cuando el Δ-Δ es NAGMA). Validación 50 casos.
+  // Solo si la PaCO₂ es NORMAL (35–45): ahí no hay trastorno respiratorio real y la "alcalosis respiratoria"
+  // es puro artefacto de Winter sobre un HCO₃ inflado. Si la PaCO₂ está baja (<35) es una alcalosis respiratoria
+  // VERDADERA y NO se suprime (p.ej. los triples pH-normal con alcalosis resp real).
+  const winterDistorsionado = hiddenHagma && dd && /ALCALOSIS/i.test(dd.interp) && paco2 >= 35 && paco2 <= 45;
+  if (compInfo.metabolic && compInfo.metabolic.status === 'mismatch' && !winterDistorsionado) concomitantes.push(compInfo.metabolic.interp);
   if (compInfo.respiratory && compInfo.respiratory.status === 'mismatch') concomitantes.push(compInfo.respiratory.interp);
   if (dd && dd.status === 'mismatch') {
     let ddTxt = dd.interp;
@@ -4316,7 +4822,15 @@ function analyze() {
   // Si el trastorno primario NO es ya una acidosis metabólica, cuéntala como componente añadido
   // (p.ej. acidosis respiratoria primaria + AG alto = trastorno mixto, no "compensado").
   const primaryEsAcMet = (dxKey === 'ac_met' || dxKey === 'ac_mix' || dxKey === 'cad' || dxKey === 'ehh');
-  if (agInfo && agInfo.agCorr > 18 && !primaryEsAcMet) {
+  const primaryEsAlcalosis = (dxKey === 'al_met' || dxKey === 'al_resp' || dxKey === 'al_mix');
+  // Umbral context-aware (validación 50 casos): un AG corregido ≥16 es una HAGMA que NO se puede pasar por
+  // alto cuando el primario es respiratorio o el pH es normal (p.ej. acidosis respiratoria + HAGMA por lactato).
+  // PERO en alcalosis/alcalemia un AG levemente alto (≈15-19) suele deberse a la propia alcalemia (mayor carga
+  // aniónica de la albúmina) y a la contracción de volumen, NO a aniones orgánicos: ahí exigir AG claramente
+  // alto (>19) o una causa orgánica (lactato >4) para no sobre-diagnosticar.
+  const umbralHagma = primaryEsAlcalosis ? 19 : 15;
+  const causaOrganicaAG = (v.lactato !== null && v.lactato > 4);
+  if (agInfo && !primaryEsAcMet && (agInfo.agCorr > umbralHagma || (agInfo.agCorr > 15 && causaOrganicaAG))) {
     concomitantes.push(`Acidosis metabólica de AG alto concomitante (AG corr ${agInfo.agCorr.toFixed(1)})`);
   }
 
@@ -4340,7 +4854,13 @@ function analyze() {
   const planSections = buildPlan(v, c, dxKey, cadInfo, ehhInfo, toxAlcInfo, agInfo, hiperclor, lactoAc);
   const contextTags = buildContextTags(v, c);
   const reasoning = buildReasoning(dxKey, cadInfo, ehhInfo, agInfo, dd, ph, paco2, hco3, v.lactato, c, v);
-  const sintesis = buildSintesis(dxKey, dxPrimary, sev, cadInfo, ehhInfo, concomitantes, c, v, agInfo);
+  const compBorderline = ['metabolic', 'respiratory'].some(k => compInfo[k] && compInfo[k].status === 'borderline');
+  // Limítrofes nombrados para surfacearlos en la síntesis (zona gris, no concluyente). Cuadro complejo:
+  // ≥3 trastornos confirmados, o ≥2 con un limítrofe encima → avisar que el método tradicional pierde fiabilidad.
+  const limitrofes = [];
+  ['metabolic','respiratory'].forEach(k => { if (compInfo[k] && compInfo[k].status === 'borderline') limitrofes.push(compInfo[k].interp); });
+  const cuadroComplejo = tripleDetected || (nTrastornos >= 2 && limitrofes.length > 0);
+  const sintesis = buildSintesis(dxKey, dxPrimary, sev, cadInfo, ehhInfo, concomitantes, c, v, agInfo, compBorderline, limitrofes, cuadroComplejo);
 
   // 9b. Revisión de datos (coherencia) — advierte, no bloquea
   const dataReview = buildDataReview(v, agInfo, sample);
@@ -4367,7 +4887,15 @@ function buildDataReview(v, agInfo, sample) {
   // 2. Anión gap implausible (typo en Na/Cl/HCO₃)
   if (v.na !== null && v.cl !== null && v.hco3 !== null) {
     const agRaw = v.na - (v.cl + v.hco3);
-    if (agRaw < 4) out.push('<strong>Anión gap muy bajo o negativo</strong> (' + agRaw.toFixed(0) + '). Revise Na⁺/Cl⁻/HCO₃⁻ por posible error de tipeo. Causas reales (raras): hipoalbuminemia severa, intoxicación por bromuro o litio, mieloma.');
+    const agCorrW = (v.alb != null) ? agRaw + 2.5 * (4.0 - v.alb) : null;
+    if (agRaw < 4) {
+      if (agCorrW != null && v.alb < 3.5 && agCorrW >= 4) {
+        // La hipoalbuminemia explica (al menos en parte) el AG bajo: no es necesariamente un error de tipeo.
+        out.push('<strong>Anión gap bajo</strong> (' + agRaw.toFixed(0) + '), pero el <strong>AG corregido por albúmina sube a ' + agCorrW.toFixed(0) + '</strong> (albúmina ' + v.alb + ' g/dL) — concordante con hipoalbuminemia, no necesariamente un error. <span class="step-ref" onclick="openRefModal(\'figge1998\')">Figge 1998</span> Recuerde: un AG bajo puede <strong>enmascarar una acidosis de AG alto</strong>; guíese por el AG corregido.');
+      } else {
+        out.push('<strong>Anión gap muy bajo o negativo</strong> (' + agRaw.toFixed(0) + ')' + (agCorrW != null ? ' (corregido por albúmina ' + agCorrW.toFixed(0) + ')' : '') + '. ' + (v.alb == null ? 'Ingrese la albúmina para corregirlo. ' : '') + 'Verifique Na⁺/Cl⁻/HCO₃⁻ (descarte error de tipeo). Causas reales: hipoalbuminemia <span class="step-ref" onclick="openRefModal(\'figge1998\')">Figge 1998</span>; cationes no medidos (litio, hiper-Ca²⁺/Mg²⁺, paraproteína IgG del mieloma); un AG <em>negativo</em> sugiere bromuro. Un AG bajo puede enmascarar una acidosis de AG alto.');
+      }
+    }
     else if (agRaw > 40) out.push('<strong>Anión gap extremadamente alto</strong> (' + agRaw.toFixed(0) + '). Confirme Na⁺/Cl⁻/HCO₃⁻ (posible error de tipeo); si es real, indica acidosis de AG alto grave.');
   }
   // 3. Cl⁻ ≥ Na⁺: químicamente implausible
@@ -4432,6 +4960,14 @@ function buildNoteText(r) {
   if (r.compInfo && r.compInfo.respiratory) calc.push('Patron resp: ' + r.compInfo.respiratory.pattern);
   if (r.dd && !r.dd.skip) calc.push('Delta-Delta ' + r.dd.dd.toFixed(1));
   if (calc.length) L.push('Calculos: ' + calc.join(' · '));
+  const _oxy = computeOxy(v);
+  if (_oxy) {
+    const ol = [];
+    ol.push('PaO2 ' + _oxy.pao2 + (v.fio2 != null ? (' · FiO2 ' + v.fio2 + '%') : '') + ' · PAO2 ' + _oxy.PAO2.toFixed(0) + ' · A-a ' + _oxy.aa.toFixed(0) + (_oxy.roomAir && _oxy.aaUpper != null ? (' (LSN ' + _oxy.aaUpper.toFixed(0) + ')') : '') + ' · P/F ' + _oxy.pf.toFixed(0) + ' (' + _oxy.pfClass.label + ')');
+    if (_oxy.cao2 != null) ol.push('CaO2 ' + _oxy.cao2.toFixed(1) + ' mL/dL');
+    L.push('OXIGENACION: ' + ol.join(' · '));
+    if (_oxy.severe.length) L.push('  [CRITICA] ' + _oxy.severe.join(' '));
+  }
   if (r.c && (r.c.hemorragia || r.c.trauma)) {
     L.push('>> ETHOS-TX: caso con ' + (r.c.hemorragia ? 'sangrado activo' : 'trauma') + ' — para decision transfusional / MTP / timing de anticoagulacion, continuar en ETHOS-TX (llevar: peso, Hb, plaquetas, INR/TP, fibrinogeno, calcio ionico, temperatura, lactato).');
   }
@@ -4525,6 +5061,125 @@ function buildTxHandoff(v, c) {
   </div></div>`;
 }
 
+// ════════════════════════════════════════════════════════════════════
+// OXIGENACIÓN E INTERCAMBIO GASEOSO (módulo aditivo; se activa con PaO₂)
+// Respaldo: Berlin 2012 · Matthay 2024 · Sarkar 2017 · Petersson 2023 · Crapo 1999 · West
+// ════════════════════════════════════════════════════════════════════
+function computeOxy(v) {
+  if (!v || v.pao2 == null) return null;
+  const pao2 = v.pao2;
+  const fio2assumed = (v.fio2 == null);
+  const fio2frac = (fio2assumed ? 21 : v.fio2) / 100;
+  const roomAir = fio2frac <= 0.24;
+  let pbar, pbarSrc;
+  if (v.pbar != null) { pbar = v.pbar; pbarSrc = 'medida'; }
+  else if (v.altitud != null) { pbar = 760 * Math.exp(-v.altitud / 7990); pbarSrc = 'estimada por altitud (' + v.altitud + ' m)'; }
+  else { pbar = 760; pbarSrc = 'asumida a nivel del mar (760)'; }
+  const PH2O = 47, R = 0.8;
+  const paco2 = (v.paco2 != null ? v.paco2 : 40);
+  // Ecuación del gas alveolar completa (igual que Crapo 1999):
+  const PAO2 = fio2frac * (pbar - PH2O) - paco2 * (fio2frac + (1 - fio2frac) / R);
+  const aa = PAO2 - pao2;
+  const aA = (PAO2 > 0) ? pao2 / PAO2 : null;
+  // Referencias Crapo 1999 (Tabla 7; válidas 18–81 años, hasta 1.400 m / PB≥~645). A aire ambiente.
+  const edad = (v.edad != null) ? v.edad : null;
+  let aaPred = null, aaUpper = null, pao2Pred = null, pao2Lower = null;
+  if (edad != null) {
+    aaPred = 11.799 + 0.2344 * edad - 0.0200 * pbar;
+    aaUpper = aaPred + 1.96 * 5.364;
+    pao2Pred = -31.453 - 0.2452 * edad + 0.1834 * pbar;
+    pao2Lower = pao2Pred - 1.96 * 5.539;
+  }
+  const aaElevated = roomAir ? (aaUpper != null ? (aa > aaUpper) : (aa > 20)) : null;
+  const pao2Low = roomAir ? (pao2Lower != null ? (pao2 < pao2Lower) : (pao2 < 80)) : null;
+  const crapoOutOfRange = (edad != null && (edad < 18 || edad > 81)) || pbar < 645;
+  const pf = pao2 / fio2frac;
+  let pfClass;
+  if (pf > 300) pfClass = { label: 'Sin criterio de hipoxemia SDRA', key: 'ok' };
+  else if (pf > 200) pfClass = { label: 'SDRA leve', key: 'warn' };
+  else if (pf > 100) pfClass = { label: 'SDRA moderado', key: 'warn' };
+  else pfClass = { label: 'SDRA grave', key: 'crit' };
+  const sf = (v.spo2 != null) ? v.spo2 / fio2frac : null;
+  const sat = (v.sao2 != null ? v.sao2 : (v.spo2 != null ? v.spo2 : null));
+  const satSrc = (v.sao2 != null ? 'SaO₂' : (v.spo2 != null ? 'SpO₂ (aprox.)' : null));
+  const cao2 = (v.hb != null && sat != null) ? (1.39 * v.hb * (sat / 100) + 0.003 * pao2) : null;
+  let mechanism;
+  if (!roomAir) mechanism = 'En O₂ suplementario: evalúa la oxigenación por PaO₂/FiO₂ (Berlin). El gradiente A-a se muestra como referencia, pero su "normal" por edad aplica a aire ambiente y sube con la FiO₂ — no lo sobreinterpretes.';
+  else if (aaElevated) mechanism = 'Gradiente A-a ELEVADO (sobre el límite superior por edad/altitud) → desajuste V/Q, shunt o alteración de la difusión. Si no corrige con O₂, sospechar shunt.';
+  else mechanism = 'Gradiente A-a dentro de lo esperado por edad/altitud → la hipoxemia (si existe) orienta a hipoventilación o FiO₂/presión baja, no a enfermedad del intercambio.';
+  const severe = [];
+  if (pao2 < 60) severe.push('PaO₂ < 60 mmHg: hipoxemia grave.');
+  if (v.sao2 != null && v.sao2 < 90) severe.push('SaO₂ < 90%: hipoxemia grave.');
+  if (pf <= 100) severe.push('PaO₂/FiO₂ ≤ 100: SDRA grave.');
+  return { pao2, fio2frac, fio2pct: fio2frac * 100, fio2assumed, roomAir, pbar, pbarSrc, PAO2, aa, aA, aaPred, aaUpper, aaElevated, pao2Pred, pao2Lower, pao2Low, crapoOutOfRange, edad, pf, pfClass, sf, cao2, sat, satSrc, mechanism, severe, paco2 };
+}
+
+function buildOxyReasoning(o) {
+  const f0 = x => (x == null || !isFinite(x)) ? '—' : x.toFixed(0);
+  const steps = [];
+  steps.push(`<p style="margin:0 0 10px;"><strong>1. ¿Cuál es el "techo" de oxígeno posible?</strong><br>
+    Calculamos la presión de O₂ en el alvéolo: PAO₂ = ${f0(o.PAO2)} mmHg, a partir de tu FiO₂ (${f0(o.fio2pct)}%) y la presión barométrica (${f0(o.pbar)} mmHg, ${o.pbarSrc}). Es el máximo PO₂ que el pulmón puede ofrecer a la sangre en estas condiciones. <span class="step-ref" onclick="openRefModal('crapo1999')">Crapo 1999</span></p>`);
+  let p2;
+  if (o.roomAir && o.aaUpper != null) {
+    p2 = o.aaElevated
+      ? `El gradiente A-a (${f0(o.aa)}) <strong>supera</strong> el límite esperado para esta edad y altitud (≤ ${f0(o.aaUpper)}). Eso señala que el problema está en el intercambio: desajuste V/Q, shunt o difusión.`
+      : `El gradiente A-a (${f0(o.aa)}) está <strong>dentro</strong> de lo esperado para esta edad y altitud (≤ ${f0(o.aaUpper)}). El intercambio funciona; una hipoxemia, de haberla, vendría de hipoventilación o de la altitud, no del pulmón.`;
+  } else {
+    p2 = `El gradiente A-a medido es ${f0(o.aa)}. Como hay O₂ suplementario, NO lo comparamos con el normal de aire ambiente (que se eleva al subir la FiO₂); lo mostramos solo como referencia.`;
+  }
+  steps.push(`<p style="margin:0 0 10px;"><strong>2. ¿El problema está en el pulmón?</strong><br>${p2} <span class="step-ref" onclick="openRefModal('sarkar2017')">Sarkar 2017</span> <span class="step-ref" onclick="openRefModal('petersson2023')">Petersson 2023</span></p>`);
+  steps.push(`<p style="margin:0 0 10px;"><strong>3. ¿Qué tan grave es la oxigenación?</strong><br>
+    ${o.roomAir ? 'En aire ambiente comparamos la PaO₂ con la esperada por edad y altitud (Crapo).' : 'En O₂ suplementario la medida más fiable es la relación PaO₂/FiO₂.'} Tu P/F = ${f0(o.pf)} → <strong>${o.pfClass.label}</strong>. <span class="step-ref" onclick="openRefModal('berlin2012')">Berlin 2012</span>${o.sf != null ? ` Cuando no hay gasometría puede usarse SpO₂/FiO₂. <span class="step-ref" onclick="openRefModal('matthay2024')">Def. global 2023</span>` : ''}</p>`);
+  if (o.cao2 != null) {
+    const anemia = o.cao2 < 16;
+    steps.push(`<p style="margin:0 0 10px;"><strong>4. ¿Cuánto O₂ transporta realmente la sangre?</strong><br>
+      Una PaO₂ alta no garantiza buen transporte: el contenido de O₂ depende sobre todo de la hemoglobina. Tu CaO₂ = ${o.cao2.toFixed(1)} mL/dL. ${anemia ? '<strong>Está bajo:</strong> aunque la PaO₂ sea alta, el contenido es limitado por la anemia — subir la FiO₂ rinde poco; lo que aumenta el aporte de O₂ es corregir la hemoglobina.' : 'Está en rango.'} <span class="step-ref" onclick="openRefModal('west_o2')">West cap. 6</span></p>`);
+  }
+  return `<div style="font-size:12.5px;line-height:1.6;color:var(--text-dim);">${steps.join('')}
+    <p style="color:var(--text-mute);font-style:italic;font-size:11px;margin:6px 0 0;">Cada paso enlaza a su fuente verificada. Es un razonamiento de apoyo, no una orden: contextualízalo al paciente.</p></div>`;
+}
+
+function buildOxygenationBlock(v) {
+  const o = computeOxy(v);
+  if (!o) return '';
+  const f1 = x => (x == null || !isFinite(x)) ? '—' : x.toFixed(1);
+  const f0 = x => (x == null || !isFinite(x)) ? '—' : x.toFixed(0);
+  let rows = '';
+  rows += `<div class="comp-row"><span class="label">PAO₂ (gas alveolar)</span><span class="formula">FiO₂ ${f0(o.fio2pct)}% × (Pbar ${f0(o.pbar)} − 47) − PaCO₂ ${f0(o.paco2)} × [FiO₂ + (1−FiO₂)/0.8] = ${f0(o.PAO2)} mmHg <span class="step-ref" onclick="openRefModal('crapo1999')">Crapo 1999</span></span><span class="result">${f0(o.PAO2)}</span></div>`;
+  let aaFormula = `PAO₂ ${f0(o.PAO2)} − PaO₂ ${f0(o.pao2)} = ${f0(o.aa)} mmHg`, aaRight;
+  if (o.roomAir && o.aaUpper != null) {
+    aaFormula += ` · esperado p/edad+altitud ≤ ${f0(o.aaUpper)} (pred ${f0(o.aaPred)})`;
+    aaRight = `<span class="result ${o.aaElevated ? 'mismatch' : 'ok'}">${o.aaElevated ? 'ELEVADO' : 'normal'}</span>`;
+  } else if (o.roomAir) {
+    aaFormula += ` · ingresa Edad para el normal por edad/altitud`;
+    aaRight = `<span class="result">${f0(o.aa)}</span>`;
+  } else {
+    aaFormula += ` · (normal por edad válido a aire ambiente; en O₂ guíate por P/F)`;
+    aaRight = `<span class="result">${f0(o.aa)}</span>`;
+  }
+  rows += `<div class="comp-row"><span class="label">Gradiente A-a</span><span class="formula">${aaFormula} <span class="step-ref" onclick="openRefModal('crapo1999')">Crapo 1999</span></span>${aaRight}</div>`;
+  if (o.roomAir && o.pao2Lower != null) {
+    rows += `<div class="comp-row"><span class="label">PaO₂ vs esperado</span><span class="formula">PaO₂ ${f0(o.pao2)} · esperado p/edad+altitud ≈ ${f0(o.pao2Pred)} (límite inf. ${f0(o.pao2Lower)}) <span class="step-ref" onclick="openRefModal('crapo1999')">Crapo 1999</span></span><span class="result ${o.pao2Low ? 'mismatch' : 'ok'}">${o.pao2Low ? 'BAJO' : 'normal'}</span></div>`;
+  }
+  rows += `<div class="comp-row"><span class="label">PaO₂/FiO₂ (P/F)</span><span class="formula">${f0(o.pao2)} / ${o.fio2frac.toFixed(2)} = ${f0(o.pf)} mmHg <span class="step-ref" onclick="openRefModal('berlin2012')">Berlin 2012</span></span><span class="result ${o.pfClass.key === 'crit' ? 'mismatch' : o.pfClass.key === 'warn' ? 'borderline' : 'ok'}">${o.pfClass.label}</span></div>`;
+  if (o.sf != null) rows += `<div class="comp-row"><span class="label">SpO₂/FiO₂ (S/F)</span><span class="formula">${f0(v.spo2)} / ${o.fio2frac.toFixed(2)} = ${f0(o.sf)} <span class="step-ref" onclick="openRefModal('matthay2024')">Def. global 2023</span></span><span class="result ${o.sf <= 315 ? 'borderline' : 'ok'}">${o.sf <= 315 ? 'hipoxemia (≤315)' : '>315'}</span></div>`;
+  if (o.aA != null) rows += `<div class="comp-row"><span class="label">Cociente a/A</span><span class="formula">PaO₂ ${f0(o.pao2)} / PAO₂ ${f0(o.PAO2)} = ${o.aA.toFixed(2)} <span class="step-ref" onclick="openRefModal('petersson2023')">Petersson 2023</span></span><span class="result ${o.aA < 0.75 ? 'borderline' : 'ok'}">${o.aA < 0.75 ? 'reducido' : 'normal'}</span></div>`;
+  if (o.cao2 != null) rows += `<div class="comp-row"><span class="label">Contenido de O₂ (CaO₂)</span><span class="formula">1.39 × Hb ${f1(v.hb)} × ${o.satSrc} ${f0(o.sat)}% + 0.003 × PaO₂ ${f0(o.pao2)} = ${f1(o.cao2)} mL/dL <span class="step-ref" onclick="openRefModal('west_o2')">West cap. 6</span></span><span class="result ${o.cao2 < 16 ? 'borderline' : 'ok'}">${f1(o.cao2)} mL/dL</span></div>`;
+  let banner = '';
+  if (o.severe.length) banner = `<div class="alert critical" style="margin-bottom:10px;"><div class="alert-icon">!</div><div class="alert-content"><strong>Oxigenación crítica</strong> — ${o.severe.join(' ')}</div></div>`;
+  let notes = `<div style="font-size:12.5px;line-height:1.55;color:var(--text-dim);margin-top:10px;"><strong>Mecanismo:</strong> ${o.mechanism} <span class="step-ref" onclick="openRefModal('sarkar2017')">Sarkar 2017</span> <span class="step-ref" onclick="openRefModal('petersson2023')">Petersson 2023</span>`;
+  if (o.fio2assumed) notes += `<br><span style="color:var(--text-mute);">⚠ FiO₂ no ingresada: se asumió 21% (aire ambiente). Ingresa la FiO₂ real para exactitud.</span>`;
+  if (o.crapoOutOfRange) notes += `<br><span style="color:var(--text-mute);">⚠ Edad o presión fuera del rango validado por Crapo (18–81 años; hasta 1.400 m / Pbar ≥ 645 mmHg): los valores esperados son una extrapolación declarada. <span class="step-ref" onclick="openRefModal('crapo1999')">Crapo 1999</span></span>`;
+  notes += `<br><span style="color:var(--text-mute);">Presión barométrica ${o.pbarSrc}. Referencias de Crapo a aire ambiente. La clasificación SDRA (P/F) requiere PEEP ≥ 5 cmH₂O.</span>`;
+  notes += `</div>`;
+  const disc = `<div style="font-size:10.5px;color:var(--text-mute);margin-top:8px;font-style:italic;">Apoyo educativo y a la decisión clínica; no reemplaza el juicio médico ni la evaluación presencial. Verifique con su criterio y las guías locales.</div>`;
+  const porque = `<div class="comp-block collapsible collapsed" style="margin-top:12px;">
+    <div class="reasoning-title collapsible-header">¿Por qué? — cómo llegamos a esto (toca para ver el razonamiento)</div>
+    <div class="collapsible-content">${buildOxyReasoning(o)}</div>
+  </div>`;
+  return `<div class="section"><div class="comp-block"><div class="reasoning-title">Oxigenación e intercambio gaseoso</div>${banner}${rows}${notes}${porque}${disc}</div></div>`;
+}
+
 function renderResult(r) {
   const main = document.getElementById('main');
   main.dataset.hasResult = '1';
@@ -4564,6 +5219,9 @@ function renderResult(r) {
     ${buildAprenderLinks(r.dxKey, r.cadInfo, r.ehhInfo, r.toxAlcInfo)}
     ${renderValues(r.values, r.agInfo)}
   </div></div>`;
+
+  // Oxigenación e intercambio gaseoso (aditivo; solo si hay PaO₂)
+  html += buildOxygenationBlock(r.values);
 
   // Handoff a ETHOS·TX (si hemorragia/shock)
   html += buildTxHandoff(r.values, r.c);
@@ -4652,7 +5310,7 @@ function renderResult(r) {
       html += `<div class="comp-row">
         <span class="label">Anion gap</span>
         <span class="formula">AG = Na − (Cl + HCO₃) = ${_v.na} − (${_v.cl} + ${_v.hco3}) = ${r.agInfo.ag.toFixed(1)}${r.agInfo.corrApplied ? ` · corregido = ${r.agInfo.ag.toFixed(1)} + 2.5 × (4.0 − ${_v.alb}) = ${r.agInfo.agCorr.toFixed(1)}` : ''}</span>
-        <span class="result ${r.agInfo.agCorr > 18 ? 'mismatch' : 'ok'}">${r.agInfo.agCorr > 18 ? 'ELEVADO' : 'Normal'}</span>
+        <span class="result ${r.agInfo.agCorr > 16 ? 'mismatch' : (r.agInfo.agCorr > 12 ? 'borderline' : 'ok')}">${r.agInfo.agCorr > 16 ? 'ELEVADO' : (r.agInfo.agCorr > 12 ? 'limítrofe' : 'Normal')}</span>
       </div>`;
     }
     if (r.dd) {
@@ -4708,6 +5366,7 @@ function renderResult(r) {
     </div></div>`;
   }
 
+  if (window.ETHOSNomo) { try { html += window.ETHOSNomo.clinicaBlock(r); } catch (e) { /* el mapa nunca debe romper el resultado */ } }
   main.innerHTML = html;
   document.querySelectorAll('.collapsible-header').forEach(h => {
     h.addEventListener('click', () => h.parentElement.classList.toggle('collapsed'));
@@ -4732,6 +5391,7 @@ function renderValues(v, agInfo) {
   if (v.fc != null) cards.push({ l:'FC', val: v.fc, abn: v.fc<60 || v.fc>100, crit: v.fc>120 || v.fc<40 });
   if (v.spo2 != null) cards.push({ l:'SpO₂', val: v.spo2, abn: v.spo2<94, crit: v.spo2<88 });
   if (v.temp != null) cards.push({ l:'T°', val: v.temp, abn: v.temp<36 || v.temp>37.8, crit: v.temp<35.5 || v.temp>38.5 });
+  if (v.diuresis != null) cards.push({ l:'Diuresis', val: v.diuresis, abn: v.diuresis<0.5, crit: v.diuresis<0.3 });
   return `<div class="values-grid">${cards.map(c => `
     <div class="value-card ${c.crit?'critical':(c.abn?'abnormal':'')}">
       <div class="label">${c.l}</div>
@@ -4750,6 +5410,11 @@ function switchView(viewName) {
     document.getElementById('viewAprender').classList.add('active');
     document.getElementById('tabAprender').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else if (viewName === 'practica') {
+    document.getElementById('viewPractica').classList.add('active');
+    document.getElementById('tabPractica').classList.add('active');
+    if (typeof window.renderQuiz === 'function') window.renderQuiz();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
     document.getElementById('viewClinica').classList.add('active');
     document.getElementById('tabClinica').classList.add('active');
@@ -4762,6 +5427,7 @@ function goToSection(key) {
   const cont = document.getElementById('aprenderContent');
   cont.style.display = 'block';
   cont.innerHTML = APRENDER_CONTENT[key] || '<p>Sección no encontrada.</p>';
+  if (key === 'MAPA' && window.ETHOSNomo) window.ETHOSNomo.initInteractive();
   // Marcar link activo
   document.querySelectorAll('.aprender-nav-link').forEach(l => l.classList.remove('active'));
   const activeLink = document.querySelector('.aprender-nav-link[data-section="' + key + '"]');
@@ -4840,6 +5506,13 @@ function sectionHeader(num, titulo, bloque) {
 // CONTENIDO PEDAGÓGICO — 16 SECCIONES
 // ════════════════════════════════════════════════════════════════════
 const APRENDER_CONTENT = {
+
+'MAPA': `<button class="back-btn" onclick="backToHub()">← Volver al índice</button>
+<h1>Mapa visual ácido-base</h1>
+<div class="section-meta">Herramienta interactiva · nomograma</div>
+<p style="font-size:14px;line-height:1.65;color:var(--text-dim);margin:12px 0;">Cada trastorno primario ocupa una <b>banda</b> en el plano pH–HCO₃⁻. Mueve los controles: el pH se calcula con Henderson-Hasselbalch y el punto del paciente se reubica. Si cae <b>fuera de toda banda</b>, sospecha un trastorno mixto. Arrastra la PaCO₂ para <i>ver</i> cómo se mueve la compensación — sentir en vez de memorizar.</p>
+<div id="nomoInteractive"></div>
+<p style="font-size:12px;color:var(--text-mute);margin-top:14px;line-height:1.55;">Las bandas se derivan de las reglas de compensación (fórmula de Winter y coeficientes respiratorios) — el mismo cálculo del motor, así que mapa e interpretación nunca se contradicen. Es orientación visual: no reemplaza el anión gap ni el Δ-Δ. <span class="step-ref" onclick="openRefModal('palmer2023')">Palmer 2023</span> <span class="step-ref" onclick="openRefModal('berend2014')">Berend 2014</span> <span class="step-ref" onclick="openRefModal('winter1967')">Winter 1967</span></p>`,
 
 // ─────────────────────────────────────────────────────────────────────
 // BLOQUE A — FUNDAMENTOS
@@ -5154,6 +5827,7 @@ H⁺ + HCO₃⁻ ⇌ H₂CO₃ ⇌ CO₂ ↑ + H₂O
 <p>Para no equivocarte, sigue siempre el mismo orden. Saltarse pasos lleva a diagnósticos incompletos. Este algoritmo está basado en <strong>CJASN 2023</strong> (Achanti & Szerlip) y <strong>Berend NEJM 2018</strong>.</p>
 
 <h2>Los 5 pasos sistemáticos</h2>
+<p style="color:var(--text-dim);font-size:0.9em;"><strong>Marco basado en:</strong> <span class="step-ref" onclick="openRefModal('berend2014')">Berend, NEJM 2014 (enfoque fisiológico de 8 pasos)</span> · <span class="step-ref" onclick="openRefModal('seifter2014')">Seifter, NEJM 2014 (ácido-base + electrolitos)</span> · <span class="step-ref" onclick="openRefModal('safp2024')">Habib, SAFP 2025 (guía de 5 pasos)</span></p>
 
 <h3>Paso 1 — Valida la muestra</h3>
 <p>Antes de interpretar nada, verifica que la gasometría sea consistente usando <strong>Henderson-Hasselbalch</strong>. ETHOS lo hace automáticamente:</p>
@@ -7106,7 +7780,7 @@ function openRefModal(key) {
   const body = document.getElementById('refModalBody');
   const linkHtml = r.url
     ? `<a class="ref-modal-link" href="${r.url}" target="_blank" rel="noopener noreferrer">Abrir fuente original ↗</a>`
-    : `<span class="ref-modal-link no-link">Sin URL pública disponible</span>`;
+    : `<span class="ref-modal-link no-link">Libro de texto (sin DOI) — extracto textual verificado, ver "Hallazgo principal".</span>`;
   body.innerHTML = `
     <div class="ref-modal-row"><span class="label">Autores</span><span class="val">${r.autores}</span></div>
     <div class="ref-modal-row"><span class="label">Título</span><span class="val"><em>${r.titulo}</em></span></div>
@@ -7185,7 +7859,89 @@ window.renderResult = function(r) {
   ids.forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('input', liveCheck); });
 })();
 
+// ════════════════════════════════════════════════════════════════════
+// MAPA VISUAL ÁCIDO-BASE (nomograma) — Fase 2. Orientación + docencia.
+// Bandas derivadas de las MISMAS fórmulas de compensación del motor
+// (Winter + coeficientes respiratorios). NUNCA árbitro único: complementa
+// el análisis numérico (no ve HAGMA/NAGMA ni triples con pH normal).
+// ════════════════════════════════════════════════════════════════════
+window.ETHOSNomo = (function(){
+  function log10(x){ return Math.log(x)/Math.LN10; }
+  function pHf(h,p){ return 6.1 + log10(h/(0.03*p)); }
+  var PHm=7.00, PHM=7.70, Hm=0, HM=46;
+  var W=640, H=372, mL=44, mR=12, mT=12, mB=30, pw=W-mL-mR, ph=H-mT-mB;
+  function X(v){ return mL + (Math.max(PHm,Math.min(PHM,v))-PHm)/(PHM-PHm)*pw; }
+  function Y(v){ return mT + ph - (Math.max(Hm,Math.min(HM,v))-Hm)/(HM-Hm)*ph; }
+  function lMetAcid(){ var a=[]; for(var h=5;h<=24;h++) a.push([pHf(h,1.5*h+8),h]); return a; }
+  function lMetAlk(){ var a=[]; for(var h=24;h<=45;h++) a.push([pHf(h,0.7*(h-24)+40),h]); return a; }
+  function lRA(c){ var a=[]; for(var p=40;p<=90;p+=2){ var h=24+c*(p-40)/10; a.push([pHf(h,p),h]); } return a; }
+  function lRAl(c){ var a=[]; for(var p=40;p>=15;p-=2){ var h=24-c*(40-p)/10; a.push([pHf(h,p),h]); } return a; }
+  var BANDS=[
+    {k:'metac', n:'Acidosis metabólica', c:'#e24b4a', pts:lMetAcid()},
+    {k:'racut', n:'Acidosis resp. aguda', c:'#d85a30', pts:lRA(1.0)},
+    {k:'rcron', n:'Acidosis resp. crónica', c:'#ba7517', pts:lRA(3.5)},
+    {k:'metal', n:'Alcalosis metabólica', c:'#378add', pts:lMetAlk()},
+    {k:'alacut',n:'Alcalosis resp. aguda', c:'#1d9e75', pts:lRAl(2.0)},
+    {k:'alcron',n:'Alcalosis resp. crónica', c:'#7f77dd', pts:lRAl(5.0)}
+  ];
+  function poly(pts,dx){ var t=pts.map(function(q){return [X(q[0]+dx),Y(q[1])];}); var b=pts.map(function(q){return [X(q[0]-dx),Y(q[1])];}).reverse(); return t.concat(b).map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1);}).join(' '); }
+  function isoStr(p){ var a=[]; for(var h=2;h<=HM;h++){ var x=pHf(h,p); if(x>=PHm&&x<=PHM) a.push(X(x).toFixed(1)+','+Y(h).toFixed(1)); } return a.join(' '); }
+  function classify(ph_,h){ var best=null,bd=1e9; BANDS.forEach(function(b){ b.pts.forEach(function(q){ var d=Math.pow((ph_-q[0])*12,2)+Math.pow((h-q[1])*0.4,2); if(d<bd){bd=d;best=b;} }); }); var dist=Math.sqrt(bd); return {band:best, d:dist, inside:dist<0.75}; }
+  function pointMarkup(ph_,h){ var cls=classify(ph_,h); var col=cls.inside?cls.band.c:'#9aa0aa'; var cx=X(ph_),cy=Y(h);
+    return '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="11" fill="'+col+'" opacity="0.22"/><circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="5.5" fill="'+col+'" stroke="var(--bg-elev)" stroke-width="2"/>'; }
+  function baseSVG(){
+    var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="display:block;max-width:'+W+'px;margin:0 auto;" role="img" aria-label="Nomograma ácido-base: bicarbonato contra pH con las bandas de los trastornos primarios">';
+    s+='<rect x="'+mL+'" y="'+mT+'" width="'+pw+'" height="'+ph+'" fill="var(--bg-elev)" stroke="var(--border)"/>';
+    for(var t=7.0;t<7.701;t=Math.round((t+0.1)*100)/100){ var x=X(t); s+='<line x1="'+x.toFixed(1)+'" y1="'+mT+'" x2="'+x.toFixed(1)+'" y2="'+(mT+ph)+'" stroke="var(--border-soft)" stroke-width="0.5"/><text x="'+x.toFixed(1)+'" y="'+(mT+ph+15)+'" text-anchor="middle" font-size="10" fill="var(--text-mute)">'+t.toFixed(1)+'</text>'; }
+    for(var hh=0;hh<=46;hh+=8){ var y=Y(hh); s+='<line x1="'+mL+'" y1="'+y.toFixed(1)+'" x2="'+(mL+pw)+'" y2="'+y.toFixed(1)+'" stroke="var(--border-soft)" stroke-width="0.5"/><text x="'+(mL-5)+'" y="'+(y+3.5).toFixed(1)+'" text-anchor="end" font-size="10" fill="var(--text-mute)">'+hh+'</text>'; }
+    s+='<text x="'+(mL+pw/2)+'" y="'+(H-3)+'" text-anchor="middle" font-size="11" fill="var(--text-dim)">pH</text>';
+    s+='<text x="11" y="'+(mT+ph/2)+'" text-anchor="middle" font-size="11" fill="var(--text-dim)" transform="rotate(-90 11 '+(mT+ph/2)+')">HCO₃⁻ (mmol/L)</text>';
+    [20,40,60,80].forEach(function(p){ var st=isoStr(p); if(!st)return; s+='<polyline points="'+st+'" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.5"/>'; var parts=st.split(' '); var first=parts[Math.min(2,parts.length-1)].split(','); s+='<text x="'+(parseFloat(first[0])+2).toFixed(1)+'" y="'+(parseFloat(first[1])-3).toFixed(1)+'" font-size="8.5" fill="var(--text-mute)">PaCO₂ '+p+'</text>'; });
+    BANDS.forEach(function(b){ s+='<polygon points="'+poly(b.pts,0.033)+'" fill="'+b.c+'" opacity="0.18"/>'; });
+    s+='<circle cx="'+X(7.40).toFixed(1)+'" cy="'+Y(24).toFixed(1)+'" r="3" fill="none" stroke="var(--text-dim)" stroke-width="1.1"/><text x="'+(X(7.40)+6).toFixed(1)+'" y="'+(Y(24)-5).toFixed(1)+'" font-size="9" fill="var(--text-dim)">normal</text>';
+    s+='<g id="nomoPt"></g></svg>';
+    return s;
+  }
+  function legendHTML(){ return '<div style="display:flex;flex-wrap:wrap;gap:7px 13px;margin-top:8px;justify-content:center;">'+BANDS.map(function(b){return '<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-dim);"><span style="width:10px;height:10px;border-radius:2px;background:'+b.c+';opacity:0.75;"></span>'+b.n+'</span>';}).join('')+'</div>'; }
+  return {
+    clinicaBlock: function(r){
+      var v=r&&r.values; if(!v||v.ph==null||v.hco3==null||v.paco2==null) return '';
+      var cls=classify(v.ph, v.hco3);
+      var svg=baseSVG().replace('<g id="nomoPt"></g>','<g>'+pointMarkup(v.ph,v.hco3)+'</g>');
+      var cap = cls.inside
+        ? 'El punto del paciente cae en la banda de <b style="color:'+cls.band.c+';">'+cls.band.n+'</b>.'
+        : '<b style="color:var(--accent);">El punto cae fuera de las bandas</b> → patrón <b>mixto</b> (dos procesos): correlacione con el anión gap y el Δ-Δ de arriba.';
+      return '<div class="section"><div class="comp-block"><div class="reasoning-title">Mapa ácido-base — orientación visual</div>'
+        + svg + legendHTML()
+        + '<div style="font-size:13px;line-height:1.55;color:var(--text-dim);margin-top:10px;">'+cap+'</div>'
+        + '<div style="font-size:11px;color:var(--text-mute);margin-top:6px;font-style:italic;">Orientación visual; el diagnóstico completo (HAGMA/NAGMA, Δ-Δ, mixtos/triples) lo da el análisis numérico de arriba — el mapa no lo reemplaza. Bandas derivadas de las reglas de compensación. <span class="step-ref" onclick="openRefModal(\'palmer2023\')">Palmer 2023</span></div>'
+        + '</div></div>';
+    },
+    initInteractive: function(){
+      var cont=document.getElementById('nomoInteractive'); if(!cont) return;
+      cont.innerHTML = baseSVG() + legendHTML()
+        + '<div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;">'
+        + '<div style="flex:1;min-width:200px;display:flex;align-items:center;gap:10px;"><label style="font-size:13px;color:var(--text-dim);min-width:92px;">HCO₃⁻ <b id="nomoHl" style="color:var(--text);"></b></label><input id="nomoHco3" type="range" min="5" max="45" step="1" value="26" style="flex:1;"></div>'
+        + '<div style="flex:1;min-width:200px;display:flex;align-items:center;gap:10px;"><label style="font-size:13px;color:var(--text-dim);min-width:92px;">PaCO₂ <b id="nomoPl" style="color:var(--text);"></b></label><input id="nomoPaco2" type="range" min="15" max="90" step="1" value="60" style="flex:1;"></div>'
+        + '</div><div id="nomoReadout" style="margin-top:12px;min-height:22px;font-size:14px;line-height:1.5;"></div>';
+      var q=function(s){ return cont.querySelector(s); };
+      function upd(){
+        var h=+q('#nomoHco3').value, p=+q('#nomoPaco2').value, ph_=pHf(h,p);
+        q('#nomoHl').textContent=h; q('#nomoPl').textContent=p;
+        q('#nomoPt').innerHTML=pointMarkup(ph_,h);
+        var cls=classify(ph_,h);
+        q('#nomoReadout').innerHTML = cls.inside
+          ? '<span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:12px;height:12px;border-radius:3px;background:'+cls.band.c+';display:inline-block;flex:none;"></span>pH <b>'+ph_.toFixed(2)+'</b> → banda de <b>'+cls.band.n+'</b></span>'
+          : '<span style="color:var(--accent);">pH '+ph_.toFixed(2)+' → fuera de toda banda → <b>trastorno mixto</b> (dos procesos sobreañadidos).</span>';
+      }
+      q('#nomoHco3').addEventListener('input',upd);
+      q('#nomoPaco2').addEventListener('input',upd);
+      upd();
+    },
+    _classify: classify
+  };
+})();
+
 </script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>
 </html>
