@@ -1,4 +1,4 @@
-const CACHE = "ethos-acidobase-v5_0";
+const CACHE = "ethos-acidobase-v5_1";
 const ASSETS = [".", "index.html", "manifest.json", "icono-192.png", "icono-512.png", "apple-touch-icon.png"];
 self.addEventListener("install", function(e){
   self.skipWaiting();

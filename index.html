@@ -22,37 +22,38 @@ if ('serviceWorker' in navigator) {
 <!-- Fuentes del sistema (offline; sin dependencias online) -->
 <style>
 :root {
-  --bg: #0e1014;
-  --bg-elev: #161a21;
-  --bg-elev2: #1d222b;
-  --bg-elev3: #232832;
-  --border: #2a313d;
-  --border-soft: #232832;
-  --text: #e8eaed;
-  --text-dim: #a4abb6;
-  --text-mute: #6b7280;
+  /* Tema CLARO (v5.0). El dark anterior queda en .theme-dark por si se reactiva. */
+  --bg: #f3f5f8;
+  --bg-elev: #ffffff;
+  --bg-elev2: #eceff4;
+  --bg-elev3: #e3e8ef;
+  --border: #d2d9e2;
+  --border-soft: #e4e9f0;
+  --text: #1b2230;
+  --text-dim: #545e70;
+  --text-mute: #8a94a3;
 
-  --critical: #ef4444;
-  --critical-bg: rgba(239, 68, 68, 0.08);
-  --critical-border: rgba(239, 68, 68, 0.3);
-  --attention: #f59e0b;
-  --attention-bg: rgba(245, 158, 11, 0.08);
-  --attention-border: rgba(245, 158, 11, 0.3);
-  --info: #3b82f6;
-  --info-bg: rgba(59, 130, 246, 0.08);
-  --info-border: rgba(59, 130, 246, 0.3);
-  --ok: #10b981;
-  --ok-bg: rgba(16, 185, 129, 0.08);
-  --ok-border: rgba(16, 185, 129, 0.3);
+  --critical: #cf3a39;
+  --critical-bg: rgba(207, 58, 57, 0.09);
+  --critical-border: rgba(207, 58, 57, 0.32);
+  --attention: #b9760c;
+  --attention-bg: rgba(185, 118, 12, 0.10);
+  --attention-border: rgba(185, 118, 12, 0.32);
+  --info: #2f7bc4;
+  --info-bg: rgba(47, 123, 196, 0.09);
+  --info-border: rgba(47, 123, 196, 0.32);
+  --ok: #0d7a52;
+  --ok-bg: rgba(13, 122, 82, 0.10);
+  --ok-border: rgba(13, 122, 82, 0.32);
 
-  --accent: #c9a76b;
-  --plan: #14b8a6;
-  --plan-bg: rgba(20, 184, 166, 0.07);
-  --plan-border: rgba(20, 184, 166, 0.28);
+  --accent: #9a7426;
+  --plan: #0d9488;
+  --plan-bg: rgba(13, 148, 136, 0.09);
+  --plan-border: rgba(13, 148, 136, 0.30);
 
-  --rx: #8b5cf6;
-  --rx-bg: rgba(139, 92, 246, 0.06);
-  --rx-border: rgba(139, 92, 246, 0.25);
+  --rx: #7c3aed;
+  --rx-bg: rgba(124, 58, 237, 0.07);
+  --rx-border: rgba(124, 58, 237, 0.28);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -3291,7 +3292,7 @@ function parseGasometria() {
 
   let html = '';
   if (found.length) {
-    html += '<span style="color:#3fb950;font-weight:600;">✓ Autocompletado:</span> ' + found.join(' · ') + '.';
+    html += '<span style="color:#15803d;font-weight:600;">✓ Autocompletado:</span> ' + found.join(' · ') + '.';
     html += '<br><span style="color:var(--text-mute);">Revisa los valores antes de pulsar Interpretar — el lector puede equivocarse. Solo se rellenan los campos que se reconocieron.</span>';
   } else {
     html += '<span style="color:var(--text-mute);">No reconocí ningún valor. Revisa el formato o ingrésalos a mano.</span>';
@@ -5185,7 +5186,7 @@ function renderResult(r) {
   main.dataset.hasResult = '1';
   lastResult = r;
   let html = '';
-  html += `<div style="text-align:right;margin-bottom:12px;"><button class="btn secondary" style="width:auto;padding:6px 14px;display:inline-block;" onclick="copyNote()">Copiar nota para la ficha</button> <span id="copyNoteMsg" style="font-size:11px;color:#3fb950;"></span></div>`;
+  html += `<div style="text-align:right;margin-bottom:12px;"><button class="btn secondary" style="width:auto;padding:6px 14px;display:inline-block;" onclick="copyNote()">Copiar nota para la ficha</button> <span id="copyNoteMsg" style="font-size:11px;color:#15803d;"></span></div>`;
 
   if (r.values && r.values.narrativa) {
     const _nar = String(r.values.narrativa).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -5512,6 +5513,8 @@ const APRENDER_CONTENT = {
 <div class="section-meta">Herramienta interactiva · nomograma</div>
 <p style="font-size:14px;line-height:1.65;color:var(--text-dim);margin:12px 0;">Cada trastorno primario ocupa una <b>banda</b> en el plano pH–HCO₃⁻. Mueve los controles: el pH se calcula con Henderson-Hasselbalch y el punto del paciente se reubica. Si cae <b>fuera de toda banda</b>, sospecha un trastorno mixto. Arrastra la PaCO₂ para <i>ver</i> cómo se mueve la compensación — sentir en vez de memorizar.</p>
 <div id="nomoInteractive"></div>
+<div style="text-align:center;margin-top:12px;"><button onclick="ETHOSNomo.openFull('teach')" style="background:var(--bg-elev2);border:1px solid var(--border);color:var(--accent);font-size:13px;padding:9px 16px;border-radius:7px;cursor:pointer;">⤢ Abrir a pantalla completa</button></div>
+<div id="nomoExplain" style="margin-top:18px;"></div>
 <p style="font-size:12px;color:var(--text-mute);margin-top:14px;line-height:1.55;">Las bandas se derivan de las reglas de compensación (fórmula de Winter y coeficientes respiratorios) — el mismo cálculo del motor, así que mapa e interpretación nunca se contradicen. Es orientación visual: no reemplaza el anión gap ni el Δ-Δ. <span class="step-ref" onclick="openRefModal('palmer2023')">Palmer 2023</span> <span class="step-ref" onclick="openRefModal('berend2014')">Berend 2014</span> <span class="step-ref" onclick="openRefModal('winter1967')">Winter 1967</span></p>`,
 
 // ─────────────────────────────────────────────────────────────────────
@@ -7897,12 +7900,77 @@ window.ETHOSNomo = (function(){
     s+='<text x="'+(mL+pw/2)+'" y="'+(H-3)+'" text-anchor="middle" font-size="11" fill="var(--text-dim)">pH</text>';
     s+='<text x="11" y="'+(mT+ph/2)+'" text-anchor="middle" font-size="11" fill="var(--text-dim)" transform="rotate(-90 11 '+(mT+ph/2)+')">HCO₃⁻ (mmol/L)</text>';
     [20,40,60,80].forEach(function(p){ var st=isoStr(p); if(!st)return; s+='<polyline points="'+st+'" fill="none" stroke="var(--text-mute)" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.5"/>'; var parts=st.split(' '); var first=parts[Math.min(2,parts.length-1)].split(','); s+='<text x="'+(parseFloat(first[0])+2).toFixed(1)+'" y="'+(parseFloat(first[1])-3).toFixed(1)+'" font-size="8.5" fill="var(--text-mute)">PaCO₂ '+p+'</text>'; });
-    BANDS.forEach(function(b){ s+='<polygon points="'+poly(b.pts,0.033)+'" fill="'+b.c+'" opacity="0.18"/>'; });
+    BANDS.forEach(function(b){ s+='<polygon points="'+poly(b.pts,0.033)+'" fill="'+b.c+'" opacity="0.26"/>'; });
     s+='<circle cx="'+X(7.40).toFixed(1)+'" cy="'+Y(24).toFixed(1)+'" r="3" fill="none" stroke="var(--text-dim)" stroke-width="1.1"/><text x="'+(X(7.40)+6).toFixed(1)+'" y="'+(Y(24)-5).toFixed(1)+'" font-size="9" fill="var(--text-dim)">normal</text>';
     s+='<g id="nomoPt"></g></svg>';
     return s;
   }
   function legendHTML(){ return '<div style="display:flex;flex-wrap:wrap;gap:7px 13px;margin-top:8px;justify-content:center;">'+BANDS.map(function(b){return '<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-dim);"><span style="width:10px;height:10px;border-radius:2px;background:'+b.c+';opacity:0.75;"></span>'+b.n+'</span>';}).join('')+'</div>'; }
+  function explainHTML(){
+    return '<div style="font-size:13.5px;line-height:1.7;color:var(--text-dim);">'
+      + '<p style="margin:0 0 10px;"><b style="color:var(--text);">Cómo se lee:</b> el eje horizontal es el <b>pH</b> y el vertical el <b>bicarbonato (HCO₃⁻)</b>. El punto del paciente se ubica con esos dos valores. El círculo marcado <b>normal</b> es pH 7.40 / HCO₃ 24.</p>'
+      + '<p style="margin:0 0 8px;"><b style="color:var(--text);">Las 6 bandas</b> son los trastornos primarios <i>con su compensación esperada</i>. Si el punto cae dentro de una banda, ese es el trastorno probable:</p>'
+      + '<ul style="margin:0 0 10px;padding-left:18px;">'
+      + '<li><b style="color:#cf3a39;">Acidosis metabólica</b> — pH y HCO₃ bajos; por Winter la PaCO₂ baja para compensar.</li>'
+      + '<li><b style="color:#b9760c;">Acidosis respiratoria</b> (aguda / crónica) — PaCO₂ alta; el riñón sube el HCO₃ poco (aguda) o bastante (crónica).</li>'
+      + '<li><b style="color:#2f7bc4;">Alcalosis metabólica</b> — pH y HCO₃ altos.</li>'
+      + '<li><b style="color:#0d9488;">Alcalosis respiratoria</b> (aguda / crónica) — PaCO₂ baja; el HCO₃ baja poco (aguda) o más (crónica).</li>'
+      + '</ul>'
+      + '<p style="margin:0 0 10px;"><b style="color:var(--text);">Aguda vs crónica:</b> para una misma PaCO₂, el pH cambia según cuánto alcanzó a compensar el riñón (minutos en la aguda, días en la crónica). Por eso son bandas separadas — y verlo así lo vuelve intuitivo.</p>'
+      + '<p style="margin:0 0 10px;"><b style="color:var(--text);">Las líneas punteadas</b> son isopletas de PaCO₂: cada una une los puntos con la misma PaCO₂.</p>'
+      + '<p style="margin:0;"><b style="color:var(--accent);">Si el punto cae FUERA de toda banda</b> → hay un <b>trastorno mixto</b> (dos procesos a la vez). El mapa te dice <i>que</i> falta algo; el <b>anión gap</b> y el <b>Δ-Δ</b> te dicen <i>qué</i>. El mapa no distingue HAGMA de NAGMA — eso es trabajo del anión gap.</p>'
+      + '</div>';
+  }
+  function buildInteractive(cont, maxW){
+    if(!cont) return;
+    var svgStr = maxW ? baseSVG().replace('max-width:640px','max-width:'+maxW) : baseSVG();
+    cont.innerHTML = svgStr + legendHTML()
+      + '<div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;">'
+      + '<div style="flex:1;min-width:200px;display:flex;align-items:center;gap:10px;"><label style="font-size:13px;color:var(--text-dim);min-width:92px;">HCO₃⁻ <b class="nomoHl" style="color:var(--text);"></b></label><input class="nomoHco3" type="range" min="5" max="45" step="1" value="26" style="flex:1;"></div>'
+      + '<div style="flex:1;min-width:200px;display:flex;align-items:center;gap:10px;"><label style="font-size:13px;color:var(--text-dim);min-width:92px;">PaCO₂ <b class="nomoPl" style="color:var(--text);"></b></label><input class="nomoPaco2" type="range" min="15" max="90" step="1" value="60" style="flex:1;"></div>'
+      + '</div><div class="nomoReadout" style="margin-top:12px;min-height:22px;font-size:14px;line-height:1.5;"></div>';
+    var q=function(s){ return cont.querySelector(s); };
+    function upd(){
+      var h=+q('.nomoHco3').value, p=+q('.nomoPaco2').value, ph_=pHf(h,p);
+      q('.nomoHl').textContent=h; q('.nomoPl').textContent=p;
+      q('#nomoPt').innerHTML=pointMarkup(ph_,h);
+      var cls=classify(ph_,h);
+      q('.nomoReadout').innerHTML = cls.inside
+        ? '<span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:12px;height:12px;border-radius:3px;background:'+cls.band.c+';display:inline-block;flex:none;"></span>pH <b>'+ph_.toFixed(2)+'</b> → banda de <b>'+cls.band.n+'</b></span>'
+        : '<span style="color:var(--accent);">pH '+ph_.toFixed(2)+' → fuera de toda banda → <b>trastorno mixto</b> (dos procesos sobreañadidos).</span>';
+    }
+    q('.nomoHco3').addEventListener('input',upd);
+    q('.nomoPaco2').addEventListener('input',upd);
+    upd();
+  }
+  function escClose(e){ if(e.key==='Escape') closeFull(); }
+  function closeFull(){ var f=document.getElementById('nomoFull'); if(f) f.remove(); document.removeEventListener('keydown', escClose); }
+  function openFull(mode, ph_, hco3, paco2){
+    closeFull();
+    var ov=document.createElement('div');
+    ov.id='nomoFull';
+    // Fondo CLARO y EMPÁTICO (cálido tipo papel, no el blanco frío clínico).
+    ov.style.cssText='position:fixed;inset:0;z-index:9999;background:#f6f3ec;overflow:auto;padding:24px 18px 64px;-webkit-overflow-scrolling:touch;';
+    var head='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;max-width:860px;margin:0 auto 16px;">'
+      +'<div><div style="font-size:22px;font-weight:600;color:#243039;letter-spacing:-0.01em;">Mapa visual ácido-base</div><div style="font-size:13.5px;color:#6c7783;margin-top:3px;">Dónde cae el paciente entre los trastornos primarios</div></div>'
+      +'<button onclick="ETHOSNomo.closeFull()" style="background:#fff;border:1px solid #ded8ca;color:#243039;font-size:13px;padding:10px 17px;border-radius:10px;cursor:pointer;flex:none;box-shadow:0 1px 2px rgba(70,55,25,.06);">✕ Cerrar</button></div>';
+    var card='background:#ffffff;border:1px solid #ece6d7;border-radius:18px;padding:20px 22px;box-shadow:0 3px 14px rgba(80,65,35,.06);';
+    var body='<div style="max-width:860px;margin:0 auto;">';
+    var svg=baseSVG().replace('max-width:640px','max-width:100%');
+    if(mode==='clinic' && ph_!=null){
+      var cls=classify(ph_,hco3);
+      body+='<div style="'+card+'">'+svg.replace('<g id="nomoPt"></g>','<g>'+pointMarkup(ph_,hco3)+'</g>')+legendHTML()
+        +'<div style="font-size:15.5px;color:#39434d;margin:16px 0 2px;text-align:center;line-height:1.5;">'+(cls.inside?'El punto del paciente cae en la banda de <b style="color:'+cls.band.c+';">'+cls.band.n+'</b>.':'<b style="color:#9a7426;">El punto cae fuera de las bandas → patrón mixto.</b> Búscalo con el anión gap y el Δ-Δ.')+'</div></div>';
+    } else {
+      body+='<div style="'+card+'" id="nomoFullInteractive"></div>';
+    }
+    body+='<div style="margin-top:20px;'+card+'"><div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#9a7426;margin-bottom:10px;">Cómo leer este mapa</div>'+explainHTML()+'</div></div>';
+    ov.innerHTML=head+body;
+    document.body.appendChild(ov);
+    if(mode!=='clinic') buildInteractive(document.getElementById('nomoFullInteractive'), '100%');
+    document.addEventListener('keydown', escClose);
+    window.scrollTo(0,0);
+  }
   return {
     clinicaBlock: function(r){
       var v=r&&r.values; if(!v||v.ph==null||v.hco3==null||v.paco2==null) return '';
@@ -7911,33 +7979,19 @@ window.ETHOSNomo = (function(){
       var cap = cls.inside
         ? 'El punto del paciente cae en la banda de <b style="color:'+cls.band.c+';">'+cls.band.n+'</b>.'
         : '<b style="color:var(--accent);">El punto cae fuera de las bandas</b> → patrón <b>mixto</b> (dos procesos): correlacione con el anión gap y el Δ-Δ de arriba.';
-      return '<div class="section"><div class="comp-block"><div class="reasoning-title">Mapa ácido-base — orientación visual</div>'
+      return '<div class="section"><div class="comp-block"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px;"><div class="reasoning-title" style="margin:0;">Mapa ácido-base — orientación visual</div><button onclick="ETHOSNomo.openFull(\'clinic\','+v.ph+','+v.hco3+','+v.paco2+')" style="background:var(--bg-elev2);border:1px solid var(--border);color:var(--accent);font-size:12px;padding:6px 12px;border-radius:6px;cursor:pointer;white-space:nowrap;">⤢ Ver en grande</button></div>'
         + svg + legendHTML()
         + '<div style="font-size:13px;line-height:1.55;color:var(--text-dim);margin-top:10px;">'+cap+'</div>'
         + '<div style="font-size:11px;color:var(--text-mute);margin-top:6px;font-style:italic;">Orientación visual; el diagnóstico completo (HAGMA/NAGMA, Δ-Δ, mixtos/triples) lo da el análisis numérico de arriba — el mapa no lo reemplaza. Bandas derivadas de las reglas de compensación. <span class="step-ref" onclick="openRefModal(\'palmer2023\')">Palmer 2023</span></div>'
         + '</div></div>';
     },
     initInteractive: function(){
-      var cont=document.getElementById('nomoInteractive'); if(!cont) return;
-      cont.innerHTML = baseSVG() + legendHTML()
-        + '<div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;">'
-        + '<div style="flex:1;min-width:200px;display:flex;align-items:center;gap:10px;"><label style="font-size:13px;color:var(--text-dim);min-width:92px;">HCO₃⁻ <b id="nomoHl" style="color:var(--text);"></b></label><input id="nomoHco3" type="range" min="5" max="45" step="1" value="26" style="flex:1;"></div>'
-        + '<div style="flex:1;min-width:200px;display:flex;align-items:center;gap:10px;"><label style="font-size:13px;color:var(--text-dim);min-width:92px;">PaCO₂ <b id="nomoPl" style="color:var(--text);"></b></label><input id="nomoPaco2" type="range" min="15" max="90" step="1" value="60" style="flex:1;"></div>'
-        + '</div><div id="nomoReadout" style="margin-top:12px;min-height:22px;font-size:14px;line-height:1.5;"></div>';
-      var q=function(s){ return cont.querySelector(s); };
-      function upd(){
-        var h=+q('#nomoHco3').value, p=+q('#nomoPaco2').value, ph_=pHf(h,p);
-        q('#nomoHl').textContent=h; q('#nomoPl').textContent=p;
-        q('#nomoPt').innerHTML=pointMarkup(ph_,h);
-        var cls=classify(ph_,h);
-        q('#nomoReadout').innerHTML = cls.inside
-          ? '<span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:12px;height:12px;border-radius:3px;background:'+cls.band.c+';display:inline-block;flex:none;"></span>pH <b>'+ph_.toFixed(2)+'</b> → banda de <b>'+cls.band.n+'</b></span>'
-          : '<span style="color:var(--accent);">pH '+ph_.toFixed(2)+' → fuera de toda banda → <b>trastorno mixto</b> (dos procesos sobreañadidos).</span>';
-      }
-      q('#nomoHco3').addEventListener('input',upd);
-      q('#nomoPaco2').addEventListener('input',upd);
-      upd();
+      buildInteractive(document.getElementById('nomoInteractive'));
+      var ex=document.getElementById('nomoExplain'); if(ex) ex.innerHTML=explainHTML();
     },
+    openFull: openFull,
+    closeFull: closeFull,
+    explainHTML: explainHTML,
     _classify: classify
   };
 })();
