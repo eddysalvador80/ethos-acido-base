@@ -1523,6 +1523,11 @@ body {
         <input type="text" inputmode="decimal" id="osmolgap" step="1" min="-20" max="100" placeholder="—">
         <div class="field-error" id="osmolgap_err"></div>
       </div>
+      <div class="field">
+        <label>Osmolalidad medida (opcional)</label>
+        <input type="text" inputmode="decimal" id="osmMedida" step="1" min="200" max="400" placeholder="—">
+        <div class="field-error" id="osmMedida_err"></div>
+      </div>
     </div>
   </div>
 
@@ -3198,7 +3203,8 @@ const RANGES = {
   cl:{min:70,max:130,name:'Cl⁻'}, k:{min:1.5,max:9,name:'K⁺'},
   alb:{min:1,max:6,name:'Albúmina'}, lactato:{min:0,max:30,name:'Lactato'},
   crea:{min:0.2,max:20,name:'Creatinina'}, glic:{min:20,max:1500,name:'Glicemia'},
-  osmolgap:{min:-20,max:100,name:'Gap osmolar'}
+  osmolgap:{min:-20,max:100,name:'Gap osmolar'},
+  osmMedida:{min:200,max:400,name:'Osmolalidad medida'}
 };
 function validateRange(id, val, range) {
   const errEl = document.getElementById(id + '_err');
@@ -4756,7 +4762,7 @@ function analyze() {
     ph, paco2, hco3,
     na:getVal('na'), cl:getVal('cl'), k:getVal('k'), alb:getVal('alb'),
     lactato:getVal('lactato'), crea:getVal('crea'), glic:getVal('glic'),
-    osmolgap:getVal('osmolgap'),
+    osmolgap:getVal('osmolgap'), osmMedida:getVal('osmMedida'),
     fr:getVal('fr'), fc:getVal('fc'), spo2:getVal('spo2'), pam:getVal('pam'),
     fio2:getVal('fio2'), temp:getVal('temp'),
     pao2:getVal('pao2'), sao2:getVal('sao2'), hb:getVal('hb'), edad:getVal('edad'), pbar:getVal('pbar'), altitud:getVal('altitud'),
@@ -4971,6 +4977,31 @@ function buildDataReview(v, agInfo, sample) {
   // 7. K⁺ en zona letal → confirmar
   if (v.k !== null && (v.k < 2.5 || v.k > 6.5)) {
     out.push('<strong>K⁺ en zona peligrosa</strong> (' + v.k + '). Riesgo de arritmia: confirme el valor (y repita/controle ECG) antes de actuar.');
+  }
+  // 8. SpO2 vs SaO2: discordancia direccional (COHb/MetHb o senal deficiente). Umbral >4 (precision basal del oximetro).
+  if (v.spo2 !== null && v.sao2 !== null) {
+    const dSat = v.spo2 - v.sao2;
+    if (dSat > 4) {
+      out.push('<strong>SpO\u2082 (' + v.spo2 + '%) supera a SaO\u2082 (' + v.sao2 + '%) en ' + dSat + ' puntos</strong> (>4, por encima de la precision basal del oximetro). Primero confirme misma muestra/momento, buena perfusion y sin vasopresores. Si ambos son correctos, una SpO\u2082 falsamente alta sobre la SaO\u2082 es el patron clasico de <strong>carboxihemoglobina</strong> (intoxicacion por CO) o metahemoglobina: solicite co-oximetria con COHb/MetHb.');
+    } else if (dSat < -4) {
+      out.push('<strong>SaO\u2082 (' + v.sao2 + '%) supera a SpO\u2082 (' + v.spo2 + '%) en ' + Math.abs(dSat) + ' puntos.</strong> No es el patron de CO; sospeche senal deficiente del oximetro (perfusion, movimiento, pigmentacion, esmalte) o tomas no simultaneas. Confie en la SaO\u2082 de co-oximetria.');
+    }
+  }
+  // 9. Gap osmolar derivado de osmolalidad MEDIDA (cruza Na/glucosa). Sin BUN el gap esta SOBREESTIMADO: solo informa, NO alimenta la sospecha de alcohol toxico.
+  if (v.osmMedida !== null && v.na !== null) {
+    const osmEf = 2 * v.na + (v.glic !== null ? v.glic / 18 : 0);
+    const gapSU = v.osmMedida - osmEf;
+    if (gapSU < -10) {
+      out.push('<strong>Gap osmolar calculado fuertemente negativo</strong> (\u2248 ' + gapSU.toFixed(0) + '): quimicamente implausible. Revise Na\u207A y la osmolalidad medida \u2014 error de tipeo probable en uno de los dos.');
+    } else {
+      out.push('<strong>Gap osmolar calculado \u2248 ' + gapSU.toFixed(0) + '</strong> (osm medida ' + v.osmMedida + ' \u2212 osm efectiva ' + osmEf.toFixed(0) + ' [2\u00D7Na' + (v.glic !== null ? ' + glucosa/18' : '') + ']). <strong>Esta SOBREESTIMADO</strong>: no descuenta la urea. Un valor bajo es tranquilizador; uno alto puede deberse solo a uremia y NO basta por si solo para sospechar alcohol toxico. Para un gap fiable, use el campo "Gap osmolar" con la urea ya descontada.');
+    }
+  }
+  // 10. Lactato muy alto: salto decimal (error tipo-OCR 2.0<->20) y desactivacion del delta-delta.
+  if (v.lactato !== null && v.lactato >= 10) {
+    const mitadLac = (v.lactato / 10).toFixed(1);
+    const ddLac = v.lactato > 15 ? ' (un lactato >15 ademas vuelve poco fiable el delta-delta)' : '';
+    out.push('<strong>Lactato ' + v.lactato + '</strong> \u2014 valor muy alto que dirige la logica de shock/perfusion' + ddLac + '. Confirme el decimal: \u00BFes ' + v.lactato + ' o ' + mitadLac + '? Un punto mal leido cambia toda la interpretacion.');
   }
   return out;
 }
