@@ -2413,6 +2413,18 @@ const REFS = {
     limitaciones: 'Estudio abierto (no ciego). Subgrupo AKIN es análisis estratificado preespecificado pero no primario. Único ensayo grande en su tipo. Dosis máxima 1000 mL/24 h de 4.2% (≈500 mmol).',
     url: 'https://doi.org/10.1016/S0140-6736(18)31080-8'
   },
+  'bicaricu2': {
+    short: 'Jung et al., BICARICU-2 JAMA 2025',
+    autores: 'Jung B, Jabaudon M, De Jong A, et al; BICARICU-2 Study Group',
+    titulo: 'Sodium Bicarbonate for Severe Metabolic Acidemia and Acute Kidney Injury (BICARICU-2)',
+    revista: 'JAMA',
+    año: '2025',
+    tipo: 'Ensayo clínico aleatorizado multicéntrico (fase 3)',
+    poblacion: 'Adultos críticos con pH ≤7.20, HCO₃⁻ ≤20 mEq/L, PaCO₂ ≤45 mmHg y AKI KDIGO 2–3 (+ SOFA total >4 o lactato ≥2 mmol/L en las 48 h post-ingreso). JAMA 2025;334(22):2000–2010 · DOI 10.1001/jama.2025.20231 · NCT04010630.',
+    hallazgo: 'Bicarbonato 4.2% (meta pH ≥7.30; máx ~1000 mL/500 mEq en 24 h) NO cambió la mortalidad a 90 días: 62.1% vs 61.7% (dif 0.4; IC95% −7.2 a 8.0; P=.91). SÍ redujo/retrasó la terapia de reemplazo renal: TRR a día 28 35% vs 50% (dif −15.5; IC95% −23.1 a −7.8; HR de inicio de TRR 0.59 [0.46–0.75]). Menos infección del torrente sanguíneo (4% vs 9%).',
+    limitaciones: 'El beneficio es renal (evitar/diferir diálisis), NO de supervivencia — supersede el supuesto de beneficio en mortalidad de BICAR-ICU 2018. No aplica a CAD, intoxicaciones ni acidosis hiperclorémica pura. Vigilar alcalosis metabólica, hipernatremia e hipocalcemia.',
+    url: 'https://doi.org/10.1001/jama.2025.20231'
+  },
   'palmer_alkalosis_2024': {
     short: 'Palmer & Clegg, NDT 2024',
     autores: 'Palmer BF, Clegg DJ',
@@ -2764,8 +2776,8 @@ const WHY = {
   },
   bicarbonato_bicar_icu: {
     titulo: '¿Por qué considerar bicarbonato solo en este estrato muy específico?',
-    fisio: 'El estudio BICAR-ICU (Lancet 2018) mostró beneficio en mortalidad 28d solo en el subgrupo a-priori con pH ≤7.20 + AKIN 2-3 (NNT 6). Mecanismo: en falla renal severa, el riñón no puede excretar la carga ácida; el HCO₃ exógeno provee el buffer que el cuerpo no puede generar. Excluyó CAD, intoxicaciones, acidosis hiperclorémica pura.',
-    siNo: 'En el subgrupo específico, no usar bicarbonato se asocia con mayor mortalidad 28d y mayor necesidad de TRR. La señal es robusta.',
+    fisio: 'Dos ensayos en este estrato (pH ≤7.20 + AKI 2-3, NO CAD/intoxicación/hiperclorémica): BICAR-ICU (Lancet 2018) sugirió señal de supervivencia 28 d en el subgrupo AKIN 2-3 (NNT 6), pero como análisis estratificado, no primario. BICARICU-2 (JAMA 2025), más grande y definitivo, NO confirmó beneficio en mortalidad (90 d 62.1% vs 61.7%) y reencuadró el efecto como renal: reduce/retrasa la diálisis (TRR 28 d 35% vs 50%). Mecanismo: en falla renal severa el riñón no puede excretar la carga ácida; el HCO₃ exógeno provee el buffer que el cuerpo no puede generar — ese soporte gana tiempo renal, no salva vidas. Excluye CAD, intoxicaciones y acidosis hiperclorémica pura.',
+    siNo: 'En este estrato, no dar bicarbonato no cambia la mortalidad pero implica más diálisis e inicio más precoz de TRR. El objetivo es renal (evitar/diferir TRR), no de supervivencia.',
     cuidado: 'Aplicar este resultado fuera del subgrupo (a CAD, hiperclorémica pura, etc.) no tiene evidencia y puede ser perjudicial. <strong>El estrato importa: pH ≤7.20 + AKIN ≥2 + acidosis metabólica NO hiperclorémica pura + NO CAD/intoxicación.</strong>'
   },
   fomepizol: {
@@ -2866,8 +2878,8 @@ const WHY = {
   },
   estrato_bicar_aplicable: {
     titulo: '¿Por qué este caso entra en el estrato BICAR-ICU?',
-    fisio: 'BICAR-ICU mostró beneficio en mortalidad 28d (NNT 6) en pacientes con pH ≤7.20 + AKIN 2-3 (clasificación KDIGO ≥2) + acidosis metabólica NO por hipercloremia pura + NO por CAD/intoxicación. En este subgrupo, la incapacidad renal de excretar la carga ácida es severa y el bicarbonato exógeno provee el buffer que falta.',
-    siNo: 'En este subgrupo específico, NO usar bicarbonato se asoció con mayor mortalidad y mayor necesidad de TRR en el estudio.',
+    fisio: 'En el estrato pH ≤7.20 + AKI KDIGO 2-3 + acidosis metabólica NO por hipercloremia pura + NO por CAD/intoxicación, el riñón no puede excretar la carga ácida y el bicarbonato exógeno provee el buffer que falta. BICARICU-2 (JAMA 2025), el ensayo definitivo en este estrato, mostró que el bicarbonato NO mejora la supervivencia (mortalidad 90 d 62.1% vs 61.7%) pero reduce/retrasa la diálisis (TRR 28 d 35% vs 50%; HR 0.59). Supersede el supuesto de beneficio en mortalidad de BICAR-ICU 2018.',
+    siNo: 'En este estrato, no usar bicarbonato no cambia la mortalidad pero se asocia a mayor necesidad e inicio más precoz de terapia de reemplazo renal. El objetivo de la alerta es renal (evitar/diferir diálisis), no de supervivencia.',
     cuidado: 'Dosis: 4.2% (125-250 mL en 30 min). Meta: pH ≥7.30. Vigilar K+ (puede caer), Ca++ ionizado (puede bajar), Na+ (puede subir). Recuerde: la decisión final es clínica, ETHOS muestra dónde la evidencia es razonable pero el equipo tratante decide.'
   },
   no_bicarbonato_hipercloremica: {
@@ -4047,7 +4059,7 @@ function buildAlerts(v, c, sample, dxKey, sev, agInfo, cadInfo, ehhInfo, toxAlcI
   }
 
   // ── Bicarbonato — BICAR-ICU estricto ─────────────────────────
-  if (dxKey === 'ac_met' && v.ph < 7.20) {
+  if (dxKey === 'ac_met' && v.ph <= 7.20) {
     if (cadInfo) {
       alerts.push({ level:'info', title:'Bicarbonato NO indicado (CAD)',
         text:`pH ${v.ph} <7.20 pero diagnóstico es CAD. ADA/EASD 2024 reserva bicarbonato solo si pH <6.9. CAD fue excluida del estudio BICAR-ICU.` });
@@ -4059,7 +4071,7 @@ function buildAlerts(v, c, sample, dxKey, sev, agInfo, cadInfo, ehhInfo, toxAlcI
           text:`pH <7.20 + AKI (${_aki}), pero patrón compatible con acidosis hiperclorémica pura. BICAR-ICU excluyó esta población; privilegie cristaloides balanceados.` });
       } else {
         alerts.push({ level:'attention', title:'Estrato BICAR-ICU aplicable',
-          text:`pH <7.20 + AKI (${_aki}) + acidosis metabólica NO hiperclorémica + NO CAD. Considerar bicarbonato 4.2% (125-250 mL en 30 min) objetivo pH ≥7.30. NNT 6 mortalidad 28 d. ${ refTag('bicar_icu','BICAR-ICU 2018') }` });
+          text:`pH ≤7.20 + AKI (${_aki}) + acidosis metabólica NO hiperclorémica + NO CAD. Considerar bicarbonato 4.2% (125-250 mL en 30 min, máx ~1000 mL/24 h) objetivo pH ≥7.30. El bicarbonato NO mejora la supervivencia (mortalidad 90 d 62.1% vs 61.7%; P=.91) pero reduce/retrasa la diálisis (TRR a 28 d 35% vs 50%; HR inicio TRR 0.59). ${ refTag('bicaricu2','BICARICU-2 2025') } ${ refTag('bicar_icu','BICAR-ICU 2018') }` });
       }
     } else {
       alerts.push({ level:'info', title:'Bicarbonato — fuera de BICAR-ICU',
@@ -4435,7 +4447,7 @@ function planModificadores(v, c, dxKey, cadInfo) {
   if (!cadInfo && (dxKey === 'ac_met' || dxKey === 'ac_mix') && v.ph !== null && v.ph <= 7.20) {
     const aki = (c.kdigo >= 2) || (v.crea !== null && v.crea >= 2.0);
     if (aki) {
-      steps.push({ text: `<strong>Considere bicarbonato de sodio (acidemia severa + AKI).</strong> En acidemia metabólica severa (pH ≤7.20) CON lesión renal aguda (AKIN/KDIGO 2-3), el bicarbonato 4.2% IV (meta pH >7.30) redujo la mortalidad a 28 días y la necesidad de terapia de reemplazo renal. En la población general NO mejoró desenlaces, así que no es una medida rutinaria. Vigile alcalosis metabólica, hipernatremia e hipocalcemia. No aplica a cetoacidosis. ${refTag('bicar_icu','BICAR-ICU 2018')}` });
+      steps.push({ text: `<strong>Considere bicarbonato de sodio (acidemia severa + AKI).</strong> En acidemia metabólica severa (pH ≤7.20) CON lesión renal aguda (KDIGO 2-3), el bicarbonato 4.2% IV (meta pH ≥7.30) NO cambió la mortalidad a 90 días (62.1% vs 61.7%) pero redujo/retrasó la necesidad de terapia de reemplazo renal (TRR a día 28 35% vs 50%; HR de inicio 0.59). El beneficio es renal, no de supervivencia. En la población general no mejora desenlaces, así que no es una medida rutinaria. Vigile alcalosis metabólica, hipernatremia e hipocalcemia. No aplica a cetoacidosis. ${refTag('bicaricu2','BICARICU-2 2025')} ${refTag('bicar_icu','BICAR-ICU 2018')}` });
     }
   }
 
@@ -6485,7 +6497,7 @@ El mismo PaCO₂ = 65 con HCO₃ = 35 es <strong>crónica</strong>: EPOC estable
 </ul>
 
 <h3>¿Bicarbonato sí, bicarbonato no?</h3>
-<p>Décadas de debate. Lo que sabemos hoy (post BICAR-ICU):</p>
+<p>Décadas de debate. Lo que sabemos hoy (post BICARICU-2):</p>
 
 <table>
 <thead><tr><th>Situación</th><th>Bicarbonato</th><th>Referencia</th></tr></thead>
@@ -6493,7 +6505,7 @@ El mismo PaCO₂ = 65 con HCO₃ = 35 es <strong>crónica</strong>: EPOC estable
 <tr><td>CAD con pH ≥6.9</td><td><strong>NO</strong></td><td>ADA/EASD 2024</td></tr>
 <tr><td>CAD con pH &lt;6.9</td><td>Considerar (100 mEq en 400 mL agua + 20 mEq KCl en 2h)</td><td>ADA/EASD 2024</td></tr>
 <tr><td>Acidosis hiperclorémica pura</td><td><strong>NO</strong></td><td>Excluida de BICAR-ICU</td></tr>
-<tr><td>Acidosis láctica + pH ≤7.20 + AKIN 2-3</td><td>Considerar (NNT 6 mortalidad 28d)</td><td>BICAR-ICU 2018</td></tr>
+<tr><td>Acidosis láctica + pH ≤7.20 + AKI KDIGO 2-3</td><td>Considerar — reduce/retrasa diálisis, NO mejora mortalidad</td><td>BICARICU-2 2025; BICAR-ICU 2018</td></tr>
 <tr><td>Acidosis láctica pH &gt;7.20 o sin AKI</td><td><strong>NO</strong></td><td>SSC 2021 (sugerencia débil)</td></tr>
 <tr><td>Intoxicación por alcoholes tóxicos</td><td>Sí, como adyuvante (alcaliniza para excreción)</td><td>EXTRIP 2023</td></tr>
 </tbody>
@@ -6886,7 +6898,8 @@ AG ≤ 12 + HCO₃ ≥ 15 + pH ≥ 7.30
 <h2>Bicarbonato en acidosis láctica</h2>
 <p>Tema controvertido. Lo que dice la evidencia:</p>
 <ul>
-<li><strong>BICAR-ICU 2018:</strong> beneficio en subgrupo pH ≤7.20 + AKIN 2-3 (NNT 6 mortalidad 28d). Fuera de este subgrupo, sin beneficio claro.</li>
+<li><strong>BICARICU-2 2025 (JAMA):</strong> ensayo definitivo en el estrato pH ≤7.20 + AKI KDIGO 2-3. NO mejora la mortalidad (90 d 62.1% vs 61.7%) pero reduce/retrasa la diálisis (TRR 28 d 35% vs 50%; HR inicio 0.59). Supersede el supuesto de beneficio en mortalidad.</li>
+<li><strong>BICAR-ICU 2018 (Lancet):</strong> primer ECA; sugirió señal de supervivencia 28 d en el subgrupo AKIN 2-3 (NNT 6), pero como análisis estratificado no primario. Contexto histórico, superado por BICARICU-2.</li>
 <li><strong>SSC 2021:</strong> sugerencia débil EN CONTRA del uso rutinario de bicarbonato en acidosis láctica con pH ≥7.15.</li>
 </ul>
 
