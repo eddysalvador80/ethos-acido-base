@@ -870,6 +870,19 @@ body {
 .plan-step:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
 .plan-step.priority { background: rgba(239, 68, 68, 0.04); padding: 12px; border-radius: 6px; border: 1px solid var(--critical-border); border-bottom: 1px solid var(--critical-border); margin-bottom: 12px; }
 .plan-step.priority .step-mark { background: var(--critical); }
+.veredicto-accion { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: var(--bg-elev2); border: 1px solid var(--border); border-left: 4px solid var(--accent); }
+.veredicto-accion .va-label { display: block; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+.veredicto-accion .va-text { font-size: 14px; line-height: 1.55; color: var(--text); }
+.veredicto-accion.sev-critica, .veredicto-accion.sev-severa { border-left-color: var(--critical); }
+.veredicto-accion.sev-critica .va-label, .veredicto-accion.sev-severa .va-label { color: var(--critical); }
+.evidencia-sello { margin-top: 14px; padding: 8px 12px; font-size: 11.5px; color: var(--text-mute); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.evidencia-sello .es-dot { color: var(--ok, #15803d); font-weight: 700; }
+.evidencia-sello .es-link { background: none; border: none; padding: 0; margin: 0; font: inherit; color: var(--accent); cursor: pointer; text-decoration: underline; }
+.caso-dia { display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; padding: 12px 16px; border-radius: 10px; background: var(--bg-elev2); border: 1px solid var(--border); cursor: pointer; text-align: left; max-width: 460px; transition: border-color .15s, transform .15s; }
+.caso-dia:hover { border-color: var(--accent); transform: translateY(-1px); }
+.caso-dia .cd-emoji { font-size: 22px; line-height: 1; }
+.caso-dia .cd-texto { font-size: 13.5px; color: var(--text); line-height: 1.4; }
+.caso-dia .cd-flecha { color: var(--accent); font-weight: 700; margin-left: auto; padding-left: 8px; }
 .step-mark {
   flex-shrink: 0;
   width: 24px; height: 24px;
@@ -1721,6 +1734,11 @@ body {
   <div class="empty-state">
     <h2>Interpretación gasométrica estructurada</h2>
     <p>Ingrese los datos del paciente y pulse <strong>Interpretar</strong>. ETHOS validará la muestra, clasificará el trastorno, identificará trastornos mixtos, calculará compensación y emitirá un plan basado en evidencia con referencia trazable.</p>
+    <div class="caso-dia" onclick="switchView('practica')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchView('practica');}">
+      <span class="cd-emoji">🩺</span>
+      <span class="cd-texto"><strong>Caso del día</strong> — mantén el ojo afilado con un caso de práctica</span>
+      <span class="cd-flecha">→</span>
+    </div>
   </div>
 </main>
 </div><!-- fin viewClinica -->
@@ -1989,6 +2007,23 @@ body {
     <div class="modal-actions">
       <button class="cancel" onclick="closeModal('loadCaseModal')">Cancelar</button>
       <button class="confirm" onclick="doLoadCase()">Sí, sobrescribir</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="evidenciaModal">
+  <div class="modal">
+    <h3>Evidencia al día</h3>
+    <p style="font-size:13px;line-height:1.55;color:var(--text-dim);">ETHOS ancla <strong>cada umbral a una fuente con DOI/PDF</strong> y te <strong>avisa cuando el método pierde fiabilidad</strong> (patrones mixtos/triples). No inventa: si la evidencia es débil o contradictoria, lo dice.</p>
+    <div style="margin-top:6px;font-size:13px;line-height:1.55;color:var(--text);">
+      <strong>Cambios recientes</strong>
+      <ul style="margin:6px 0 0;padding-left:18px;">
+        <li><strong>jun 2026 — Bicarbonato en acidemia severa + AKI:</strong> incorporado <strong>BICARICU-2</strong> (<a href="https://doi.org/10.1001/jama.2025.20231" target="_blank" rel="noopener">JAMA 2025</a>). El bicarbonato <strong>no mejora la supervivencia</strong> pero <strong>reduce/retrasa la diálisis</strong>; la alerta se reencuadró en términos renales.</li>
+      </ul>
+    </div>
+    <p style="margin-top:10px;font-size:11px;color:var(--text-mute);">Última revisión de evidencia: junio 2026.</p>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeModal('evidenciaModal')">Cerrar</button>
     </div>
   </div>
 </div>
@@ -5407,6 +5442,18 @@ function renderResult(r) {
     html += `<div class="section"><div class="muestra-status warn">⚠ ${r.sample.message}</div></div>`;
   }
 
+  // Acción inmediata (veredicto): primer paso prioritario del plan; si no hay, el primero
+  let heroAction = '';
+  if (r.planSections && r.planSections.length) {
+    let pstep = null;
+    for (const sec of r.planSections) {
+      if (!sec.steps) continue;
+      for (const s of sec.steps) { if (s.priority) { pstep = s; break; } }
+      if (pstep) break;
+    }
+    if (!pstep) { for (const sec of r.planSections) { if (sec.steps && sec.steps.length) { pstep = sec.steps[0]; break; } } }
+    if (pstep) heroAction = linkifyGlossary(pstep.text);
+  }
   // Dx principal + context tags
   html += `<div class="section"><div class="dx-block">
     <div class="dx-title-row">
@@ -5417,6 +5464,7 @@ function renderResult(r) {
       ${r.sev ? `<span class="severity-badge severity-${r.sev.key}">${r.sev.label}</span>` : ''}
     </div>
     ${r.sintesis ? `<div class="sintesis-cuadro">${r.sintesis}</div>` : ''}
+    ${heroAction ? `<div class="veredicto-accion${r.sev ? ' sev-' + r.sev.key : ''}"><span class="va-label">Acción inmediata</span><div class="va-text">${heroAction}</div></div>` : ''}
     ${r.contextTags.length ? `<div class="context-tags">${r.contextTags.map(t => `<span class="ctx-tag ${t.level}">${t.text}</span>`).join('')}</div>` : ''}
     ${buildAprenderLinks(r.dxKey, r.cadInfo, r.ehhInfo, r.toxAlcInfo)}
     ${renderValues(r.values, r.agInfo)}
@@ -5570,6 +5618,9 @@ function renderResult(r) {
   }
 
   if (window.ETHOSNomo) { try { html += window.ETHOSNomo.clinicaBlock(r); } catch (e) { /* el mapa nunca debe romper el resultado */ } }
+  // Sello "Evidencia al día" (conteo dinámico de fuentes; abre el modal de cambios)
+  const _nFuentes = (typeof REFS !== 'undefined') ? Object.keys(REFS).length : '';
+  html += `<div class="evidencia-sello"><span class="es-dot">✓</span> Evidencia revisada jun 2026 · ${_nFuentes} fuentes citadas, todas con DOI/PDF · <button type="button" class="es-link" onclick="openModal('evidenciaModal')">¿Qué cambió?</button></div>`;
   main.innerHTML = html;
   document.querySelectorAll('.collapsible-header').forEach(h => {
     h.addEventListener('click', () => h.parentElement.classList.toggle('collapsed'));
