@@ -127,6 +127,15 @@ body {
   font-style: normal;
 }
 
+/* En teléfono: apila el encabezado y reparte las 3 pestañas a ancho completo
+   (antes "Práctica" quedaba fuera de pantalla porque las pestañas se recortaban). */
+@media (max-width: 560px) {
+  .header { flex-direction: column; align-items: stretch; gap: 12px; }
+  .main-tabs { width: 100%; }
+  .main-tab { flex: 1 1 0; min-width: 0; padding: 11px 4px; font-size: 11px; letter-spacing: 0.3px; text-align: center; }
+  .main-tab-icon { margin-right: 4px; }
+}
+
 /* Vistas (clínica vs aprender) */
 .view { display: none; }
 .view.active { display: contents; }
