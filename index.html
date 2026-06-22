@@ -1879,9 +1879,72 @@ body {
 .q-next{margin-top:14px;background:var(--accent);color:#1a1205;border:none;font-weight:600;font-size:14px;padding:11px 18px;border-radius:7px;cursor:pointer;}
 .q-next:hover{filter:brightness(1.08);}
 .q-intro{font-size:13.5px;color:var(--text-dim);line-height:1.6;margin:0 auto 16px;max-width:780px;}
+/* ===== Capa B: asignar a residentes + devolver resultado ===== */
+.q-builder{margin:0 auto 16px;max-width:780px;border:1px solid var(--border-soft);border-radius:10px;background:var(--bg-elev);overflow:hidden;}
+.q-builder>summary{cursor:pointer;list-style:none;padding:13px 18px;font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;}
+.q-builder>summary::-webkit-details-marker{display:none;}
+.q-builder>summary::after{content:'\25B8';margin-left:auto;color:var(--text-mute);transition:transform .15s;}
+.q-builder[open]>summary::after{transform:rotate(90deg);}
+.q-builder>summary:hover{background:var(--bg-elev2);}
+.q-bld-body{padding:4px 18px 18px;border-top:1px solid var(--border-soft);}
+.q-bld-help{font-size:13px;color:var(--text-dim);line-height:1.6;margin:12px 0 14px;}
+.q-bld-row{display:block;margin-bottom:12px;}
+.q-bld-row>span{display:block;font-size:12px;color:var(--text-mute);margin-bottom:5px;}
+.q-bld-input{width:100%;box-sizing:border-box;font-size:14px;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--bg-elev2);color:var(--text);}
+.q-bld-presets{font-size:12px;color:var(--text-mute);margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.q-bld-chip{font-size:12px;background:var(--bg-elev2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:99px;cursor:pointer;}
+.q-bld-chip:hover{border-color:var(--accent);color:var(--text);}
+.q-bld-group{margin-bottom:12px;}
+.q-bld-gtitle{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-mute);margin:0 0 6px;}
+.q-bld-case{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:13px;}
+.q-bld-case:hover{background:var(--bg-elev2);}
+.q-bld-case input{flex:none;width:16px;height:16px;accent-color:var(--accent);}
+.q-bld-id{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;color:var(--text-mute);flex:none;width:74px;}
+.q-bld-cat{color:var(--text-dim);}
+.q-bld-shuffle{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--text-dim);margin-bottom:14px;}
+.q-bld-shuffle input{flex:none;width:16px;height:16px;accent-color:var(--accent);}
+.q-bld-actions{display:flex;align-items:center;gap:14px;margin-top:8px;flex-wrap:wrap;}
+.q-bld-gen{background:var(--accent);color:#1a1205;border:none;font-weight:600;font-size:14px;padding:11px 18px;border-radius:7px;cursor:pointer;}
+.q-bld-gen:hover{filter:brightness(1.08);}
+.q-bld-counter{font-size:13px;color:var(--text-mute);}
+.q-bld-out{margin-top:14px;padding:14px;border:1px solid var(--border);border-radius:8px;background:var(--bg-elev2);}
+.q-bld-link-label{font-size:12px;color:var(--text-mute);margin-bottom:7px;}
+.q-bld-link{width:100%;box-sizing:border-box;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;padding:9px;border-radius:6px;border:1px solid var(--border);background:var(--bg-elev);color:var(--text);resize:vertical;}
+.q-bld-copy{margin-top:8px;background:var(--bg-elev);border:1px solid var(--accent);color:var(--accent);font-size:13px;font-weight:600;padding:8px 16px;border-radius:6px;cursor:pointer;}
+.q-bld-copy:hover{background:var(--accent);color:#1a1205;}
+.q-bld-note{font-size:11.5px;color:var(--text-mute);line-height:1.55;margin-top:10px;font-style:italic;}
+.q-bld-warn{font-size:13px;color:var(--critical);}
+.q-assigned-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--info-bg);border:1px solid var(--info-border);border-radius:9px;padding:10px 15px;margin-bottom:14px;flex-wrap:wrap;}
+.q-assigned-title{font-size:14px;font-weight:600;color:var(--text);}
+.q-assigned-prog{font-size:12px;color:var(--text-dim);font-variant-numeric:tabular-nums;}
+.q-sum-h,.q-sc-h{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:12px;}
+.q-sum-grid{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.q-sum-cell{background:var(--bg-elev2);border:1px solid var(--border-soft);border-radius:8px;padding:10px 18px;min-width:96px;text-align:center;}
+.q-sum-n{font-size:24px;font-weight:600;color:var(--text);line-height:1.1;}
+.q-sum-l{font-size:11px;color:var(--text-dim);margin-top:3px;}
+.q-sum-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.q-sum-row{display:inline-flex;align-items:center;gap:5px;background:var(--bg-elev2);border:1px solid var(--border-soft);border-radius:6px;padding:4px 8px;}
+.q-sum-id{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;color:var(--text-mute);}
+.q-sum-mark{font-size:11px;font-weight:700;width:17px;height:17px;line-height:17px;text-align:center;border-radius:4px;}
+.q-sum-mark.ok{background:var(--ok-bg);color:var(--ok);}
+.q-sum-mark.no{background:var(--critical-bg);color:var(--critical);}
+.q-sum-send{margin-top:6px;border-top:1px solid var(--border-soft);padding-top:14px;}
+.q-sc-who{font-size:15px;color:var(--text);margin-bottom:14px;}
+.q-sc-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px;}
+.q-sc-tbl th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-mute);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--border);}
+.q-sc-tbl td{padding:7px 8px;border-bottom:1px solid var(--border-soft);color:var(--text-dim);}
+.q-sc-id{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;color:var(--text-mute);}
+.q-sc-cat{color:var(--text);}
+.q-sc-m{text-align:center;font-weight:700;}
+.q-sc-m.ok{color:var(--ok);}
+.q-sc-m.no{color:var(--critical);}
 </style>
 <div class="view" id="viewPractica">
   <p class="q-intro">Practica con <b>repeticion espaciada</b>: cada caso que aciertas sube de caja y reaparece mas tarde; el que fallas vuelve pronto. Reutiliza el banco de 50 casos validados. Tu progreso se guarda en este dispositivo (offline).</p>
+  <details id="quizBuilder" class="q-builder">
+    <summary>&#128105;&#8205;&#127979; Asignar un set a residentes</summary>
+    <div id="quizBuilderBody" class="q-bld-body"></div>
+  </details>
   <div id="quizBody"></div>
 </div>
 <script>
@@ -1979,7 +2042,139 @@ body {
     rev.innerHTML+='<div class="q-result '+(pass?'ok':'no')+'">'+msg+'</div><button class="q-next" onclick="ethosQuizNext()">Siguiente caso &rarr;</button>'; };
   window.ethosQuizNext=function(){ render(); };
   window.ethosQuizReset=function(){ if(confirm('Reiniciar todo tu progreso del quiz en este dispositivo?')){ try{localStorage.removeItem(LS);}catch(e){} render(); } };
-  window.renderQuiz=function(){ if(document.getElementById('quizBody')) render(); };
+  window.renderQuiz=function(){ if(window._capaBActive){ window._capaBActive=false; return; } if(document.getElementById('quizBody')){ setMode('normal'); renderBuilder(); render(); } };
+
+  /* ===================== Capa B: asignar sets a residentes + devolver resultado =====================
+     Sin servidor: el estado viaja en la URL. Los CASOS no viajan (ya estan dentro de la app, citados);
+     el link solo lleva los ids. Es formativo: el contenido es visible y el resultado es auto-reportado/editable. */
+  function b64enc(obj){ try{ var s=JSON.stringify(obj); var by=new TextEncoder().encode(s); var bin=''; for(var i=0;i<by.length;i++)bin+=String.fromCharCode(by[i]); return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }catch(e){ return ''; } }
+  function b64dec(str){ try{ str=String(str).replace(/-/g,'+').replace(/_/g,'/'); while(str.length%4)str+='='; var bin=atob(str); var by=new Uint8Array(bin.length); for(var i=0;i<bin.length;i++)by[i]=bin.charCodeAt(i); return JSON.parse(new TextDecoder().decode(by)); }catch(e){ return null; } }
+  function baseURL(){ return location.origin+location.pathname; }
+  function caseById(id){ for(var i=0;i<CASES.length;i++){ if(CASES[i].id===id) return CASES[i]; } return null; }
+  function shuffleArr(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+  function setMode(mode){ var intro=document.querySelector('#viewPractica .q-intro'); var b=document.getElementById('quizBuilder'); var show=(mode==='normal'); if(intro)intro.style.display=show?'':'none'; if(b)b.style.display=show?'':'none'; }
+  window.ethosCopy=function(id,btn){ var el=document.getElementById(id); if(!el)return; try{el.focus();el.select();}catch(e){} var done=function(){ var t=btn.textContent; btn.textContent='¡Copiado!'; setTimeout(function(){btn.textContent=t;},1600); }; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(el.value).then(done,function(){ try{document.execCommand('copy');done();}catch(e){} }); } else { try{document.execCommand('copy');done();}catch(e){} } };
+
+  /* ---- Constructor (docente) ---- */
+  var DIFLABEL={simple:'Simples',mixto:'Mixtos',triple:'Triples',especial:'Especiales',adversarial:'Adversariales'};
+  var DIFORDER=['simple','mixto','triple','especial','adversarial'];
+  function renderBuilder(){
+    var host=document.getElementById('quizBuilderBody'); if(!host||host._built)return; host._built=true;
+    var g={}; CASES.forEach(function(c){ (g[c.dif]=g[c.dif]||[]).push(c); });
+    var h='<p class="q-bld-help">Marca los casos, ponle nombre al set y genera un link. Compartelo por WhatsApp/correo: tus residentes resuelven SOLO esos casos y al terminar te devuelven un codigo con su resultado.</p>';
+    h+='<label class="q-bld-row"><span>Nombre del set</span><input id="bldTitle" type="text" maxlength="60" placeholder="Ej: R1 - Acidosis metabolica" class="q-bld-input"></label>';
+    h+='<div class="q-bld-presets"><span>Atajos:</span>';
+    DIFORDER.forEach(function(d){ if(g[d]) h+='<button type="button" class="q-bld-chip" onclick="ethosBldPreset(\''+d+'\')">'+DIFLABEL[d]+' ('+g[d].length+')</button>'; });
+    h+='<button type="button" class="q-bld-chip" onclick="ethosBldPreset(\'all\')">Todos ('+CASES.length+')</button>';
+    h+='<button type="button" class="q-bld-chip" onclick="ethosBldPreset(\'none\')">Ninguno</button></div>';
+    DIFORDER.forEach(function(d){ if(!g[d])return; h+='<div class="q-bld-group"><div class="q-bld-gtitle">'+DIFLABEL[d]+'</div>'; g[d].forEach(function(c){ h+='<label class="q-bld-case"><input type="checkbox" class="bld-cb" value="'+esc(c.id)+'" onchange="ethosBldCount()"><span class="q-bld-id">'+esc(c.id)+'</span><span class="q-bld-cat">'+esc(c.cat)+'</span></label>'; }); h+='</div>'; });
+    h+='<label class="q-bld-shuffle"><input type="checkbox" id="bldShuffle"><span>Mezclar el orden de los casos para cada residente</span></label>';
+    h+='<div class="q-bld-actions"><button type="button" class="q-bld-gen" onclick="ethosBldGen()">Generar link</button><span id="bldCount" class="q-bld-counter">0 casos</span></div>';
+    h+='<div id="bldOut" class="q-bld-out" style="display:none;"></div>';
+    host.innerHTML=h;
+  }
+  window.ethosBldPreset=function(d){ var cbs=document.querySelectorAll('#quizBuilderBody .bld-cb'); [].forEach.call(cbs,function(cb){ var c=caseById(cb.value); if(d==='all')cb.checked=true; else if(d==='none')cb.checked=false; else cb.checked=!!(c&&c.dif===d); }); ethosBldCount(); };
+  window.ethosBldCount=function(){ var n=document.querySelectorAll('#quizBuilderBody .bld-cb:checked').length; var el=document.getElementById('bldCount'); if(el)el.textContent=n+(n===1?' caso':' casos'); };
+  window.ethosBldGen=function(){
+    var ids=[].map.call(document.querySelectorAll('#quizBuilderBody .bld-cb:checked'),function(cb){return cb.value;});
+    var out=document.getElementById('bldOut'); if(!out)return;
+    if(!ids.length){ out.style.display='block'; out.innerHTML='<div class="q-bld-warn">Marca al menos un caso.</div>'; return; }
+    var title=((document.getElementById('bldTitle')||{}).value||'').trim()||'Set sin nombre';
+    var payload={v:1,t:title,ids:ids}; var shx=document.getElementById('bldShuffle'); if(shx&&shx.checked)payload.sh=1;
+    var url=baseURL()+'?quiz='+b64enc(payload);
+    out.style.display='block';
+    out.innerHTML='<div class="q-bld-link-label">Link para tus residentes ('+ids.length+(ids.length===1?' caso':' casos')+'):</div>'
+      +'<textarea id="bldLink" class="q-bld-link" readonly rows="2">'+esc(url)+'</textarea>'
+      +'<button type="button" class="q-bld-copy" onclick="ethosCopy(\'bldLink\',this)">Copiar link</button>'
+      +'<div class="q-bld-note">Formativo: el residente puede ver el contenido y el resultado es editable; no reemplaza una evaluacion formal.</div>';
+  };
+
+  /* ---- Runner asignado (residente) ---- */
+  function startAssigned(set){
+    var ids=(set.ids||[]).filter(function(id){return !!caseById(id);});
+    if(!ids.length){ window._capaBActive=false; setMode('normal'); renderBuilder(); render(); return; }
+    if(set.sh) ids=shuffleArr(ids.slice());
+    window._qa={title:set.t||'Set asignado', ids:ids, idx:0, results:[]};
+    setMode('assigned'); renderAssigned();
+  }
+  function renderAssigned(){
+    var a=window._qa, host=document.getElementById('quizBody'); if(!host)return;
+    if(a.idx>=a.ids.length){ renderAssignedSummary(); return; }
+    var c=caseById(a.ids[a.idx]); window._q={c:c,s1:null,s2:null,done:false};
+    host.innerHTML='<div class="q-assigned-bar"><span class="q-assigned-title">📋 '+esc(a.title)+'</span><span class="q-assigned-prog">Caso '+(a.idx+1)+' / '+a.ids.length+'</span></div>'
+      +'<div class="q-card"><div class="q-meta">'+esc(c.cat)+' &middot; dificultad: '+esc(c.dif)+'</div>'
+      +'<p class="q-vig">'+esc(c.ctx)+'</p><div class="q-labs">'+chips(c.labs)+'</div>'
+      +'<div class="q-step"><div class="q-q">1 &middot; Cual es el trastorno primario?</div><div id="q-s1">'+optBtns(PRIM,'ethosAsgnS1')+'</div></div>'
+      +'<div id="q-s2wrap"></div><div id="q-reveal"></div></div>';
+  }
+  window.ethosAsgnS1=function(code,btn){ if(window._q.s1!=null)return; window._q.s1=code; var c=window._q.c; lock('q-s1',c.qp,code); if(c.qp==='ERROR'){ asgnReveal(); return; } document.getElementById('q-s2wrap').innerHTML='<div class="q-step"><div class="q-q">2 &middot; Aplica la compensacion esperada (Winter / regla respiratoria). La medida concuerda?</div><div id="q-s2">'+optBtns(COMP,'ethosAsgnS2')+'</div></div>'; };
+  window.ethosAsgnS2=function(code,btn){ if(window._q.s2!=null)return; window._q.s2=code; var c=window._q.c; lock('q-s2',c.qc,code); asgnReveal(); };
+  function asgnReveal(){ var c=window._q.c, e=c.exp;
+    var cites=(c.cites||[]).map(function(k){var r=(typeof REFS!=='undefined'&&REFS[k])?REFS[k].short:k; return '<span class="q-cite" onclick="openRefModal(\''+k+'\')">'+esc(r)+'</span>';}).join('');
+    var sec=(e.sec&&e.sec.length)?('<li><b>Secundario(s):</b> '+e.sec.map(esc).join('; ')+'</li>'):'<li><b>Trastorno simple</b> (sin secundarios)</li>';
+    var h='<div class="q-rev"><div class="q-rev-h">Respuesta experta</div><ul class="q-rev-list"><li><b>Primario:</b> '+esc(e.prim)+'</li><li><b>Compensacion:</b> '+esc(e.comp)+'</li>'+sec+(e.dx?'<li><b>Diagnostico:</b> '+esc(e.dx)+'</li>':'')+'</ul>'
+      +(e.porque?'<p class="q-why"><b>Por que:</b> '+esc(e.porque)+'</p>':'')
+      +(e.perla?'<p class="q-perla"><b>Perla clinica:</b> '+esc(e.perla)+'</p>':'')
+      +(cites?'<div class="q-cites">'+cites+'</div>':'')
+      +'<div class="q-self"><div class="q-q">3 &middot; Comparando con tu razonamiento: identificaste el cuadro completo (incluidos los secundarios)?</div><button class="caso-opcion q-opt" onclick="ethosAsgnSelf(true)">Si, lo tenia</button><button class="caso-opcion q-opt" onclick="ethosAsgnSelf(false)">No del todo</button></div></div>';
+    document.getElementById('q-reveal').innerHTML=h;
+  }
+  window.ethosAsgnSelf=function(self){ if(!window._q||window._q.done)return; window._q.done=true; var c=window._q.c, a=window._qa;
+    var s1ok=(window._q.s1===c.qp); var s2ok=(c.qp==='ERROR')?true:(window._q.s2===c.qc);
+    a.results.push({id:c.id,p:s1ok?1:0,c:s2ok?1:0,s:self?1:0});
+    var last=(a.idx+1>=a.ids.length); var rev=document.getElementById('q-reveal');
+    var msg=(s1ok&&s2ok)?'Primario y compensacion correctos.':((s1ok?'':'Primario fallado. ')+(s2ok?'':'Compensacion fallada.'));
+    rev.innerHTML+='<div class="q-result '+((s1ok&&s2ok)?'ok':'no')+'">'+msg+'</div><button class="q-next" onclick="ethosAsgnNext()">'+(last?'Ver mi resultado &rarr;':'Siguiente caso &rarr;')+'</button>';
+  };
+  window.ethosAsgnNext=function(){ window._qa.idx++; renderAssigned(); };
+  function renderAssignedSummary(){
+    var a=window._qa, host=document.getElementById('quizBody'); if(!host)return;
+    var n=a.results.length, p=0,co=0,sf=0; a.results.forEach(function(r){p+=r.p;co+=r.c;sf+=r.s;});
+    var mini=a.results.map(function(r){ return '<div class="q-sum-row"><span class="q-sum-id">'+esc(r.id)+'</span><span class="q-sum-mark '+(r.p?'ok':'no')+'">P</span><span class="q-sum-mark '+(r.c?'ok':'no')+'">C</span></div>'; }).join('');
+    host.innerHTML='<div class="q-assigned-bar"><span class="q-assigned-title">📋 '+esc(a.title)+'</span><span class="q-assigned-prog">Completado</span></div>'
+      +'<div class="q-card"><div class="q-sum-h">Tu resultado</div>'
+      +'<div class="q-sum-grid"><div class="q-sum-cell"><div class="q-sum-n">'+p+'/'+n+'</div><div class="q-sum-l">primario</div></div>'
+      +'<div class="q-sum-cell"><div class="q-sum-n">'+co+'/'+n+'</div><div class="q-sum-l">compensacion</div></div>'
+      +'<div class="q-sum-cell"><div class="q-sum-n">'+sf+'/'+n+'</div><div class="q-sum-l">autoeval. ok</div></div></div>'
+      +'<div class="q-sum-list">'+mini+'</div>'
+      +'<div class="q-sum-send"><div class="q-q">Envia tu resultado al docente</div>'
+      +'<label class="q-bld-row"><span>Tu nombre (opcional)</span><input id="resName" type="text" maxlength="40" placeholder="Nombre y apellido" class="q-bld-input"></label>'
+      +'<button type="button" class="q-bld-gen" onclick="ethosAsgnSend()">Generar mi resultado</button>'
+      +'<div id="resOut" class="q-bld-out" style="display:none;"></div></div>'
+      +'<div class="q-bld-note">Auto-reportado y editable; valor formativo, no reemplaza una evaluacion formal.</div></div>';
+  }
+  window.ethosAsgnSend=function(){ var a=window._qa; var nm=((document.getElementById('resName')||{}).value||'').trim();
+    var payload={v:1,t:a.title,n:nm,r:a.results.map(function(r){return [r.id,r.p,r.c,r.s];})};
+    var url=baseURL()+'?resultado='+b64enc(payload); var out=document.getElementById('resOut'); if(!out)return; out.style.display='block';
+    out.innerHTML='<div class="q-bld-link-label">Copia esto y envialo al docente por WhatsApp:</div>'
+      +'<textarea id="resLink" class="q-bld-link" readonly rows="2">'+esc(url)+'</textarea>'
+      +'<button type="button" class="q-bld-copy" onclick="ethosCopy(\'resLink\',this)">Copiar mi resultado</button>';
+  };
+
+  /* ---- Scorecard (el docente abre el ?resultado=) ---- */
+  function renderScorecard(data){
+    setMode('result'); var host=document.getElementById('quizBody'); if(!host)return;
+    if(!data||!data.r||!data.r.length){ host.innerHTML='<div class="q-card"><div class="q-sc-h">Resultado no valido</div><p class="q-vig">El codigo esta incompleto o danado. Pide al residente que lo genere de nuevo.</p><button type="button" class="q-next" onclick="ethosExitCapaB()">Ir al quiz</button></div>'; return; }
+    var n=data.r.length, p=0,co=0,sf=0; data.r.forEach(function(x){p+=x[1];co+=x[2];sf+=x[3];});
+    var rows=data.r.map(function(x){ var c=caseById(x[0]); var cat=c?c.cat:x[0]; return '<tr><td class="q-sc-id">'+esc(x[0])+'</td><td class="q-sc-cat">'+esc(cat)+'</td><td class="q-sc-m '+(x[1]?'ok':'no')+'">'+(x[1]?'✓':'✗')+'</td><td class="q-sc-m '+(x[2]?'ok':'no')+'">'+(x[2]?'✓':'✗')+'</td><td class="q-sc-m">'+(x[3]?'✓':'—')+'</td></tr>'; }).join('');
+    host.innerHTML='<div class="q-card"><div class="q-sc-h">Resultado de residente</div>'
+      +'<div class="q-sc-who">'+(data.n?esc(data.n):'<i>(sin nombre)</i>')+' &middot; <b>'+esc(data.t||'Set')+'</b></div>'
+      +'<div class="q-sum-grid"><div class="q-sum-cell"><div class="q-sum-n">'+p+'/'+n+'</div><div class="q-sum-l">primario</div></div>'
+      +'<div class="q-sum-cell"><div class="q-sum-n">'+co+'/'+n+'</div><div class="q-sum-l">compensacion</div></div>'
+      +'<div class="q-sum-cell"><div class="q-sum-n">'+sf+'/'+n+'</div><div class="q-sum-l">autoeval.</div></div></div>'
+      +'<table class="q-sc-tbl"><thead><tr><th>Caso</th><th>Categoria</th><th>P</th><th>C</th><th>Auto</th></tr></thead><tbody>'+rows+'</tbody></table>'
+      +'<div class="q-bld-note">P=primario, C=compensacion, Auto=autoevaluacion. Auto-reportado por el residente y editable; valor formativo, no es una calificacion formal.</div>'
+      +'<button type="button" class="q-next" onclick="ethosExitCapaB()" style="margin-top:14px;">Ir al quiz</button></div>';
+  }
+  window.ethosExitCapaB=function(){ try{ history.replaceState(null,'',baseURL()); }catch(e){} window._qa=null; window._capaBActive=false; setMode('normal'); renderBuilder(); render(); };
+
+  /* ---- Router: lee la URL al cargar ---- */
+  function capaBRoute(){ var qs; try{ qs=new URLSearchParams(location.search); }catch(e){ return; }
+    var q=qs.get('quiz'), r=qs.get('resultado');
+    if(q){ var set=b64dec(q); if(set&&set.ids&&set.ids.length){ window._capaBActive=true; if(typeof switchView==='function')switchView('practica'); startAssigned(set); return; } }
+    if(r){ var data=b64dec(r); window._capaBActive=true; if(typeof switchView==='function')switchView('practica'); renderScorecard(data); return; }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',capaBRoute); else capaBRoute();
 })();
 </script>
 
