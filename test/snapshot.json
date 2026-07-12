@@ -1,0 +1,352 @@
+{
+  "PURO-01": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 30
+  },
+  "PURO-02": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 26
+  },
+  "PURO-03": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 8
+  },
+  "PURO-04": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 7
+  },
+  "PURO-05": {
+    "dxKey": "al_met",
+    "dxPrimary": "Alcalosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 14
+  },
+  "PURO-06": {
+    "dxKey": "al_met",
+    "dxPrimary": "Alcalosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 16
+  },
+  "PURO-07": {
+    "dxKey": "ac_resp",
+    "dxPrimary": "Acidosis respiratoria primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 11
+  },
+  "PURO-08": {
+    "dxKey": "mixed_compensated",
+    "dxPrimary": "Acidosis respiratoria crónica (pH casi normalizado por compensación renal)",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 12
+  },
+  "PURO-09": {
+    "dxKey": "al_resp",
+    "dxPrimary": "Alcalosis respiratoria primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 16
+  },
+  "PURO-10": {
+    "dxKey": "mixed_compensated",
+    "dxPrimary": "Alcalosis respiratoria crónica (pH casi normalizado por compensación renal)",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 12
+  },
+  "MX-01": {
+    "dxKey": "ac_mix",
+    "dxPrimary": "Acidosis mixta (metabólica + respiratoria)",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 22
+  },
+  "MX-02": {
+    "dxKey": "al_resp",
+    "dxPrimary": "Alcalosis respiratoria primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 24
+  },
+  "MX-03": {
+    "dxKey": "mixed_compensated",
+    "dxPrimary": "Acidosis respiratoria crónica (pH casi normalizado por compensación renal)",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 12
+  },
+  "MX-04": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica de AG alto OCULTA (AG 26.0) — el pH está en rango porque la equilibra un proceso alcalinizante concomitante; no es \"sin trastorno\"",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 26
+  },
+  "MX-05": {
+    "dxKey": "al_resp",
+    "dxPrimary": "Alcalosis respiratoria primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 14
+  },
+  "MX-06": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 13
+  },
+  "MX-07": {
+    "dxKey": "ac_resp",
+    "dxPrimary": "Acidosis respiratoria primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 16
+  },
+  "MX-08": {
+    "dxKey": "al_resp",
+    "dxPrimary": "Alcalosis respiratoria primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 13
+  },
+  "MX-09": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 35
+  },
+  "MX-10": {
+    "dxKey": "ac_resp",
+    "dxPrimary": "Acidosis respiratoria primaria",
+    "nConcomitantes": 2,
+    "tripleDetected": true,
+    "agCorr": 18
+  },
+  "MX-11": {
+    "dxKey": "al_resp",
+    "dxPrimary": "Alcalosis respiratoria primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 14
+  },
+  "T1-triple-HAGMA-NAGMA-respAlk": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica de AG alto OCULTA (AG 20.0) — el pH está en rango porque la equilibra un proceso alcalinizante concomitante; no es \"sin trastorno\"",
+    "nConcomitantes": 2,
+    "tripleDetected": true,
+    "agCorr": 20
+  },
+  "T2-triple-HAGMA-metAlk-respAcid": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica de AG alto OCULTA (AG 22.0) — el pH está en rango porque la equilibra un proceso alcalinizante concomitante; no es \"sin trastorno\"",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 22
+  },
+  "T3-triple-HAGMA-NAGMA-respAcid": {
+    "dxKey": "ac_mix",
+    "dxPrimary": "Acidosis mixta (metabólica + respiratoria)",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 18
+  },
+  "DD1-deltaRatio-bajo-NAGMA-oculta": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 16
+  },
+  "DD2-deltaRatio-alto-metAlk-oculta": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica de AG alto OCULTA (AG 24.0) — el pH está en rango porque la equilibra un proceso alcalinizante concomitante; no es \"sin trastorno\"",
+    "nConcomitantes": 2,
+    "tripleDetected": true,
+    "agCorr": 24
+  },
+  "DD3-deltaRatio-normal-HAGMA-pura": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 28
+  },
+  "HA1-hipoalb-enmascara-HAGMA": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica de AG alto OCULTA (desenmascarada al corregir el AG por albúmina baja: AG corr 17.0) — el pH está en rango porque la equilibra un proceso alcalinizante concomitante; no es \"sin trastorno\"",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 17
+  },
+  "HA2-hipoalb-HAGMA-con-comp-resp": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica de AG alto OCULTA (desenmascarada al corregir el AG por albúmina baja: AG corr 17.5) — el pH está en rango porque la equilibra un proceso alcalinizante concomitante; no es \"sin trastorno\"",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 17.5
+  },
+  "HA3-hipoalb-HAGMA-mas-metAlk": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica de AG alto OCULTA (desenmascarada al corregir el AG por albúmina baja: AG corr 18.0) — el pH está en rango porque la equilibra un proceso alcalinizante concomitante; no es \"sin trastorno\"",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 18
+  },
+  "ESP-01-CAD": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 34
+  },
+  "ESP-02-AKA": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 29.5
+  },
+  "ESP-03-METANOL": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 30
+  },
+  "ESP-04-SALICILATOS": {
+    "dxKey": "al_resp",
+    "dxPrimary": "Alcalosis respiratoria primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 24
+  },
+  "ESP-05-LACTICA-SEPSIS": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 30.5
+  },
+  "ESP-06-UREMICA": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 22
+  },
+  "ESP-07-RTA": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 8
+  },
+  "ESP-08-HIPERCLOREMICA-SF": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 8
+  },
+  "ESP-09-ALCALOSIS-CONTRACCION": {
+    "dxKey": "al_met",
+    "dxPrimary": "Alcalosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 16
+  },
+  "ESP-10-EPOC-REAGUDIZADO": {
+    "dxKey": "ac_resp",
+    "dxPrimary": "Acidosis respiratoria primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 15
+  },
+  "ESP-11-AKA-VARIANTE": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 29
+  },
+  "ADV-01-pHnormal-mixto": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica de AG alto OCULTA (AG 30.5) — el pH está en rango porque la equilibra un proceso alcalinizante concomitante; no es \"sin trastorno\"",
+    "nConcomitantes": 2,
+    "tripleDetected": true,
+    "agCorr": 30.5
+  },
+  "ADV-02-inconsistencia-HH": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidemia con HCO₃ y PaCO₂ en rango — sospechar trastorno mixto o verificar la muestra",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 12
+  },
+  "ADV-03-borde-Winter": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 24
+  },
+  "ADV-04-resp-cronica-coef": {
+    "dxKey": "ac_resp",
+    "dxPrimary": "Acidosis respiratoria primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 8
+  },
+  "ADV-05-extremo-pH-bajo": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 33
+  },
+  "ADV-06-alcalosis-posthipercapnica": {
+    "dxKey": "al_met",
+    "dxPrimary": "Alcalosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 16
+  },
+  "ADV-07-triple-pHnormal-albumina": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica de AG alto OCULTA (desenmascarada al corregir el AG por albúmina baja: AG corr 30.8) — el pH está en rango porque la equilibra un proceso alcalinizante concomitante; no es \"sin trastorno\"",
+    "nConcomitantes": 2,
+    "tripleDetected": true,
+    "agCorr": 30.75
+  },
+  "ADV-08-extremo-pH-alto": {
+    "dxKey": "al_resp",
+    "dxPrimary": "Alcalosis respiratoria primaria",
+    "nConcomitantes": 1,
+    "tripleDetected": false,
+    "agCorr": 23
+  },
+  "ADV-09-borde-delta-ratio": {
+    "dxKey": "ac_met",
+    "dxPrimary": "Acidosis metabólica primaria",
+    "nConcomitantes": 0,
+    "tripleDetected": false,
+    "agCorr": 25.5
+  }
+}
