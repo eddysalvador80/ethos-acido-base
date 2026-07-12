@@ -1,0 +1,1740 @@
+[
+ {
+  "id": "PURO-01",
+  "dificultad": "simple",
+  "categoria": "Acidosis metabólica AG alto (HAGMA)",
+  "contexto": "Mujer de 24 años con diabetes tipo 1, poliuria, dolor abdominal y respiración de Kussmaul; cetonas urinarias 4+.",
+  "labs": {
+   "pH": 7.2,
+   "paco2": 21,
+   "hco3": 8,
+   "na": 138,
+   "cl": 100,
+   "k": 5.2,
+   "alb": 4,
+   "lactato": 1,
+   "glucosa": 480,
+   "crea": 1.1
+  },
+  "calculos": {
+   "ag": 30,
+   "agCorregido": 30,
+   "deltaRatio": "ΔAG/ΔHCO₃ = (30−12)/(24−8) = 18/16 ≈ 1.1 (normal 1–2, trastorno HAGMA puro)",
+   "winterPaCO2": "1.5×8+8±2 = 18–22 mmHg",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap elevado (HAGMA)",
+   "compensacion": "Apropiada: PaCO₂ 21 mmHg cae dentro del rango de Winter (18–22), hay hiperventilación compensatoria adecuada; trastorno simple",
+   "secundarios": [],
+   "diagnostico": "Cetoacidosis diabética (CAD)",
+   "porQue": "AG 30 muy elevado con cetonemia y glucosa 480; HCO₃ bajo con PaCO₂ que sigue la fórmula de Winter indica compensación respiratoria completa sin trastorno respiratorio agregado",
+   "perlaClinica": "Δ-ratio ≈1 confirma que solo hay un proceso AG-alto; si fuera <1 sospecharía una NAGMA agregada (p.ej. acidosis hiperclorémica por reanimación con SF)"
+  }
+ },
+ {
+  "id": "PURO-02",
+  "dificultad": "simple",
+  "categoria": "Acidosis metabólica AG alto (HAGMA)",
+  "contexto": "Hombre de 68 años con shock séptico de foco abdominal, hipotensión y piel moteada; lactato muy elevado.",
+  "labs": {
+   "pH": 7.29,
+   "paco2": 26,
+   "hco3": 12,
+   "na": 140,
+   "cl": 102,
+   "k": 4.6,
+   "alb": 3.6,
+   "lactato": 8.5,
+   "glucosa": 130,
+   "crea": 1.6
+  },
+  "calculos": {
+   "ag": 26,
+   "agCorregido": 27,
+   "deltaRatio": "ΔAG/ΔHCO₃ usando AGc = (27−12)/(24−12) = 15/12 = 1.25 (normal 1–2)",
+   "winterPaCO2": "1.5×12+8±2 = 24–28 mmHg",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap elevado (HAGMA)",
+   "compensacion": "Apropiada: PaCO₂ 26 mmHg dentro del rango de Winter (24–28); compensación respiratoria adecuada, trastorno simple",
+   "secundarios": [],
+   "diagnostico": "Acidosis láctica tipo A por shock séptico (hipoperfusión)",
+   "porQue": "Lactato 8.5 explica todo el incremento del AG corregido por albúmina baja; Δ-ratio ~1.25 sin desviación, PaCO₂ en rango de Winter",
+   "perlaClinica": "Corregir el AG por albúmina (3.6 g/dL) sube el AG de 26 a 27; sin esa corrección se subestima la magnitud de la brecha en hipoalbuminémicos"
+  }
+ },
+ {
+  "id": "PURO-03",
+  "dificultad": "simple",
+  "categoria": "Acidosis metabólica hiperclorémica (NAGMA)",
+  "contexto": "Niño de 6 años llevado por diarrea acuosa profusa de 4 días, deshidratado y con mucosas secas.",
+  "labs": {
+   "pH": 7.32,
+   "paco2": 30,
+   "hco3": 15,
+   "na": 138,
+   "cl": 115,
+   "k": 3.2,
+   "alb": 4,
+   "lactato": 1.2,
+   "glucosa": 95,
+   "crea": 0.6
+  },
+  "calculos": {
+   "ag": 8,
+   "agCorregido": 8,
+   "deltaRatio": "No aplica (AG normal); el HCO₃ perdido se compensa con aumento de Cl⁻ (hiperclorémica)",
+   "winterPaCO2": "1.5×15+8±2 = 28.5–32.5 mmHg",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica hiperclorémica con anión gap normal (NAGMA)",
+   "compensacion": "Apropiada: PaCO₂ 30 mmHg dentro del rango de Winter (28.5–32.5); compensación respiratoria adecuada, trastorno simple",
+   "secundarios": [],
+   "diagnostico": "Pérdida digestiva baja de bicarbonato por diarrea (acidosis hiperclorémica)",
+   "porQue": "AG 8 normal con Cl⁻ 115 elevado: la caída del HCO₃ es reemplazada por cloro, patrón clásico de pérdida gastrointestinal de álcali",
+   "perlaClinica": "La hipokalemia (K 3.2) acompaña la pérdida diarreica; útil para diferenciar de ATR distal (donde el K también puede caer) calculando el gap aniónico urinario"
+  }
+ },
+ {
+  "id": "PURO-04",
+  "dificultad": "simple",
+  "categoria": "Acidosis metabólica hiperclorémica (NAGMA)",
+  "contexto": "Mujer de 35 años con litiasis renal recurrente, nefrocalcinosis y debilidad muscular; orina alcalina persistente.",
+  "labs": {
+   "pH": 7.34,
+   "paco2": 33,
+   "hco3": 17,
+   "na": 140,
+   "cl": 116,
+   "k": 3,
+   "alb": 4,
+   "lactato": 0.9,
+   "glucosa": 92,
+   "crea": 0.9
+  },
+  "calculos": {
+   "ag": 7,
+   "agCorregido": 7,
+   "deltaRatio": "No aplica (AG normal, hiperclorémica)",
+   "winterPaCO2": "1.5×17+8±2 = 31.5–35.5 mmHg",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica hiperclorémica con anión gap normal (NAGMA)",
+   "compensacion": "Apropiada: PaCO₂ 33 mmHg dentro del rango de Winter (31.5–35.5); trastorno simple",
+   "secundarios": [],
+   "diagnostico": "Acidosis tubular renal distal tipo 1 (orina alcalina, hipokalemia, nefrocalcinosis)",
+   "porQue": "NAGMA con K bajo, orina inapropiadamente alcalina y nefrocalcinosis; el gap aniónico urinario sería positivo por amoniogénesis defectuosa",
+   "perlaClinica": "ATR distal cursa con hipokalemia y nefrolitiasis de calcio; contrasta con ATR tipo 4 (hiperkalémica). El AG plasmático normal descarta una HAGMA agregada"
+  }
+ },
+ {
+  "id": "PURO-05",
+  "dificultad": "simple",
+  "categoria": "Alcalosis metabólica",
+  "contexto": "Hombre de 55 años con vómitos persistentes por estenosis pilórica de 1 semana; signos de depleción de volumen.",
+  "labs": {
+   "pH": 7.5,
+   "paco2": 48,
+   "hco3": 36,
+   "na": 142,
+   "cl": 92,
+   "k": 3.1,
+   "alb": 4,
+   "lactato": 1,
+   "glucosa": 100,
+   "crea": 1
+  },
+  "calculos": {
+   "ag": 14,
+   "agCorregido": 14,
+   "deltaRatio": "AG levemente alto (14) por contracción de volumen/alcalemia; ΔAG=2 no constituye una acidosis AG-alto verdadera, por lo que el delta-ratio formal no aplica",
+   "winterPaCO2": "No aplica (no es acidosis metabólica). Compensación esperada por alcalosis metabólica: PaCO₂ ≈ 0.7×ΔHCO₃+40 = 0.7×12+40 ≈ 48 mmHg (±2)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Alcalosis metabólica",
+   "compensacion": "Apropiada: PaCO₂ 48 mmHg coincide con la esperada (≈0.7×ΔHCO₃+40 ≈ 48); hipoventilación compensatoria adecuada, trastorno simple",
+   "secundarios": [],
+   "diagnostico": "Alcalosis metabólica clorurosensible por pérdida gástrica de HCl (vómitos) con contracción de volumen e hipokalemia",
+   "porQue": "HCO₃ 36 con Cl⁻ 92 bajo e hipokalemia; la PaCO₂ sube apropiadamente para amortiguar la alcalemia sin sobrepasar lo esperado",
+   "perlaClinica": "Es clorurosensible (Cl⁻ urinario bajo); responde a reposición de NaCl y KCl. El leve AG de 14 es por alcalemia y depleción, no una HAGMA agregada"
+  }
+ },
+ {
+  "id": "PURO-06",
+  "dificultad": "simple",
+  "categoria": "Alcalosis metabólica",
+  "contexto": "Mujer de 72 años con insuficiencia cardíaca en tratamiento con furosemida en dosis altas; calambres y debilidad.",
+  "labs": {
+   "pH": 7.49,
+   "paco2": 46,
+   "hco3": 34,
+   "na": 140,
+   "cl": 90,
+   "k": 3,
+   "alb": 3.8,
+   "lactato": 1.1,
+   "glucosa": 110,
+   "crea": 1.3
+  },
+  "calculos": {
+   "ag": 16,
+   "agCorregido": 16.5,
+   "deltaRatio": "No aplica delta-ratio: no hay acidosis metabólica de AG alto. El AG de 16 (corregido 16.5) está levemente elevado por alcalemia (mayor carga aniónica de proteínas) y contracción de volumen, con lactato normal (1.1) y sin acidosis NAGMA ni HAGMA sobreañadida",
+   "winterPaCO2": "No aplica (Winter es para acidosis metabólica). Compensación esperada de alcalosis metabólica: PaCO₂ ≈ 0.7×ΔHCO₃+40 = 0.7×10+40 ≈ 47 mmHg (±2)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Alcalosis metabólica",
+   "compensacion": "Apropiada: PaCO₂ 46 mmHg dentro del rango esperado (≈45–49); hipoventilación compensatoria adecuada, trastorno simple",
+   "secundarios": [],
+   "diagnostico": "Alcalosis metabólica por diuréticos de asa (contracción de volumen, pérdida renal de Cl⁻ y K⁺)",
+   "porQue": "HCO₃ 34 con hipocloremia (Cl 90) e hipokalemia (K 3.0) en contexto de furosemida; PaCO₂ compensatoria en rango esperado y pH consistente por Henderson-Hasselbalch (calculado 7.49)",
+   "perlaClinica": "Alcalosis metabólica cloruro-sensible (cloruro urinario bajo): responde a reposición de volumen, Cl⁻ y K⁺. El AG levemente alto NO indica aniones no medidos: en alcalemia aumenta la carga negativa de la albúmina y la contracción concentra aniones; con lactato normal no hay HAGMA agregada"
+  }
+ },
+ {
+  "id": "PURO-07",
+  "dificultad": "simple",
+  "categoria": "Acidosis respiratoria aguda",
+  "contexto": "Hombre de 40 años traído por sobredosis de opioides, somnoliento, bradipneico, sin antecedentes pulmonares.",
+  "labs": {
+   "pH": 7.26,
+   "paco2": 60,
+   "hco3": 26,
+   "na": 140,
+   "cl": 103,
+   "k": 4.2,
+   "alb": 4,
+   "lactato": 1.3,
+   "glucosa": 105,
+   "crea": 1
+  },
+  "calculos": {
+   "ag": 11,
+   "agCorregido": 11,
+   "deltaRatio": "No aplica (AG normal, sin acidosis metabólica de brecha elevada)",
+   "winterPaCO2": "No aplica (es trastorno respiratorio primario). Compensación esperada: ΔHCO₃ = +1/10 mmHg → HCO₃ ≈ 24+(20/10×1) = 26",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis respiratoria aguda",
+   "compensacion": "Apropiada: por cada 10 mmHg de aumento de PaCO₂ sobre 40, el HCO₃ sube +1; con PaCO₂ 60 (ΔPaCO₂=20) se espera HCO₃ ≈ 26, que es exactamente el valor medido. Buffer celular agudo adecuado, trastorno simple. La cronicidad esperaría HCO₃≈31 (+3.5/10), lo que se descarta.",
+   "secundarios": [],
+   "diagnostico": "Depresión respiratoria por opioides (hipoventilación alveolar aguda)",
+   "porQue": "pH bajo con PaCO₂ alta y HCO₃ apenas elevado (26): el ajuste renal aún no ocurre, solo amortiguación tisular aguda",
+   "perlaClinica": "Un HCO₃ de 26 con PaCO₂ 60 indica que el proceso es agudo; si el HCO₃ fuera ~33 pensaría en cronicidad o componente metabólico agregado"
+  }
+ },
+ {
+  "id": "PURO-08",
+  "dificultad": "simple",
+  "categoria": "Acidosis respiratoria crónica",
+  "contexto": "Hombre de 66 años con EPOC avanzado, retenedor crónico de CO₂, en su estado basal sin descompensación aguda.",
+  "labs": {
+   "pH": 7.36,
+   "paco2": 60,
+   "hco3": 33,
+   "na": 140,
+   "cl": 95,
+   "k": 4.4,
+   "alb": 4,
+   "lactato": 1,
+   "glucosa": 100,
+   "crea": 1
+  },
+  "calculos": {
+   "ag": 12,
+   "agCorregido": 12,
+   "deltaRatio": "No aplica (AG normal)",
+   "winterPaCO2": "No aplica (no hay acidosis metabólica). Compensación renal crónica esperada: ΔHCO₃ = +3.5 por cada 10 mmHg de PaCO₂ sobre 40 → con PaCO₂ 60 (Δ=20), HCO₃ esperado ≈ 24+(20/10×3.5) = 31, rango ~31–33",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis respiratoria crónica",
+   "compensacion": "Apropiada: por cada 10 mmHg de aumento de PaCO₂ sobre 40, el HCO₃ sube +3.5 en la forma crónica; con PaCO₂ 60 (Δ20) se espera HCO₃ ≈ 31, observado 33, dentro del rango (~31–33). Compensación renal completa, trastorno simple",
+   "secundarios": [],
+   "diagnostico": "Acidosis respiratoria crónica compensada por EPOC (retenedor crónico de CO₂)",
+   "porQue": "pH casi normal (7.36, ligeramente acidémico) con PaCO₂ 60 y HCO₃ 33 indica retención renal de bicarbonato establecida en semanas; el Cl⁻ 95 baja recíprocamente. AG 12 normal, sin trastorno metabólico agregado",
+   "perlaClinica": "El pH casi normalizado pese a PaCO₂ muy alta es la firma de cronicidad; mantener objetivos de SpO₂ 88–92% para no abolir el estímulo hipóxico ventilatorio"
+  }
+ },
+ {
+  "id": "PURO-09",
+  "dificultad": "simple",
+  "categoria": "Alcalosis respiratoria aguda",
+  "contexto": "Mujer de 28 años con crisis de pánico, hiperventilando, con parestesias peribucales y en las manos; pulmones limpios.",
+  "labs": {
+   "pH": 7.51,
+   "paco2": 26,
+   "hco3": 20,
+   "na": 140,
+   "cl": 104,
+   "k": 3.8,
+   "alb": 4,
+   "lactato": 1,
+   "glucosa": 90,
+   "crea": 0.8
+  },
+  "calculos": {
+   "ag": 16,
+   "agCorregido": 16,
+   "deltaRatio": "No aplica (trastorno respiratorio primario; no hay acidosis metabólica que motive cálculo delta-delta). El AG de 16 está levemente alto pero con lactato normal y cuadro limpio se atribuye a variación analítica/alcalemia aguda, no a un segundo trastorno",
+   "winterPaCO2": "No aplica (no hay acidosis metabólica). Compensación esperada para alcalosis respiratoria aguda: ΔHCO₃ = −2 por cada 10 mmHg de descenso de PaCO₂ → con PaCO₂ 26 (descenso 14), HCO₃ esperado ≈ 24 − 2.8 ≈ 21",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Alcalosis respiratoria aguda",
+   "compensacion": "Apropiada: por cada 10 mmHg de descenso de PaCO₂ bajo 40 el HCO₃ baja −2 en la forma aguda; con PaCO₂ 26 se espera HCO₃ ≈ 21, muy cercano al valor medido 20. Solo amortiguación tisular aguda, sin respuesta renal aún; trastorno simple",
+   "secundarios": [],
+   "diagnostico": "Hiperventilación aguda por crisis de ansiedad/pánico",
+   "porQue": "pH alto con PaCO₂ baja y HCO₃ apenas reducido (20): el riñón aún no excreta bicarbonato, solo hay amortiguación aguda. El HCO₃ medido coincide con la predicción aguda (≈21) y no con la crónica (≈18), confirmando agudeza",
+   "perlaClinica": "Las parestesias se deben a la caída del calcio iónico por la alcalemia aguda; el HCO₃ poco reducido (20, próximo a 21) confirma agudeza frente a una alcalosis respiratoria crónica (que daría ≈18). El AG de 16 es un hallazgo menor sin correlato clínico"
+  }
+ },
+ {
+  "id": "PURO-10",
+  "dificultad": "simple",
+  "categoria": "Alcalosis respiratoria crónica",
+  "contexto": "Mujer de 30 años, embarazo de 28 semanas sin complicaciones, gasometría de control; asintomática.",
+  "labs": {
+   "pH": 7.43,
+   "paco2": 28,
+   "hco3": 18,
+   "na": 138,
+   "cl": 108,
+   "k": 4,
+   "alb": 4,
+   "lactato": 0.9,
+   "glucosa": 85,
+   "crea": 0.6
+  },
+  "calculos": {
+   "ag": 12,
+   "agCorregido": 12,
+   "deltaRatio": "No aplica (AG normal)",
+   "winterPaCO2": "No aplica (no hay acidosis metabólica). Compensación esperada para alcalosis respiratoria crónica: ΔHCO₃ = −4 a −5 por cada 10 mmHg de descenso de PaCO₂ → con PaCO₂ 28 (descenso de 12 mmHg) HCO₃ esperado ≈ 24−(1.2×4 a 5) ≈ 18.0–19.2",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Alcalosis respiratoria crónica",
+   "compensacion": "Apropiada: por cada 10 mmHg de descenso de PaCO₂ bajo 40, el HCO₃ baja −4 a −5 en la forma crónica; con PaCO₂ 28 (descenso de 12 mmHg) se espera HCO₃ ≈ 18.0–19.2, y el valor medido de 18 cae en ese rango. Compensación renal completa con pH casi normal, trastorno simple",
+   "secundarios": [],
+   "diagnostico": "Alcalosis respiratoria crónica fisiológica del embarazo (la progesterona estimula el centro respiratorio)",
+   "porQue": "pH casi normal (7.43) con PaCO₂ 28 y HCO₃ 18 refleja excreción renal de bicarbonato ya establecida; el Cl⁻ 108 sube recíprocamente para mantener la electroneutralidad con AG normal (12)",
+   "perlaClinica": "Una PaCO₂ de 28 con HCO₃ 18 y pH casi normal es el hallazgo basal esperado en el embarazo; no confundir el HCO₃ bajo con una acidosis metabólica, pues el AG es normal (12) y el pH es alcalótico, no acidótico"
+  }
+ },
+ {
+  "id": "MX-01",
+  "dificultad": "mixto",
+  "categoria": "acidosis metabólica AG alto + acidosis respiratoria",
+  "contexto": "Hombre de 68 años con EPOC severo en shock séptico hipotenso, taquipneico pero agotado, derivado a UCI.",
+  "labs": {
+   "pH": 7.04,
+   "paco2": 60,
+   "hco3": 16,
+   "na": 138,
+   "cl": 100,
+   "k": 5.4,
+   "alb": 4,
+   "lactato": 8,
+   "glucosa": 150,
+   "crea": 2.1
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anion gap elevado (lactato)",
+   "compensacion": "Inapropiada/insuficiente: por Winter el PaCO₂ esperado es 30-34 mmHg, pero el medido es 60 mmHg, muy por encima del rango; el paciente NO baja el CO₂ como debería, hay acidosis respiratoria sobreañadida",
+   "secundarios": [
+    "Acidosis respiratoria (PaCO₂ 60 fuera del rango de Winter por fatiga muscular/EPOC + shock)"
+   ],
+   "diagnostico": "Acidosis mixta metabólica (láctica) + respiratoria por fatiga ventilatoria en EPOC con shock séptico",
+   "porQue": "AG=22 confirma componente metabólico de gap alto; el PaCO₂ de 60 está muy por encima del esperado por Winter (30-34), lo que delata un segundo trastorno respiratorio: el pulmón no puede compensar. pH 7.04 refleja la suma de ambas acidosis.",
+   "perlaClinica": "Un PaCO₂ 'normal' o alto frente a una acidosis metabólica grave es una bandera roja: indica fallo ventilatorio inminente. Ventilar antes de que el paciente se descompense."
+  },
+  "calculos": {
+   "ag": 22,
+   "agCorregido": 22,
+   "winterPaCO2": "30-34 mmHg",
+   "deltaRatio": "ΔAG/ΔHCO₃ = (22-12)/(24-16) = 10/8 = 1.25 (rango normal, acidosis AG alto pura en el componente metabólico)",
+   "consistenciaHH": true
+  }
+ },
+ {
+  "id": "MX-02",
+  "dificultad": "mixto",
+  "categoria": "acidosis metabólica AG alto + alcalosis respiratoria (SALICILATOS)",
+  "contexto": "Mujer de 24 años traída por intoxicación voluntaria con AAS; tinnitus, hiperventilación franca, náuseas.",
+  "labs": {
+   "pH": 7.5,
+   "paco2": 18,
+   "hco3": 14,
+   "na": 140,
+   "cl": 102,
+   "k": 3.6,
+   "alb": 4,
+   "lactato": 3,
+   "glucosa": 95,
+   "crea": 0.9
+  },
+  "esperado": {
+   "primario": "Alcalosis respiratoria (estímulo directo del centro respiratorio por salicilato) — pH alcalémico domina",
+   "compensacion": "NO es compensación: el HCO₃ bajo (14) no es respuesta a la alcalosis respiratoria sino una acidosis metabólica de AG alto independiente; coexisten dos trastornos primarios opuestos",
+   "secundarios": [
+    "Acidosis metabólica con anion gap elevado (salicilato, lactato, cetoácidos)"
+   ],
+   "diagnostico": "Intoxicación por salicilatos: el clásico trastorno mixto alcalosis respiratoria + acidosis metabólica de AG alto",
+   "porQue": "AG=24 (muy alto) indica acidosis metabólica de gap. El HCO₃ medido (14) está muy por debajo del rango de Winter esperado para el componente metabólico (27-31 mmHg de PaCO₂), y el PaCO₂ real (18) cae aún más abajo, lo que confirma una alcalosis respiratoria primaria sobreañadida. pH alcalémico (7.50) porque domina el componente respiratorio.",
+   "perlaClinica": "En todo adulto con alcalosis respiratoria + acidosis metabólica de AG alto sin causa obvia, pensar salicilatos hasta demostrar lo contrario. Pedir niveles y considerar alcalinización urinaria/diálisis."
+  },
+  "calculos": {
+   "ag": 24,
+   "agCorregido": 24,
+   "winterPaCO2": "componente metabólico: PaCO₂esp=1.5×14+8±2 = 27-31 mmHg; el medido (18) está muy por debajo, confirmando alcalosis respiratoria primaria sobreañadida",
+   "deltaRatio": "ΔAG/ΔHCO₃ = (24-12)/(24-14) = 12/10 = 1.2 (componente metabólico de AG alto puro)",
+   "consistenciaHH": true,
+   "agCorregidoValor": 24,
+   "winterValorCentral": 29
+  }
+ },
+ {
+  "id": "MX-03",
+  "dificultad": "mixto",
+  "categoria": "acidosis respiratoria crónica + alcalosis metabólica",
+  "contexto": "Hombre de 72 años con EPOC retenedor crónico, en tratamiento con furosemida por cor pulmonale; refiere vómitos los últimos días.",
+  "labs": {
+   "pH": 7.36,
+   "paco2": 70,
+   "hco3": 38,
+   "na": 140,
+   "cl": 90,
+   "k": 3,
+   "alb": 4,
+   "lactato": 1,
+   "glucosa": 110,
+   "crea": 1.3
+  },
+  "esperado": {
+   "primario": "Acidosis respiratoria crónica (EPOC retenedor)",
+   "compensacion": "Inapropiada por exceso: la compensación renal crónica esperada es ΔHCO₃ +3.5/10 mmHg de PaCO₂ sobre 40 → ΔPaCO₂=30, HCO₃ esperado = 24 + 10.5 = 34.5. El HCO₃ medido (38) supera lo esperado en ~3.5 mEq/L, delatando alcalosis metabólica sobreañadida (diuréticos + vómitos)",
+   "secundarios": [
+    "Alcalosis metabólica (cloro-sensible: furosemida + vómitos; Cl 90 bajo, K 3.0 bajo)"
+   ],
+   "diagnostico": "EPOC con acidosis respiratoria crónica complicada por alcalosis metabólica por diuréticos de asa y vómitos",
+   "porQue": "El HCO₃ de 38 está por encima del esperado para una compensación crónica pura (34.5). El Cl bajo (90) y la hipokalemia (3.0) apuntan a alcalosis metabólica cloro-sensible añadida. El pH casi normal (7.36) enmascara los dos trastornos.",
+   "perlaClinica": "En el EPOC retenedor, un HCO₃ desproporcionadamente alto y un Cl bajo señalan alcalosis metabólica sobreimpuesta; corregirla (KCl, suspender/ajustar diurético) mejora el drive respiratorio.",
+   "primario_es": "Acidosis respiratoria crónica (EPOC retenedor)"
+  },
+  "calculos": {
+   "ag": 12,
+   "agCorregido": 12,
+   "winterPaCO2": "no aplica (primario respiratorio)",
+   "deltaRatio": "no aplica (AG normal)",
+   "consistenciaHH": true
+  }
+ },
+ {
+  "id": "MX-04",
+  "dificultad": "mixto",
+  "categoria": "acidosis metabólica AG alto + alcalosis metabólica (delta-ratio >2)",
+  "contexto": "Mujer de 33 años diabética con cetoacidosis que además ha vomitado profusamente durante 48 horas antes de consultar.",
+  "labs": {
+   "pH": 7.44,
+   "paco2": 40,
+   "hco3": 26,
+   "na": 140,
+   "cl": 88,
+   "k": 3.4,
+   "alb": 4,
+   "lactato": 2,
+   "glucosa": 480,
+   "crea": 1.4
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anion gap elevado (cetoacidosis diabética) — revelada por el AG y por el HCO₃ corregido (40), no por el HCO₃ medido",
+   "compensacion": "Engañosa: pH y HCO₃ casi normales ocultan dos trastornos metabólicos opuestos que se cancelan; el AG elevado (26) y el HCO₃ corregido (40) son las únicas pistas. No procede evaluar Winter de forma estándar porque el HCO₃ neto no ha descendido; la PaCO₂ de 40 es coherente con un pH neutro.",
+   "secundarios": [
+    "Alcalosis metabólica (vómitos; pérdida de HCl, Cl 88 muy bajo, cloruro-respondedora)"
+   ],
+   "diagnostico": "CAD con vómitos: acidosis metabólica de AG alto + alcalosis metabólica concurrente, evidenciada por HCO₃ corregido de 40 (delta-ratio degenerado por HCO₃ no descendido)",
+   "porQue": "El componente acidótico se demuestra por ΔAG = AG−12 = 26−12 = 14 mEq de aniones no medidos (cetoácidos; lactato normal en 2). Si fuera una acidosis metabólica de AG alto pura, el HCO₃ debería haber caído ~14 hasta ~10; en cambio está en 26. El HCO₃ corregido (HCO₃ medido + ΔAG = 26+14 = 40) está muy por encima de 24, lo que cuantifica una alcalosis metabólica concurrente que 'rellenó' el bicarbonato. El Cl muy bajo (88) confirma la pérdida gástrica de HCl. NOTA: el delta-ratio ΔAG/ΔHCO₃ aquí es degenerado/negativo porque ΔHCO₃ = 24−26 = −2 (el HCO₃ subió en vez de bajar); en este escenario el delta-ratio no debe etiquetarse simplemente como '>2' sino interpretarse con el HCO₃ corregido.",
+   "perlaClinica": "Un HCO₃ y pH normales con AG elevado y glucosa alta NO descartan CAD: el vómito puede normalizar el bicarbonato. Calcular SIEMPRE el AG y el HCO₃ corregido (HCO₃ + ΔAG); si el corregido supera 24, hay una alcalosis metabólica sobreañadida aunque el delta-ratio salga negativo o indefinido. Tratar la CAD aunque el pH parezca tranquilizador."
+  },
+  "calculos": {
+   "ag": 26,
+   "agCorregido": 26,
+   "winterPaCO2": "No aplica de forma limpia: Winter (1.5×HCO₃+8±2 = 45–49 con HCO₃=26) presupone una acidosis metabólica con HCO₃ descendido. Como el HCO₃ neto no cayó por la alcalosis concurrente, la fórmula no es interpretable aquí; la PaCO₂ de 40 es coherente con el pH neutro.",
+   "deltaRatio": "ΔAG = 26−12 = 14; ΔHCO₃ = 24−26 = −2. El cociente ΔAG/ΔHCO₃ = −7 es DEGENERADO (negativo) porque el HCO₃ subió en lugar de bajar — no equivale a '>2'. Interpretación correcta vía HCO₃ corregido = 26+14 = 40 (>24) → alcalosis metabólica concurrente que rellenó el bicarbonato.",
+   "consistenciaHH": true,
+   "deltaRatioNumerico": -7,
+   "hco3Corregido": 40
+  }
+ },
+ {
+  "id": "MX-05",
+  "dificultad": "mixto",
+  "categoria": "alcalosis respiratoria + alcalosis metabólica",
+  "contexto": "Mujer de 58 años con sepsis y dolor (hiperventilación) y aspiración nasogástrica continua por íleo.",
+  "labs": {
+   "pH": 7.58,
+   "paco2": 28,
+   "hco3": 26,
+   "na": 140,
+   "cl": 100,
+   "k": 3.1,
+   "alb": 4,
+   "lactato": 1.5,
+   "glucosa": 120,
+   "crea": 1
+  },
+  "esperado": {
+   "primario": "Alcalosis respiratoria (sepsis/dolor) concurrente con alcalosis metabólica — ambas elevan el pH",
+   "compensacion": "inapropiada como mecanismo compensatorio: ambos trastornos empujan el pH al alza, no hay compensación verdadera. Para alcalosis respiratoria aguda pura con PaCO₂ 28 (ΔPaCO₂ −12) el HCO₃ debería bajar ~2/10 → ~22; el HCO₃ medido (26) está por encima, lo que delata alcalosis metabólica añadida en vez de la caída esperada",
+   "secundarios": [
+    "Alcalosis metabólica (aspiración nasogástrica, pérdida de HCl; K 3.1 hipokalémico, hipocloremia relativa Cl 100)"
+   ],
+   "diagnostico": "Alcalemia mixta severa: alcalosis respiratoria + alcalosis metabólica por aspiración gástrica",
+   "porQue": "El HCO₃ de 26 es demasiado alto para ser compensación de una alcalosis respiratoria (que lo bajaría a ~22 en forma aguda, ~19 si crónica). En lugar de descender, sube → segundo trastorno alcalótico metabólico. El pH 7.58 marcadamente alto es la suma de ambos. AG 14 levemente elevado sin acidosis metabólica clínicamente relevante (lactato 1.5 normal, sin brecha osmolar reportada).",
+   "perlaClinica": "Dos trastornos que tiran del pH en la misma dirección producen alcalemias o acidemias extremas; pH >7.55 obliga a buscar doble causa y a corregir el K (3.1) por riesgo de arritmias. La aspiración nasogástrica perpetúa la alcalosis (cloruro-sensible): reponer Cl/K/volumen es clave."
+  },
+  "calculos": {
+   "ag": 14,
+   "agCorregido": 14,
+   "winterPaCO2": "no aplica (primario respiratorio; no hay acidosis metabólica)",
+   "deltaRatio": "no aplica de forma estándar (no hay acidosis metabólica de AG alto; AG 14 solo limítrofe alto)",
+   "consistenciaHH": true
+  }
+ },
+ {
+  "id": "MX-06",
+  "dificultad": "triple",
+  "categoria": "acidosis metabólica AG alto + acidosis metabólica hiperclorémica (delta-ratio <1) + acidosis respiratoria leve agregada (PaCO₂ > Winter)",
+  "contexto": "Hombre de 45 años con diarrea profusa de varios días y deshidratación, que desarrolla acidosis láctica por hipoperfusión.",
+  "labs": {
+   "pH": 7.22,
+   "paco2": 28,
+   "hco3": 11,
+   "na": 140,
+   "cl": 116,
+   "k": 3.5,
+   "alb": 4,
+   "lactato": 4,
+   "glucosa": 100,
+   "crea": 1.6
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica mixta de AG alto (láctica) + AG normal (hiperclorémica por diarrea)",
+   "compensacion": "Inapropiada: por Winter PaCO₂esp = 1.5×11+8 ±2 = 22.5–26.5 mmHg, pero el medido es 28 mmHg, POR ENCIMA del límite superior. Una PaCO₂ mayor que la predicha por Winter indica que la ventilación no baja el CO₂ lo suficiente → acidosis respiratoria LEVE agregada (componente respiratorio sobreañadido). No es compensación adecuada, sino un tercer trastorno (leve/limítrofe, +1.5 mmHg sobre el límite).",
+   "secundarios": [
+    "Acidosis metabólica hiperclorémica de AG normal (pérdida de HCO₃ por diarrea; Cl 116 elevado; delta-ratio <1)",
+    "Acidosis respiratoria leve agregada (PaCO₂ 28 > Winter máx 26.5 → ventilación insuficiente)"
+   ],
+   "diagnostico": "Trastorno TRIPLE en diarrea con hipoperfusión: (1) acidosis metabólica de AG alto (láctica), (2) acidosis hiperclorémica de AG normal (pérdida digestiva de bicarbonato, delta-ratio <1), y (3) acidosis respiratoria leve por respuesta ventilatoria insuficiente (PaCO₂ sobre el rango de Winter).",
+   "porQue": "AG=13 (sólo ligeramente alto, coherente con lactato 4) pero HCO₃ muy bajo (11): el descenso del bicarbonato (ΔHCO₃=13) excede al aumento del AG (ΔAG=1) → delta-ratio ≈0.08 (<1), señal de NAGMA hiperclorémica coexistente (Cl 116 lo confirma). Además, la PaCO₂ medida (28) supera la esperada por Winter (22.5–26.5), de modo que la compensación respiratoria es insuficiente → tercer trastorno (acidosis respiratoria leve).",
+   "perlaClinica": "Dos perlas: (a) un delta-ratio <1 significa que el HCO₃ cayó más de lo que el AG subió → hay un componente hiperclorémico añadido (diarrea, ATR); el Cl alto es la pista directa. (b) Siempre comparar la PaCO₂ medida con el rango de Winter: si es MAYOR que el predicho (como aquí, 28 > 26.5), la compensación es inadecuada y existe una acidosis respiratoria sobreañadida, convirtiendo un trastorno mixto en triple."
+  },
+  "calculos": {
+   "ag": 13,
+   "agCorregido": 13,
+   "consistenciaHH": true,
+   "deltaRatio": "ΔAG/ΔHCO₃ = (13−12)/(24−11) = 1/13 = 0.08 → muy <1, NAGMA hiperclorémica sobreañadida",
+   "winterPaCO2": "22.5–26.5 mmHg (1.5×11+8 ±2); medido 28 → POR ENCIMA del rango → acidosis respiratoria leve agregada"
+  }
+ },
+ {
+  "id": "MX-07",
+  "dificultad": "mixto",
+  "categoria": "acidosis respiratoria aguda + acidosis metabólica AG alto",
+  "contexto": "Hombre de 55 años con sobredosis de opioides (depresión respiratoria) que llega hipotenso con acidosis láctica por hipoperfusión.",
+  "labs": {
+   "pH": 7.18,
+   "paco2": 65,
+   "hco3": 23,
+   "na": 138,
+   "cl": 99,
+   "k": 4.6,
+   "alb": 4,
+   "lactato": 5,
+   "glucosa": 105,
+   "crea": 1.2
+  },
+  "esperado": {
+   "primario": "Acidosis respiratoria aguda (depresión del centro respiratorio por opioides)",
+   "compensacion": "Inapropiada/insuficiente: en acidosis respiratoria aguda pura ΔHCO₃ sube +1/10 mmHg de PaCO₂ → con PaCO₂ 65 (ΔPaCO₂ +25) el HCO₃ esperado sería ~26-27 (cálculo exacto 26.5). El HCO₃ medido (23) es MÁS BAJO de lo esperado, delatando una acidosis metabólica de AG alto añadida",
+   "secundarios": [
+    "Acidosis metabólica con anion gap elevado (lactato por hipoperfusión; AG 16)"
+   ],
+   "diagnostico": "Sobredosis de opioides con shock: acidosis respiratoria aguda + acidosis metabólica láctica",
+   "porQue": "El HCO₃ de 23 parece casi normal, pero para una hipercapnia aguda de 65 debería haber SUBIDO a ~26-27. Que esté en 23 con un AG de 16 revela una acidosis metabólica de gap concurrente que consume bicarbonato. pH 7.18 por la doble acidosis.",
+   "perlaClinica": "Un HCO₃ 'normal' frente a hipercapnia aguda significativa es realmente bajo: la regla del +1/10 ayuda a desenmascarar la acidosis metabólica escondida."
+  },
+  "calculos": {
+   "ag": 16,
+   "agCorregido": 16,
+   "winterPaCO2": "40.5-44.5",
+   "deltaRatio": "4.0 (distorsionado por componente respiratorio)",
+   "consistenciaHH": true
+  }
+ },
+ {
+  "id": "MX-08",
+  "dificultad": "mixto",
+  "categoria": "alcalosis respiratoria + acidosis metabólica hiperclorémica (AG normal)",
+  "contexto": "Mujer de 40 años con sepsis temprana (taquipnea febril) y acidosis tubular renal proximal en seguimiento nefrológico.",
+  "labs": {
+   "pH": 7.49,
+   "paco2": 25,
+   "hco3": 19,
+   "na": 142,
+   "cl": 110,
+   "k": 3.2,
+   "alb": 4,
+   "lactato": 1.8,
+   "glucosa": 100,
+   "crea": 1.1
+  },
+  "esperado": {
+   "primario": "Alcalosis respiratoria (sepsis temprana, taquipnea) — pH alcalémico domina",
+   "compensacion": "NO es solo compensación: en alcalosis respiratoria aguda pura con PaCO₂ 25 (ΔPaCO₂ -15) el HCO₃ bajaría ~2/10 → ~21. El HCO₃ medido (19) es más bajo y el Cl está elevado (110) con AG normal, indicando acidosis metabólica hiperclorémica de AG normal añadida (ATR)",
+   "secundarios": [
+    "Acidosis metabólica de AG normal (hiperclorémica, acidosis tubular renal; Cl 110 alto, K 3.2 bajo)"
+   ],
+   "diagnostico": "Sepsis con ATR de base: alcalosis respiratoria + acidosis metabólica hiperclorémica",
+   "porQue": "AG normal (13) descarta acidosis con gap, pero HCO₃ bajo (19) + Cl alto (110) = acidosis hiperclorémica. La compensación de la alcalosis respiratoria no explica un HCO₃ tan bajo (esperado ~21). El pH alcalémico (7.49) indica que domina el componente respiratorio.",
+   "perlaClinica": "Cuando coexisten alcalosis respiratoria y acidosis metabólica de AG normal, el AG es normal pero el Cl está alto; vigilar la hipokalemia que ambos trastornos pueden agravar."
+  },
+  "calculos": {
+   "ag": 13,
+   "agCorregido": 13,
+   "winterPaCO2": "componente metabólico: 1.5×19+8±2 = 34.5-38.5 mmHg; el PaCO₂ medido (25) está muy por debajo, confirmando alcalosis respiratoria sobreañadida",
+   "deltaRatio": "ΔAG/ΔHCO₃ = (13-12)/(24-19) = 1/5 = 0.2 → <1, consistente con acidosis hiperclorémica de AG normal",
+   "consistenciaHH": true
+  }
+ },
+ {
+  "id": "MX-09",
+  "dificultad": "mixto",
+  "categoria": "acidosis metabólica AG alto (con albúmina baja) + alcalosis metabólica",
+  "contexto": "Hombre de 64 años cirrótico (hipoalbuminemia) con sepsis y acidosis láctica que además recibió diuréticos de asa y tiene vómitos.",
+  "labs": {
+   "pH": 7.3,
+   "paco2": 32,
+   "hco3": 15,
+   "na": 140,
+   "cl": 95,
+   "k": 3,
+   "alb": 2,
+   "lactato": 6,
+   "glucosa": 130,
+   "crea": 1.8
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anion gap elevado (láctica). El AG medido ya es alto (30); la corrección por albúmina baja no la 'revela' sino que muestra que es aún más severa (AGc 35)",
+   "compensacion": "Apropiada en lo respiratorio: por Winter PaCO₂esp=1.5×15+8±2 = 28.5-32.5 mmHg; el medido (32) está en rango, sin trastorno respiratorio agregado",
+   "secundarios": [
+    "Alcalosis metabólica (diuréticos de asa + vómitos; Cl 95 relativamente bajo, K 3.0 bajo) detectada por delta-ratio >2 sobre el AG corregido"
+   ],
+   "diagnostico": "Cirrótico séptico: acidosis láctica de AG alto (acentuada por hipoalbuminemia, no enmascarada) + alcalosis metabólica por diuréticos/vómitos",
+   "porQue": "El AG medido (30) ya es claramente alto; al corregir por albúmina 2.0 → AG corregido = 30 + 2.5×(4-2) = 35, aún mayor. El delta-ratio con el AG corregido = (35-12)/(24-15) = 23/9 ≈ 2.56 → >2, lo que indica alcalosis metabólica concurrente que ha amortiguado la caída del HCO₃. Sin corregir por albúmina se subestimaría la magnitud del componente de gap.",
+   "perlaClinica": "En hipoalbuminemia SIEMPRE corregir el AG (+2.5 por cada 1 g/dL bajo 4.0); en un cirrótico un AG 'normal' puede ocultar una acidosis de gap, y un AG alto resulta aún mayor al corregir. El delta-ratio >2 (sobre el AGc) destapa la alcalosis añadida."
+  },
+  "calculos": {
+   "ag": 30,
+   "agCorregido": 35,
+   "winterPaCO2": "28.5-32.5 mmHg (PaCO₂ medido 32 = compensación respiratoria adecuada)",
+   "deltaRatio": "con AG corregido: ΔAG/ΔHCO₃ = (35-12)/(24-15) = 23/9 ≈ 2.56 → >2, alcalosis metabólica sobreañadida (con AG medido: 18/9 = 2.0)",
+   "consistenciaHH": true
+  }
+ },
+ {
+  "id": "MX-10",
+  "dificultad": "mixto",
+  "categoria": "acidosis respiratoria (EPOC reagudizado) + acidosis metabólica AG alto",
+  "contexto": "Hombre de 70 años con EPOC reagudizado en falla ventilatoria que desarrolla shock cardiogénico por cor pulmonale descompensado.",
+  "labs": {
+   "pH": 7.1,
+   "paco2": 75,
+   "hco3": 22,
+   "na": 137,
+   "cl": 97,
+   "k": 5,
+   "alb": 4,
+   "lactato": 5.5,
+   "glucosa": 140,
+   "crea": 1.9
+  },
+  "esperado": {
+   "primario": "Acidosis respiratoria (EPOC reagudizado con falla ventilatoria)",
+   "compensacion": "Inapropiada/insuficiente: si fuera acidosis respiratoria pura, el HCO₃ esperado con PaCO₂ 75 (ΔPaCO₂ +35) sería ~27.5 (aguda +1/10) o ~36 (crónica +3.5/10). El HCO₃ medido (22) es MUCHO más bajo que cualquiera de los dos, e incluso por debajo del basal normal de 24, delatando acidosis metabólica de AG alto sobreañadida que consume el bicarbonato.",
+   "secundarios": [
+    "Acidosis metabólica con anion gap elevado (lactato 5.5 por shock; AG 18)"
+   ],
+   "diagnostico": "EPOC reagudizado en shock: acidosis respiratoria + acidosis metabólica láctica, pH severamente bajo (7.10)",
+   "porQue": "Con una hipercapnia de 75, lo esperable es un HCO₃ elevado (~27.5 agudo, ~36 crónico). Que el HCO₃ esté en 22 con AG de 18 demuestra que una acidosis metabólica de gap está consumiendo el bicarbonato esperado. La doble acidosis explica el pH 7.10 crítico.",
+   "perlaClinica": "En el EPOC descompensado, un HCO₃ que NO sube pese a hipercapnia marcada es la huella de una acidosis metabólica concurrente (láctica): buscar y tratar el shock, no solo ventilar."
+  },
+  "calculos": {
+   "ag": 18,
+   "agCorregido": 18,
+   "winterPaCO2": "Winter aplica al componente metabólico: 1.5×22+8±2 = 39-43 mmHg; el PaCO₂ medido (75) está muy por encima, confirmando acidosis respiratoria dominante sobreañadida.",
+   "deltaRatio": "ΔAG/ΔHCO₃ = (18-12)/(24-22) = 6/2 = 3 — distorsionado al alza por el HCO₃ retenido del componente respiratorio (que eleva el HCO₃ y reduce el denominador ΔHCO₃); el AG elevado confirma la acidosis metabólica de gap.",
+   "consistenciaHH": true,
+   "winterPaCO2_calc": "39-43",
+   "deltaRatio_calc": "3.0"
+  }
+ },
+ {
+  "id": "MX-11",
+  "dificultad": "mixto",
+  "categoria": "alcalosis respiratoria + acidosis metabólica AG alto",
+  "contexto": "Mujer de 28 años con intoxicación por salicilatos en fase temprana: hiperventilación marcada y acidosis metabólica de gap incipiente.",
+  "labs": {
+   "pH": 7.55,
+   "paco2": 22,
+   "hco3": 19,
+   "na": 141,
+   "cl": 108,
+   "k": 3.4,
+   "alb": 4,
+   "lactato": 3.5,
+   "glucosa": 98,
+   "crea": 1
+  },
+  "esperado": {
+   "primario": "Alcalosis respiratoria (estímulo respiratorio por salicilato) — pH alcalémico domina",
+   "compensacion": "NO es solo compensación: el AG está elevado (14, con tendencia a subir) y el HCO₃ (19) refleja acidosis metabólica de gap concurrente, no compensación. En alcalosis respiratoria aguda pura con PaCO₂ 22 (ΔPaCO₂ -18) el HCO₃ bajaría ~3.6 → ~20.4; el HCO₃ medido (19) está algo más bajo, y el AG elevado con lactato confirman el componente metabólico independiente",
+   "secundarios": [
+    "Acidosis metabólica con anion gap elevado (salicilato/lactato; AG 14)"
+   ],
+   "diagnostico": "Salicilatos en fase temprana: alcalosis respiratoria + acidosis metabólica de AG alto, con predominio respiratorio (pH 7.55)",
+   "porQue": "El PaCO₂ muy bajo (22) y el pH 7.55 indican alcalosis respiratoria dominante. El AG de 14 (limítrofe-alto) con lactato elevado señala el inicio del componente metabólico de gap típico de salicilatos. A medida que progresa, el pH viraría hacia la acidemia.",
+   "perlaClinica": "La intoxicación por salicilatos en adultos cursa primero con alcalosis respiratoria; la acidosis metabólica de AG alto se suma después. Un AG que empieza a subir con pH aún alcalótico debe alertar y motivar niveles seriados."
+  },
+  "calculos": {
+   "ag": 14,
+   "agCorregido": 14,
+   "winterPaCO2": "componente metabólico: 1.5×19+8±2 = 34.5-38.5 mmHg; el PaCO₂ medido (22) está muy por debajo, confirmando alcalosis respiratoria sobreañadida",
+   "deltaRatio": "ΔAG/ΔHCO₃ = (14-12)/(24-19) = 2/5 = 0.4 — distorsionado por el componente respiratorio (que también baja HCO₃); el AG elevado con lactato confirma la acidosis de gap incipiente",
+   "consistenciaHH": true
+  }
+ },
+ {
+  "id": "T1-triple-HAGMA-NAGMA-respAlk",
+  "dificultad": "triple",
+  "categoria": "Trastorno triple: HAGMA + NAGMA + alcalosis respiratoria",
+  "contexto": "Mujer 34 años, sepsis abdominal con diarrea profusa de 3 días, taquipneica, febril, hipotensa.",
+  "labs": {
+   "pH": 7.45,
+   "paco2": 18,
+   "hco3": 12,
+   "na": 140,
+   "cl": 108,
+   "k": 3.4,
+   "alb": 4,
+   "lactato": 5.2,
+   "glucosa": 110,
+   "crea": 1.6
+  },
+  "calculos": {
+   "ag": 20,
+   "agCorregido": 20,
+   "deltaRatio": "0.67 (<1 -> sugiere componente NAGMA agregado a la HAGMA)",
+   "winterPaCO2": "24-28 mmHg esperado por Winter; PaCO2 real 18 mmHg está POR DEBAJO -> alcalosis respiratoria adicional",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap elevado (HAGMA por lactato/sepsis), AG 20 (AG corregido 20, albúmina normal 4.0)",
+   "compensacion": "Inapropiada: Winter predice PaCO2 24-28 mmHg pero el real es 18 -> la hiperventilación EXCEDE la compensación esperada = alcalosis respiratoria primaria sobreañadida (taquipnea por sepsis/fiebre), NO simple compensación",
+   "secundarios": [
+    "Acidosis metabólica hiperclorémica (NAGMA) por la diarrea, desenmascarada por delta-ratio 0.67 (<1) y bicarbonato corregido (HCO3 esperado si solo HAGMA = 24-(20-12) = 16; el HCO3 real de 12 es más bajo, confirmando pérdida adicional de bicarbonato)",
+    "Alcalosis respiratoria (PaCO2 18 mmHg, por debajo del rango de Winter 24-28)"
+   ],
+   "diagnostico": "Triple trastorno: HAGMA láctica + NAGMA por diarrea + alcalosis respiratoria por sepsis/fiebre. pH casi normal (7.45, levemente alcalémico) que oculta tres procesos simultáneos.",
+   "porQue": "El AG elevado (20) confirma HAGMA. El delta-ratio <1 (0.67) y la caída de HCO3 desproporcionada al aumento del AG revelan una NAGMA concurrente (diarrea). La PaCO2 (18) inferior al rango de Winter (24-28) prueba un componente respiratorio primario, no compensatorio.",
+   "perlaClinica": "Un pH normal o casi normal NUNCA descarta trastorno ácido-base grave: aquí coexisten tres. Siempre calcular delta-ratio y aplicar Winter aunque el pH parezca tranquilizador."
+  }
+ },
+ {
+  "id": "T2-triple-HAGMA-metAlk-respAcid",
+  "dificultad": "triple",
+  "categoria": "Trastorno triple: HAGMA + alcalosis metabólica + acidosis respiratoria",
+  "contexto": "Hombre 68 años, EPOC reagudizado, vómitos por gastroparesia y uso crónico de diuréticos, con hipoperfusión por descompensación.",
+  "labs": {
+   "pH": 7.39,
+   "paco2": 58,
+   "hco3": 34,
+   "na": 140,
+   "cl": 84,
+   "k": 3.1,
+   "alb": 4,
+   "lactato": 3,
+   "glucosa": 130,
+   "crea": 1.4
+  },
+  "calculos": {
+   "ag": 22,
+   "agCorregido": 22,
+   "winterPaCO2": "No aplica Winter (HCO3 elevado, trastorno metabólico dominante es alcalosis). Para alcalosis metabólica con HCO3 34, PaCO2 esperada ≈ 0.7×(34−24)+40 = 47 mmHg; el real 58 es mayor → acidosis respiratoria adicional",
+   "deltaRatio": "HCO3 ELEVADO (34) → el delta-ratio clásico (ΔAG/ΔHCO3) no aplica limpiamente porque ΔHCO3 es negativo. Usar bicarbonato corregido = HCO3 + (AG−12) = 34 + 10 = 44 (>>26) → alcalosis metabólica concurrente clara",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Trastorno mixto complejo; el AG elevado (22) marca una HAGMA (láctica por hipoperfusión)",
+   "compensacion": "Inapropiada como evento único: la PaCO2 de 58 supera lo esperado para la alcalosis metabólica (~47), confirmando acidosis respiratoria primaria por EPOC, no compensación",
+   "secundarios": [
+    "Alcalosis metabólica (vómitos + diuréticos): bicarbonato corregido 44 muy por encima de 26",
+    "Acidosis respiratoria por EPOC reagudizado (PaCO2 58 > esperada ~47)"
+   ],
+   "diagnostico": "Triple trastorno: HAGMA láctica + alcalosis metabólica (vómito/diurético) + acidosis respiratoria (EPOC). El HCO3 elevado y el pH casi normal enmascaran la HAGMA.",
+   "porQue": "Pese al HCO3 alto, el AG de 22 obliga a buscar una acidosis metabólica de AG elevado oculta. El bicarbonato corregido de 44 revela que la alcalosis metabólica es aún mayor de lo que el HCO3 sugiere. La PaCO2 por encima de la esperada confirma el componente respiratorio acidótico.",
+   "perlaClinica": "Con HCO3 elevado, el delta-ratio se vuelve poco fiable: usar el bicarbonato corregido (HCO3 + ΔAG). Un AG alto con HCO3 alto = HAGMA escondida bajo una alcalosis metabólica."
+  }
+ },
+ {
+  "id": "T3-triple-HAGMA-NAGMA-respAcid",
+  "dificultad": "triple",
+  "categoria": "Trastorno triple: HAGMA + NAGMA + acidosis respiratoria",
+  "contexto": "Hombre 55 anos post-paro cardiaco reanimado, intubado con hipoventilacion, antecedente de diarrea por colitis y shock.",
+  "labs": {
+   "pH": 7.09,
+   "paco2": 48,
+   "hco3": 14,
+   "na": 137,
+   "cl": 105,
+   "k": 5,
+   "alb": 4,
+   "lactato": 8,
+   "glucosa": 160,
+   "crea": 2.1
+  },
+  "calculos": {
+   "ag": 18,
+   "agCorregido": 18,
+   "deltaRatio": "0.6 (<1 -> componente NAGMA agregado; HCO3 corregido 14+6=20, <22, confirma)",
+   "winterPaCO2": "27-31 mmHg esperado por Winter (1.5x14+8=29 +/-2); PaCO2 real 48 muy por encima -> acidosis respiratoria adicional (hipoventilacion)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabolica con AG elevado (HAGMA lactica post-paro), AG 18 (lactato 8)",
+   "compensacion": "Inapropiada: Winter predice PaCO2 27-31 pero el real es 48 -> el pulmon NO compensa, hay acidosis respiratoria primaria (hipoventilacion/fallo ventilatorio)",
+   "secundarios": [
+    "Acidosis metabolica hipercloremica (NAGMA) por diarrea/reanimacion con salino: delta-ratio 0.6 (<1) y HCO3 corregido 20 (<22)",
+    "Acidosis respiratoria (PaCO2 48 muy por encima del rango de Winter 27-31)"
+   ],
+   "diagnostico": "Triple acidosis: HAGMA lactica + NAGMA + acidosis respiratoria. Acidemia severa (pH 7.09) con tres acidosis sumadas.",
+   "porQue": "AG 18 = HAGMA. Delta-ratio 0.6 (<1) y HCO3 corregido 20 (<22) = NAGMA agregada. PaCO2 48 muy por encima de Winter (27-31) = fallo ventilatorio agregado. Tres procesos acidificantes simultaneos explican la acidemia profunda.",
+   "perlaClinica": "Cuando las tres ramas (AG, hipercloremica y respiratoria) empujan en la misma direccion acida, el pH se desploma. Aplicar Winter SIEMPRE: una PaCO2 'alta-normal' en plena acidosis metabolica es en realidad acidosis respiratoria letal."
+  }
+ },
+ {
+  "id": "DD1-deltaRatio-bajo-NAGMA-oculta",
+  "dificultad": "mixto",
+  "categoria": "Delta-ratio <1 desenmascara NAGMA oculta sobre HAGMA",
+  "contexto": "Mujer 22 años con cetoacidosis diabética en tratamiento, recibió varios litros de suero fisiológico 0.9% y persiste con diarrea.",
+  "labs": {
+   "pH": 7.31,
+   "paco2": 29,
+   "hco3": 14,
+   "na": 140,
+   "cl": 110,
+   "k": 4,
+   "alb": 4,
+   "lactato": 1.5,
+   "glucosa": 280,
+   "crea": 1
+  },
+  "calculos": {
+   "ag": 16,
+   "agCorregido": 16,
+   "deltaRatio": "0.4 (<1 -> NAGMA concurrente desenmascarada)",
+   "winterPaCO2": "27-31 mmHg esperado; PaCO2 real 29 -> compensación respiratoria apropiada",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con AG elevado (cetoacidosis), AG 16",
+   "compensacion": "Apropiada: PaCO2 29 dentro del rango de Winter (27-31); el componente respiratorio es compensatorio puro, no un tercer trastorno",
+   "secundarios": [
+    "Acidosis metabólica hiperclorémica (NAGMA) por resucitación con salino + diarrea: delta-ratio 0.4 y bicarbonato corregido 18 (<22)"
+   ],
+   "diagnostico": "Mixto metabólico: HAGMA cetoacidótica + NAGMA hiperclorémica (salino/diarrea), con compensación respiratoria adecuada.",
+   "porQue": "El AG solo modestamente elevado (16) NO explica la caída de HCO3 a 14: el delta-ratio de 0.4 prueba que la mayor parte del descenso de bicarbonato se debe a una acidosis hiperclorémica oculta, no a la cetoacidosis.",
+   "perlaClinica": "En CAD resucitada con suero fisiológico, el delta-ratio <1 es la regla, no la excepción: el cloruro 'normaliza' el AG mientras instala una acidosis hiperclorémica. Vigilar el delta-ratio para no dar por resuelta la acidosis."
+  }
+ },
+ {
+  "id": "DD2-deltaRatio-alto-metAlk-oculta",
+  "dificultad": "mixto",
+  "categoria": "Delta-ratio >2 desenmascara alcalosis metabólica oculta sobre HAGMA",
+  "contexto": "Hombre 60 años alcohólico con cetoacidosis alcohólica y vómitos recurrentes de varios días.",
+  "labs": {
+   "pH": 7.41,
+   "paco2": 33,
+   "hco3": 20,
+   "na": 140,
+   "cl": 96,
+   "k": 3.2,
+   "alb": 4,
+   "lactato": 2,
+   "glucosa": 90,
+   "crea": 1.1
+  },
+  "calculos": {
+   "ag": 24,
+   "agCorregido": 24,
+   "deltaRatio": "3.0 (>2 -> alcalosis metabólica concurrente desenmascarada)",
+   "winterPaCO2": "36-40 mmHg esperado por Winter para HCO3 20; PaCO2 real 33 esta POR DEBAJO del rango -> componente respiratorio alcalotico (hiperventilacion) anadido, no solo compensacion",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con AG elevado (cetoacidosis alcohólica), AG 24",
+   "compensacion": "Inapropiada: PaCO2 real 33 < rango de Winter (36-40), lo que delata una alcalosis respiratoria sobreanadida ademas del trastorno metabolico mixto",
+   "secundarios": [
+    "Alcalosis metabólica (vómitos): delta-ratio 3.0 (>2); el HCO3 'pre-HAGMA' (medido 20 + dAG 12 = 32) supera 24-26, el HCO3 esta mucho mas alto de lo que la HAGMA permitiria",
+    "Alcalosis respiratoria: PaCO2 33 por debajo del rango de Winter 36-40 esperado para HCO3 20"
+   ],
+   "diagnostico": "Trastorno triple: HAGMA cetoacidótica + alcalosis metabólica por vómitos + alcalosis respiratoria (PaCO2 bajo Winter). El pH normal (7.41) esconde un AG marcadamente elevado.",
+   "porQue": "Un AG de 24 (ΔAG=12) deberia haber bajado el HCO3 a ~12, pero esta en 20: el delta-ratio de 3 y el HCO3 'pre-HAGMA' de 32 revelan una alcalosis metabolica que 'sostiene' el bicarbonato. Ademas la PaCO2 de 33 cae por debajo del rango de Winter (36-40), evidenciando un componente respiratorio alcalotico adicional.",
+   "perlaClinica": "Cetoacidosis alcohólica + vómitos = combinación clásica de delta-ratio >2. El pH normal con AG muy alto es la pista: nunca tranquilizarse por un pH normal sin calcular el AG, el delta-delta Y comparar la PaCO2 con Winter (aqui revela un tercer trastorno respiratorio)."
+  }
+ },
+ {
+  "id": "DD3-deltaRatio-normal-HAGMA-pura",
+  "dificultad": "simple",
+  "categoria": "Control: HAGMA pura con delta-ratio normal y compensación apropiada",
+  "contexto": "Hombre 45 años con cetoacidosis diabética inaugural, sin vómitos ni diarrea, deshidratado.",
+  "labs": {
+   "pH": 7.24,
+   "paco2": 24,
+   "hco3": 10,
+   "na": 140,
+   "cl": 102,
+   "k": 4.5,
+   "alb": 4,
+   "lactato": 1.8,
+   "glucosa": 420,
+   "crea": 1.3
+  },
+  "calculos": {
+   "ag": 28,
+   "agCorregido": 28,
+   "deltaRatio": "1.14 (entre 1 y 2 -> HAGMA pura, sin segundo trastorno metabólico)",
+   "winterPaCO2": "21-25 mmHg esperado por Winter; PaCO2 real 24 -> compensación respiratoria apropiada",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con AG elevado (cetoacidosis diabética), AG 28",
+   "compensacion": "Apropiada: PaCO2 24 dentro del rango de Winter (21-25); respiración de Kussmaul compensatoria correcta, sin trastorno respiratorio adicional",
+   "secundarios": [],
+   "diagnostico": "HAGMA pura por cetoacidosis diabética, sin trastornos metabólicos ni respiratorios sobreañadidos. Caso control limpio.",
+   "porQue": "El delta-ratio de 1.14 (rango 1-2) indica que la caída del HCO3 se explica totalmente por el aumento del AG: una sola acidosis metabólica de AG elevado, bien compensada.",
+   "perlaClinica": "Caso de calibración: delta-ratio 1-2 + PaCO2 dentro de Winter = trastorno único bien compensado. Sirve para confirmar que la app NO sobrediagnostica trastornos mixtos cuando no los hay."
+  }
+ },
+ {
+  "id": "HA1-hipoalb-enmascara-HAGMA",
+  "dificultad": "especial",
+  "categoria": "Hipoalbuminemia enmascara HAGMA: AG medido normal, AG corregido elevado",
+  "contexto": "Hombre 70 años cirrótico desnutrido (albúmina 2.0) con sepsis temprana, gasometría aparentemente normal.",
+  "labs": {
+   "pH": 7.4,
+   "paco2": 40,
+   "hco3": 24,
+   "na": 140,
+   "cl": 104,
+   "k": 4.2,
+   "alb": 2,
+   "lactato": 4,
+   "glucosa": 120,
+   "crea": 1.2
+  },
+  "calculos": {
+   "ag": 12,
+   "agCorregido": 17,
+   "deltaRatio": "No calculable de forma fiable (ΔHCO3=0 con HCO3 normal en 24 produce división por cero); el hallazgo clave es el AG corregido elevado (17), no el delta-ratio",
+   "winterPaCO2": "No aplica (HCO3 normal en 24; si se forzara, Winter daría PaCO2 esperada 42-46, pero no hay acidosis metabólica establecida por HCO3)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica de AG elevado (HAGMA láctica por sepsis) ENMASCARADA: el AG medido (12) parece normal pero el AG corregido por albúmina es 17",
+   "compensacion": "No valorable como trastorno descompensado; el pH y HCO3 normales son engañosos por una HAGMA temprana camuflada por la hipoalbuminemia",
+   "secundarios": [
+    "Coexiste una tendencia alcalinizante (probable alcalosis metabólica leve o pérdida del anión albúmina) que mantiene el HCO3 en 24 pese a la carga ácida del lactato; el dato firme es el AG corregido elevado, no un cuarto proceso definido"
+   ],
+   "diagnostico": "HAGMA enmascarada por hipoalbuminemia. Cada 1 g/dL de albúmina por debajo de 4.0 baja el AG ~2.5: con albúmina 2.0, el AG 'normal' de 12 corresponde a un AG corregido de 17 = acidosis de AG elevado real (lactato 4.0).",
+   "porQue": "La albúmina es el principal anión no medido; en hipoalbuminemia el AG basal cae, de modo que un AG numéricamente 'normal' puede ocultar una HAGMA. La corrección [AG + 2.5×(4.0−alb)] = 12 + 2.5×2 = 17 la revela.",
+   "perlaClinica": "En todo paciente crítico, hepatópata o desnutrido, SIEMPRE corregir el AG por albúmina antes de declararlo normal. Un AG de 12 con albúmina de 2.0 esconde una acidosis. Nota: forzar el delta-gap con el AG corregido aquí puede sugerir falsamente una 'alcalosis metabólica'; con HCO3 normal el mensaje real es simplemente HAGMA enmascarada."
+  }
+ },
+ {
+  "id": "HA2-hipoalb-HAGMA-con-comp-resp",
+  "dificultad": "especial",
+  "categoria": "Hipoalbuminemia enmascara HAGMA con compensación respiratoria",
+  "contexto": "Mujer 64 años con sepsis urinaria y desnutrición (albúmina 2.2), taquipneica.",
+  "labs": {
+   "pH": 7.39,
+   "paco2": 34,
+   "hco3": 20,
+   "na": 141,
+   "cl": 108,
+   "k": 3.8,
+   "alb": 2.2,
+   "lactato": 3.5,
+   "glucosa": 140,
+   "crea": 1.5
+  },
+  "calculos": {
+   "ag": 13,
+   "agCorregido": 17.5,
+   "consistenciaHH": true,
+   "deltaRatio": "Con AG medido = 0.25 (engañoso, sugeriría NAGMA pura); con AG corregido por albúmina sube a ~1.38 (~1.4) -> HAGMA real adecuadamente representada (dentro del rango normal 1-2)",
+   "winterPaCO2": "36-40 mmHg esperado por Winter para HCO3 20; PaCO2 real 34 queda 2 mmHg POR DEBAJO del límite inferior -> estrictamente indica leve alcalosis respiratoria sobreimpuesta (sobre-compensación), esperable en sepsis/taquipnea"
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica de AG elevado (HAGMA láctica por sepsis) enmascarada: AG medido 13 (límite) pero AG corregido 17.5",
+   "compensacion": "Compensación respiratoria casi adecuada pero levemente excesiva: PaCO2 34 está 2 mmHg por debajo del rango de Winter (36-40), lo que estrictamente añade un componente de alcalosis respiratoria leve (taquipnea por sepsis). No es un simple 'apropiada/límite': por el criterio estricto de Winter es una sobre-compensación menor.",
+   "secundarios": [
+    "Alcalosis respiratoria leve sobreimpuesta (PaCO2 34 < límite inferior de Winter 36) por taquipnea séptica",
+    "El delta-ratio calculado con AG MEDIDO (0.25) sugeriría falsamente una NAGMA dominante; al corregir por albúmina el delta-ratio se normaliza (~1.4), descartando ese falso positivo"
+   ],
+   "diagnostico": "HAGMA láctica por sepsis enmascarada por hipoalbuminemia, con compensación respiratoria casi adecuada pero levemente excesiva (mínima alcalosis respiratoria sobreimpuesta). La corrección por albúmina es imprescindible tanto para el AG como para el delta-ratio.",
+   "porQue": "Con albúmina 2.2, el AG medido de 13 subestima la carga de aniones no medidos; el AG corregido de 17.5 confirma HAGMA. El delta-ratio DEBE recalcularse con el AG corregido (0.25->1.4) para no diagnosticar una NAGMA inexistente. Además, PaCO2 34 queda bajo el límite de Winter (36), por lo que estrictamente hay un componente respiratorio alcalótico leve añadido.",
+   "perlaClinica": "La hipoalbuminemia no solo enmascara el AG: también distorsiona el delta-ratio. Recalcular el delta-ratio con el AG corregido por albúmina evita el falso diagnóstico de acidosis hiperclorémica. Y al verificar Winter, una PaCO2 apenas por debajo del rango (34 vs 36-40) ya delata taquipnea séptica con sobre-compensación respiratoria."
+  }
+ },
+ {
+  "id": "HA3-hipoalb-HAGMA-mas-metAlk",
+  "dificultad": "triple",
+  "categoria": "Hipoalbuminemia + HAGMA enmascarada + alcalosis metabólica concurrente",
+  "contexto": "Hombre 72 años oncológico desnutrido (albúmina 2.4) con sepsis y vómitos por obstrucción intestinal alta.",
+  "labs": {
+   "pH": 7.36,
+   "paco2": 40,
+   "hco3": 22,
+   "na": 140,
+   "cl": 104,
+   "k": 3,
+   "alb": 2.4,
+   "lactato": 3.8,
+   "glucosa": 150,
+   "crea": 1.7
+  },
+  "calculos": {
+   "ag": 14,
+   "agCorregido": 18,
+   "deltaRatio": "Con AG corregido: ΔAG=6, ΔHCO3=2 -> delta-ratio 3.0 (>2 -> alcalosis metabólica concurrente); bicarbonato corregido = 22 + (18−12) = 28 (>26)",
+   "winterPaCO2": "39-43 mmHg esperado por Winter para HCO3 22; PaCO2 real 40 -> compensación apropiada/sin componente respiratorio dominante",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica de AG elevado (HAGMA láctica por sepsis) enmascarada por hipoalbuminemia: AG medido 14, AG corregido 18",
+   "compensacion": "Apropiada en el eje respiratorio (PaCO2 40 dentro de Winter 39-43); el trastorno adicional es metabólico, no respiratorio",
+   "secundarios": [
+    "Alcalosis metabólica por vómitos: con el AG corregido, el delta-ratio es 3.0 (>2) y el bicarbonato corregido 28 (>26), revelando que el HCO3 está sostenido por una alcalosis concurrente"
+   ],
+   "diagnostico": "Doble trastorno metabólico oculto: HAGMA enmascarada por hipoalbuminemia + alcalosis metabólica por vómitos, con respiración compensadora apropiada. El pH casi normal (7.36) esconde ambos.",
+   "porQue": "Solo al corregir el AG por albúmina (de 14 a 18) aparece la HAGMA; y solo entonces el delta-ratio (3.0) y el bicarbonato corregido (28) revelan que existe además una alcalosis metabólica que mantiene el HCO3 elevado de forma desproporcionada.",
+   "perlaClinica": "El caso más traicionero: hipoalbuminemia que esconde una HAGMA Y una alcalosis metabólica simultánea. Sin corregir por albúmina, ambos trastornos pasan inadvertidos. La secuencia correcta es: 1) corregir AG por albúmina, 2) recalcular delta-ratio/bicarbonato corregido con el AG corregido, 3) aplicar Winter."
+  }
+ },
+ {
+  "id": "ESP-01-CAD",
+  "dificultad": "especial",
+  "categoria": "Acidosis metabólica de AG alto — Cetoacidosis diabética (CAD)",
+  "contexto": "Mujer de 24 años, diabética tipo 1, omitió insulina; poliuria, dolor abdominal, respiración de Kussmaul y aliento cetónico.",
+  "labs": {
+   "pH": 6.95,
+   "paco2": 24,
+   "hco3": 5,
+   "na": 138,
+   "cl": 99,
+   "k": 5.6,
+   "alb": 4.2,
+   "lactato": 1.8,
+   "glucosa": 540,
+   "crea": 1.3,
+   "gapOsmolar": 6
+  },
+  "calculos": {
+   "ag": 34,
+   "agCorregido": 33.5,
+   "winterPaCO2": "13.5–17.5",
+   "deltaRatio": "1.16 (corregido 1.13)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap alto (cetoacidosis diabética grave)",
+   "compensacion": "Inapropiada/insuficiente: PaCO₂ esperada por Winter 13.5–17.5 mmHg, la real es 24 (6.5 mmHg por encima del límite superior esperado) → la compensación respiratoria es MENOR de la esperada, lo que añade un componente de acidosis respiratoria relativa (paciente agotándose, fatiga de músculos respiratorios o depresión del SNC). Trastorno mixto.",
+   "secundarios": [
+    "Acidosis respiratoria relativa por compensación insuficiente"
+   ],
+   "diagnostico": "CAD grave por omisión de insulina, con incapacidad de generar hiperventilación compensatoria adecuada (signo de gravedad / fatiga ventilatoria)",
+   "porQue": "Δ-ratio ≈1.1–1.2 (dentro de 1–2) indica acidosis AGMA pura sin segundo trastorno metabólico; el gap osmolar normal (6) descarta alcohol tóxico; lactato normal descarta acidosis láctica como motor; glucosa 540 + cetonas + AG 34 confirman cetoacidosis. El K sérico 5.6 es engañosamente alto por el déficit de insulina (K corporal total bajo) — vigilar caída al tratar.",
+   "perlaClinica": "En CAD el potasio sérico inicial suele estar normal-alto pese a un déficit corporal masivo; al iniciar insulina cae bruscamente. Una PaCO₂ que NO baja lo esperado por Winter en una CAD grave es un signo ominoso de fatiga respiratoria inminente.",
+   "primario_dup_guard": ""
+  }
+ },
+ {
+  "id": "ESP-02-AKA",
+  "dificultad": "especial",
+  "categoria": "Trastorno mixto — Cetoacidosis alcohólica (AKA)",
+  "contexto": "Hombre de 47 años, alcoholismo crónico, varios días sin comer y vómitos repetidos tras una borrachera; ahora abstinente, deshidratado, taquipneico.",
+  "labs": {
+   "pH": 7.3,
+   "paco2": 30,
+   "hco3": 14,
+   "na": 137,
+   "cl": 95,
+   "k": 3.4,
+   "alb": 3.4,
+   "lactato": 3,
+   "glucosa": 78,
+   "crea": 1.1,
+   "gapOsmolar": 8
+  },
+  "calculos": {
+   "ag": 28,
+   "agCorregido": 29.5,
+   "winterPaCO2": "27.0–31.0",
+   "deltaRatio": "1.60 (corregido 1.75)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap alto (cetoacidosis alcohólica, predominio β-hidroxibutirato)",
+   "compensacion": "Apropiada: PaCO₂ real 30 dentro del rango de Winter 27–31.",
+   "secundarios": [
+    "Alcalosis metabólica concurrente por vómitos (Δ-ratio >1.5–2 y Cl bajo 95)"
+   ],
+   "diagnostico": "Cetoacidosis alcohólica con alcalosis metabólica superpuesta por vómitos; glucosa normal/baja (no hiperglucémica) es la clave diferencial frente a CAD",
+   "porQue": "AG corregido por albúmina sube a 29.5 (la hipoalbuminemia ocultaba parte del gap). Δ-ratio corregido ≈1.75: el HCO₃ ha caído MENOS de lo que subió el AG → hay una alcalosis metabólica agregada (vómitos, contracción de volumen, Cl 95 bajo). Glucosa 78 con AG alto y cetosis = AKA, no CAD. Gap osmolar normal (8) y lactato sólo levemente alto descartan alcohol tóxico como causa dominante.",
+   "perlaClinica": "En AKA la cetona predominante es β-hidroxibutirato, que la tira reactiva (nitroprusiato) detecta MAL: una cetonuria 'negativa o débil' no descarta AKA. La glucemia normal o baja distingue AKA de CAD. Reponer tiamina ANTES de la dextrosa para evitar Wernicke."
+  }
+ },
+ {
+  "id": "ESP-03-METANOL",
+  "dificultad": "especial",
+  "categoria": "Acidosis AG alto con BRECHA OSMOLAR — Alcohol tóxico (metanol/etilenglicol)",
+  "contexto": "Hombre de 52 años traído por consumo de un destilado clandestino; visión borrosa ('como ver en una tormenta de nieve'), confuso, taquipneico.",
+  "labs": {
+   "pH": 7.1,
+   "paco2": 27,
+   "hco3": 8,
+   "na": 140,
+   "cl": 102,
+   "k": 4.5,
+   "alb": 4,
+   "lactato": 2.5,
+   "glucosa": 95,
+   "crea": 1.2,
+   "gapOsmolar": 32
+  },
+  "calculos": {
+   "ag": 30,
+   "agCorregido": 30,
+   "winterPaCO2": "18.0–22.0",
+   "deltaRatio": "1.12",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap muy alto (intoxicación por metanol)",
+   "compensacion": "Inapropiada/insuficiente: Winter predice PaCO₂ 18–22; la real es 27 → hipoventilación relativa = acidosis respiratoria sobreañadida (depresión del SNC por el tóxico). Trastorno mixto y muy peligroso.",
+   "secundarios": [
+    "Acidosis respiratoria sobreañadida por depresión del SNC"
+   ],
+   "diagnostico": "Intoxicación por metanol: AG alto (ácido fórmico) + GAP OSMOLAR elevado (32) con lactato sólo levemente alto/no concordante con la magnitud de la acidosis",
+   "porQue": "La discordancia diagnóstica es el GAP OSMOLAR de 32 (normal <10): el alcohol no medido aporta osmolaridad sin contribuir aún al AG hasta metabolizarse. El lactato 2.5 NO explica un AG de 30, por lo que un anión no medido (formato) está presente. La compensación respiratoria insuficiente (PaCO₂ 27 vs 18–22 esperada) revela depresión neurológica. Síntomas visuales orientan a metanol sobre etilenglicol (este último daría cristales de oxalato y fallo renal).",
+   "perlaClinica": "GOLDMARK/MUDPILES: ante AG alto + gap osmolar alto + lactato que NO concuerda con la gravedad, sospecha alcohol tóxico hasta demostrar lo contrario. El gap osmolar puede ser normal en fases tardías (cuando el alcohol ya se metabolizó a ácido). Fomepizol y diálisis son tiempo-dependientes; los síntomas visuales son banderas de metanol."
+  }
+ },
+ {
+  "id": "ESP-04-SALICILATOS",
+  "dificultad": "especial",
+  "categoria": "Trastorno mixto clásico — Intoxicación por salicilatos (adulto)",
+  "contexto": "Mujer de 34 años con ingesta voluntaria de aspirina; acúfenos, hiperventilación marcada, náuseas, febrícula, agitación.",
+  "labs": {
+   "pH": 7.46,
+   "paco2": 19,
+   "hco3": 13,
+   "na": 140,
+   "cl": 103,
+   "k": 3.6,
+   "alb": 4.2,
+   "lactato": 2.8,
+   "glucosa": 90,
+   "crea": 1,
+   "gapOsmolar": 7
+  },
+  "calculos": {
+   "ag": 24,
+   "agCorregido": 23.5,
+   "winterPaCO2": "25.5–29.5",
+   "deltaRatio": "1.09 (corregido 1.05)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Trastorno mixto: alcalosis respiratoria primaria + acidosis metabólica con anión gap alto (patrón clásico de salicilismo en el adulto)",
+   "compensacion": "No es una simple compensación: el pH es alcalémico (7.46) pese a un HCO₃ bajo (13). La PaCO₂ real de 19 es MUY inferior a la esperada por Winter (25.5–29.5) para un HCO₃ de 13 → existe una alcalosis respiratoria PRIMARIA, no compensatoria.",
+   "secundarios": [
+    "Acidosis metabólica de AG alto (AG 24) por ácidos orgánicos/salicilato/cetonas/lactato"
+   ],
+   "diagnostico": "Intoxicación por salicilatos: estimulación directa del centro respiratorio (alcalosis respiratoria) coexistente con acidosis metabólica de AG alto",
+   "porQue": "La regla de oro: en una acidosis metabólica pura el pH nunca debe ser alcalémico. Aquí pH 7.46 con HCO₃ 13 sólo se explica si una alcalosis respiratoria primaria domina. El AG de 24 confirma el componente metabólico simultáneo. Gap osmolar normal y glucosa normal descartan alcohol tóxico y CAD. El cuadro de acúfenos + hiperventilación + AG alto es patognomónico.",
+   "perlaClinica": "El doble trastorno (alcalosis respiratoria + acidosis metabólica AG alto con pH casi normal o alto) es la firma del salicilismo del adulto. Cuidado: no dar bicarbonato para 'corregir' un pH que ya es alcalémico sin alcalinizar la orina con un objetivo claro — y NUNCA intubar y permitir hipoventilación, pues la caída de la hiperventilación precipita acidemia letal y mayor paso del salicilato al SNC."
+  }
+ },
+ {
+  "id": "ESP-05-LACTICA-SEPSIS",
+  "dificultad": "especial",
+  "categoria": "Acidosis AG alto — Acidosis láctica por sepsis/shock (con trampa de albúmina)",
+  "contexto": "Hombre de 68 años con shock séptico de foco abdominal, hipotenso, moteado, oligúrico, en ventilación.",
+  "labs": {
+   "pH": 7.2,
+   "paco2": 24,
+   "hco3": 9,
+   "na": 136,
+   "cl": 100,
+   "k": 4.8,
+   "alb": 2.6,
+   "lactato": 9.5,
+   "glucosa": 150,
+   "crea": 2.1,
+   "gapOsmolar": 5
+  },
+  "calculos": {
+   "ag": 27,
+   "agCorregido": 30.5,
+   "winterPaCO2": "19.5–23.5",
+   "deltaRatio": "1.00 (corregido 1.23)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap alto por acidosis láctica tipo A (shock séptico/hipoperfusión)",
+   "compensacion": "Apropiada/límite: PaCO₂ real 24 está justo en el borde superior del rango de Winter (19.5–23.5); compatible con compensación adecuada, posible leve insuficiencia ventilatoria.",
+   "secundarios": [],
+   "diagnostico": "Acidosis láctica tipo A por sepsis/shock; el lactato 9.5 explica la mayor parte del anión gap",
+   "porQue": "El gran aprendizaje es la corrección por albúmina: con albúmina 2.6 el AG medido (27) subestima la carga aniónica. AG corregido = 27 + 2.5×(4.0−2.6) = 30.5. El Δ-ratio SIN corregir da 1.0 (en el borde inferior, podría sugerir falsamente una NAGMA agregada), pero corregido por albúmina sube a 1.23 → en realidad es una AGMA pura. Gap osmolar normal descarta alcohol tóxico; el lactato muy alto y concordante con el AG confirma acidosis láctica.",
+   "perlaClinica": "En hipoalbuminemia (crítico, hepatópata, séptico) SIEMPRE corrige el anión gap: cada 1 g/dL de albúmina por debajo de 4.0 'esconde' ~2.5 mEq de gap. Sin corregir, se pueden diagnosticar erróneamente trastornos mixtos inexistentes o pasar por alto una AGMA. El lactato guía la resucitación; su aclaramiento es marcador pronóstico."
+  }
+ },
+ {
+  "id": "ESP-06-UREMICA",
+  "dificultad": "especial",
+  "categoria": "Acidosis AG alto — Acidosis urémica (enfermedad renal avanzada)",
+  "contexto": "Mujer de 60 años con ERC estadio 5 que omitió dos sesiones de diálisis; astenia, anorexia, frote pericárdico.",
+  "labs": {
+   "pH": 7.28,
+   "paco2": 28,
+   "hco3": 13,
+   "na": 139,
+   "cl": 104,
+   "k": 6.2,
+   "alb": 3.8,
+   "lactato": 1.5,
+   "glucosa": 100,
+   "crea": 9.8,
+   "gapOsmolar": 6
+  },
+  "calculos": {
+   "ag": 22,
+   "agCorregido": 22.5,
+   "winterPaCO2": "25.5–29.5",
+   "deltaRatio": "0.91 (corregido 0.95; con AG normal=10 sube a ~1.1, es decir limítrofe)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap alto de causa urémica (retención de sulfatos, fosfatos y aniones orgánicos)",
+   "compensacion": "Apropiada: PaCO₂ real 28 dentro del rango de Winter 25.5–29.5; pH calculado por Henderson-Hasselbalch 7.29 coincide con el dado 7.28.",
+   "secundarios": [
+    "Posible componente hiperclorémico/NAGMA leve agregado (Δ-ratio ~0.9, en el límite inferior; interpretación dependiente de la convención: con AG normal=10 el ratio ~1.1 lo haría una HAGMA prácticamente pura, por lo que NO es un segundo trastorno firme)"
+   ],
+   "diagnostico": "Acidosis urémica por ERC terminal y diálisis omitida; creatinina 9.8 e hiperkalemia 6.2 son los marcadores clave",
+   "porQue": "Δ-ratio ≈0.9 (límite inferior de 1–2): el HCO₃ cayó algo más de lo que subió el AG, sugiriendo un posible componente hiperclorémico mixto típico de la ERC avanzada (la uremia combina pérdida tubular de bicarbonato con retención de aniones); este componente es limítrofe y depende del AG normal de referencia. Creatinina 9.8 confirma fallo renal como motor; gap osmolar normal (6) descarta alcohol tóxico; lactato 1.5 y glucosa 100 normales descartan láctica y CAD. La hiperkalemia 6.2 es la urgencia inmediata.",
+   "perlaClinica": "La acidosis urémica empieza siendo hiperclorémica (AG normal) en la ERC moderada y se convierte en AG alto en la ERC avanzada al acumularse sulfatos y fosfatos. La hiperkalemia con cambios en el ECG (T picudas) es la amenaza vital, no el pH. Indicación de diálisis urgente (AEIOU: Acidosis, Electrolitos/K, Intoxicaciones, Overload, Uremia/pericarditis)."
+  }
+ },
+ {
+  "id": "ESP-07-RTA",
+  "dificultad": "especial",
+  "categoria": "Acidosis de AG NORMAL (hiperclorémica) — Acidosis tubular renal (RTA)",
+  "contexto": "Mujer de 30 años con síndrome de Sjögren, debilidad muscular episódica, nefrolitiasis recurrente, orina persistentemente alcalina.",
+  "labs": {
+   "pH": 7.3,
+   "paco2": 34,
+   "hco3": 16,
+   "na": 140,
+   "cl": 116,
+   "k": 2.9,
+   "alb": 4.2,
+   "lactato": 1,
+   "glucosa": 92,
+   "crea": 0.9,
+   "gapOsmolar": 5
+  },
+  "calculos": {
+   "ag": 8,
+   "agCorregido": 7.5,
+   "winterPaCO2": "30.0–34.0",
+   "deltaRatio": "no aplica (AG normal, acidosis hiperclorémica pura)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap NORMAL (hiperclorémica) por acidosis tubular renal distal tipo 1",
+   "compensacion": "Apropiada: PaCO₂ real 34 dentro/borde del rango de Winter 30–34.",
+   "secundarios": [],
+   "diagnostico": "Acidosis tubular renal distal (tipo 1) asociada a Sjögren; la HIPOKALEMIA (K 2.9), la orina alcalina y la nefrolitiasis son la firma",
+   "porQue": "AG = 8 (normal) descarta acidosis de gap alto: aquí el bicarbonato perdido se reemplaza por cloro → hiperclorémica (Cl 116). En la diferencial GOLDMARK de AG normal se separa por kalemia: RTA distal y proximal cursan con HIPOkalemia (K 2.9), mientras que la RTA tipo 4 cursa con HIPERkalemia. Función renal y gap osmolar normales descartan uremia y alcohol tóxico. El cálculo del anión gap URINARIO (positivo en RTA distal) confirmaría el diagnóstico frente a una diarrea (gap urinario negativo).",
+   "perlaClinica": "Ante una NAGMA, divide por el potasio: K bajo → RTA tipo 1/2 o diarrea; K alto → RTA tipo 4 (hipoaldosteronismo). El anión gap urinario distingue causa renal (positivo, RTA) de extrarrenal (negativo, diarrea). La RTA distal tipo 1 da orina inapropiadamente alcalina (pH >5.5) pese a la acidemia, nefrocalcinosis y cálculos."
+  }
+ },
+ {
+  "id": "ESP-08-HIPERCLOREMICA-SF",
+  "dificultad": "especial",
+  "categoria": "Acidosis de AG NORMAL (hiperclorémica) — Reanimación con suero salino 0.9%",
+  "contexto": "Hombre de 55 años postoperado de cirugía abdominal mayor que recibió 6 litros de suero fisiológico 0.9% en 12 horas; hemodinámicamente estable.",
+  "labs": {
+   "pH": 7.3,
+   "paco2": 33,
+   "hco3": 16,
+   "na": 140,
+   "cl": 116,
+   "k": 4.2,
+   "alb": 4,
+   "lactato": 1.2,
+   "glucosa": 110,
+   "crea": 1,
+   "gapOsmolar": 4
+  },
+  "calculos": {
+   "ag": 8,
+   "agCorregido": 8,
+   "winterPaCO2": "30.0–34.0",
+   "deltaRatio": "no aplica (AG normal, acidosis hiperclorémica pura)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap NORMAL (hiperclorémica) iatrogénica por dilución/sobrecarga de cloro del suero salino 0.9%",
+   "compensacion": "Apropiada: PaCO₂ real 33 dentro del rango de Winter 30–34.",
+   "secundarios": [],
+   "diagnostico": "Acidosis hiperclorémica dilucional por reanimación con grandes volúmenes de NaCl 0.9% (Cl del suero 154 mEq/L); 'acidosis del suero salino'",
+   "porQue": "AG normal (8) descarta gap alto. La clave es el contexto: el NaCl 0.9% aporta un exceso de cloro relativo al sodio (154/154 vs el plasma ~140/100), lo que reduce la diferencia de iones fuertes (SID de Stewart) y baja el bicarbonato. Lactato normal descarta hipoperfusión, gap osmolar y función renal normales descartan tóxicos y uremia, sin diarrea ni RTA por contexto. Es diagnóstico de exclusión apoyado en la historia de fluidoterapia.",
+   "perlaClinica": "Es la NAGMA más frecuente y olvidada en el postoperatorio y la UCI. El abordaje de Stewart la explica: el exceso de cloro reduce el SID. Suele ser benigna y autolimitada, pero un Cl muy alto puede causar vasoconstricción renal. Las soluciones balanceadas (Ringer lactato, Plasma-Lyte) la previenen. No confundirla con acidosis láctica por hipoperfusión: aquí el lactato es normal."
+  }
+ },
+ {
+  "id": "ESP-09-ALCALOSIS-CONTRACCION",
+  "dificultad": "especial",
+  "categoria": "Alcalosis metabólica — Alcalosis de contracción por diuréticos",
+  "contexto": "Mujer de 72 años con insuficiencia cardiaca y furosemida a dosis altas; debilidad, calambres y depleción de volumen.",
+  "labs": {
+   "pH": 7.5,
+   "paco2": 48,
+   "hco3": 36,
+   "na": 140,
+   "cl": 88,
+   "k": 3,
+   "alb": 4.4,
+   "lactato": 1,
+   "glucosa": 100,
+   "crea": 1.4,
+   "gapOsmolar": 6
+  },
+  "calculos": {
+   "ag": 16,
+   "agCorregido": 15,
+   "winterPaCO2": "no aplica (trastorno primario alcalótico); PaCO₂ esperada para alcalosis metabólica = 0.7×ΔHCO₃+40 = 48.4 (rango 46.4–50.4)",
+   "deltaRatio": "no aplica (trastorno primario alcalótico; AG corregido 15 sólo marginalmente sobre 12, atribuible a contracción de volumen, no a HAGMA real)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Alcalosis metabólica (de contracción) por diuréticos de asa",
+   "compensacion": "Apropiada: PaCO₂ esperada para compensar (0.7×ΔHCO₃+40 = 48.4; rango 46.4–50.4) coincide con la real (48). Hipoventilación compensatoria correcta.",
+   "secundarios": [],
+   "diagnostico": "Alcalosis metabólica de contracción cloro-sensible por furosemida: hipocloremia (Cl 88), hipokalemia (K 3.0) y depleción de volumen",
+   "porQue": "pH alcalémico (7.50) con HCO₃ alto (36) = alcalosis metabólica primaria; HH consistente (pH calculado 7.498 ≈ 7.50). La PaCO₂ sube apropiadamente (48 dentro de 46.4–50.4) como compensación respiratoria. El AG está sólo levemente elevado (16; corregido por albúmina alta = 15) por la contracción de volumen que concentra aniones no medidos, no por una AGMA real (lactato 1, sin gap osmolar). La hipocloremia marcada y la hipokalemia son típicas de la pérdida renal por diuréticos. Es cloro-sensible (cloruro urinario bajo), responde a reposición de NaCl/KCl.",
+   "perlaClinica": "Clasifica la alcalosis metabólica por el cloruro urinario: <20 mEq/L = cloro-sensible (vómitos, diuréticos, contracción) y responde a salino; >20 mEq/L = cloro-resistente (hiperaldosteronismo, Cushing, Bartter/Gitelman) y NO responde a salino. Corrige el potasio: la hipokalemia perpetúa la alcalosis. Una PaCO₂ que no subiera lo esperado delataría una acidosis respiratoria oculta."
+  }
+ },
+ {
+  "id": "ESP-10-EPOC-REAGUDIZADO",
+  "dificultad": "especial",
+  "categoria": "Acidosis respiratoria crónica REAGUDIZADA (acute-on-chronic) — EPOC",
+  "contexto": "Hombre de 70 años con EPOC GOLD D, retenedor crónico de CO₂, ingresa por infección respiratoria con mayor disnea, somnolencia y asterixis.",
+  "labs": {
+   "pH": 7.26,
+   "paco2": 75,
+   "hco3": 33,
+   "na": 140,
+   "cl": 92,
+   "k": 4.6,
+   "alb": 4,
+   "lactato": 1.5,
+   "glucosa": 105,
+   "crea": 1.1,
+   "gapOsmolar": 5
+  },
+  "calculos": {
+   "ag": 15,
+   "agCorregido": 15,
+   "winterPaCO2": "no aplica (trastorno primario respiratorio)",
+   "deltaRatio": "no aplica como ΔAG/ΔHCO₃ clásico; ver compensación respiratoria crónica",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis respiratoria crónica reagudizada (componente agudo sobre crónico) por EPOC agudizado",
+   "compensacion": "Mixta en el tiempo. Para una acidosis respiratoria CRÓNICA pura con PaCO₂ 75 se esperaría HCO₃ ≈ 24 + 3.5×(75−40)/10 ≈ 36.2; para una AGUDA pura ≈ 24 + 1×(75−40)/10 ≈ 27.5. El HCO₃ real (33) cae ENTRE ambos, por debajo del esperado para crónica pura → indica un componente AGUDO sobreañadido a la basal crónica (la elevación reciente de PaCO₂ aún no ha sido tamponada renalmente por completo). Patrón acute-on-chronic confirmado.",
+   "secundarios": [
+    "Componente agudo de acidosis respiratoria sobre la basal crónica (reagudización)"
+   ],
+   "diagnostico": "EPOC agudizado por infección: retenedor crónico de CO₂ que sufre un ascenso agudo adicional de PaCO₂; la acidemia franca (7.26) y la asterixis/somnolencia reflejan narcosis por CO₂",
+   "porQue": "En acidosis respiratoria crónica el HCO₃ sube ~3.5 mEq por cada 10 mmHg de PaCO₂ sobre 40 (aquí esperaríamos ~36.2); como el HCO₃ real (33) queda por debajo pero por encima del esperado para aguda pura (~27.5), parte del ascenso de PaCO₂ es agudo. El AG (15) está sólo borderline-elevado con lactato normal (1.5), sin brecha osmolar (5) → no hay AGMA significativa que justifique el déficit de HCO₃; el déficit relativo se explica mejor por el componente agudo respiratorio. La hipocloremia (92) acompaña a la retención compensatoria de bicarbonato.",
+   "perlaClinica": "Compara el HCO₃ medido con el esperado para crónica pura (3.5/10): si es menor, hay un componente agudo (reagudización); si es mayor, sospecha alcalosis metabólica sobreañadida (frecuente por diuréticos/esteroides en EPOC). Cuidado con el oxígeno excesivo: puede empeorar la hipercapnia (efecto Haldane y desbalance V/Q); titular SatO₂ 88–92%. La VNI es el tratamiento de elección de esta acidemia."
+  }
+ },
+ {
+  "id": "ESP-11-AKA-VARIANTE",
+  "dificultad": "especial",
+  "categoria": "Trastorno triple — Cetoacidosis alcohólica con tres componentes",
+  "contexto": "Hombre de 50 años, bebedor crónico, con vómitos profusos varios días, ahora taquipneico, deshidratado y desnutrido (hipoalbuminemia).",
+  "labs": {
+   "pH": 7.34,
+   "paco2": 29,
+   "hco3": 15,
+   "na": 138,
+   "cl": 96,
+   "k": 3.2,
+   "alb": 3.2,
+   "lactato": 3.5,
+   "glucosa": 84,
+   "crea": 1.2,
+   "gapOsmolar": 9
+  },
+  "calculos": {
+   "ag": 27,
+   "agCorregido": 29,
+   "winterPaCO2": "28.5–32.5",
+   "deltaRatio": "1.67 (corregido 1.89)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con anión gap alto (cetoacidosis alcohólica)",
+   "compensacion": "Apropiada para el componente metabólico: PaCO₂ real 29 dentro del rango de Winter 28.5–32.5.",
+   "secundarios": [
+    "Alcalosis metabólica por vómitos (Δ-ratio corregido ~1.9, Cl bajo 96, K bajo 3.2)",
+    "Componente láctico añadido (lactato 3.5) que contribuye al AG alto junto a los cetoácidos"
+   ],
+   "diagnostico": "Trastorno TRIPLE: AGMA (cetoacidosis alcohólica + láctico) + alcalosis metabólica de contracción por vómitos; la compensación respiratoria es adecuada (no constituye un cuarto trastorno)",
+   "porQue": "AG corregido por albúmina = 27 + 2.5×(4.0−3.2) = 29 (la hipoalbuminemia ocultaba parte del gap). Δ-ratio corregido ≈1.9 (en el límite >2): el HCO₃ cayó MUCHO menos de lo que subió el AG → hay una alcalosis metabólica agregada (vómitos). El AG alto tiene doble origen: cetoácidos (β-hidroxibutirato) y lactato 3.5. Glucosa normal (84) descarta CAD; gap osmolar normal (9) descarta alcohol tóxico significativo. El pH casi normal (7.34) con tres trastornos ilustra cómo se pueden 'cancelar' entre sí.",
+   "perlaClinica": "Un pH normal o casi normal NO descarta enfermedad acidobásica grave: aquí coexisten tres trastornos que se compensan. Siempre calcula AG corregido por albúmina y Δ-ratio; un Δ-ratio >2 con cetoacidosis y vómitos delata la alcalosis metabólica oculta. Reponer tiamina antes de glucosa, corregir K antes de que la realimentación lo desplome."
+  }
+ },
+ {
+  "id": "ADV-01-pHnormal-mixto",
+  "dificultad": "adversarial",
+  "categoria": "pH normal que oculta trastorno mixto",
+  "contexto": "Mujer de 58 a con cetoacidosis diabetica en tratamiento que ademas ha vomitado por 2 dias; consulta con pH aparentemente normal.",
+  "labs": {
+   "pH": 7.4,
+   "paco2": 24,
+   "hco3": 14.5,
+   "na": 140,
+   "cl": 95,
+   "k": 4.2,
+   "alb": 4,
+   "lactato": 1.5,
+   "glucosa": 420,
+   "crea": 1.1
+  },
+  "calculos": {
+   "ag": 30.5,
+   "agCorregido": 30.5,
+   "deltaRatio": "1.95 (con AG normal 12); pero HCO3 corregido = HCO3 + delta-AG = 14.5 + 18.5 = 33 mEq/L, muy por encima de 24, lo que delata alcalosis metabolica concurrente",
+   "winterPaCO2": "27.75-31.75",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabolica con AG elevado (AGMA, cetoacidosis)",
+   "compensacion": "INAPROPIADA: PaCO2 24 esta POR DEBAJO del rango de Winter (27.75-31.75) -> alcalosis respiratoria sobreagregada; ademas el HCO3 corregido de 33 (HCO3 14.5 + delta-AG 18.5) es muy superior al normal, lo que delata alcalosis metabolica concurrente (vomitos)",
+   "secundarios": [
+    "Alcalosis respiratoria",
+    "Alcalosis metabolica (perdida de H+ por vomito)"
+   ],
+   "diagnostico": "Trastorno triple con pH NORMAL (cetoacidosis AGMA + alcalosis metabolica por vomito + alcalosis respiratoria)",
+   "porQue": "El pH 7.40 dentro de rango es una trampa clasica: la app NUNCA debe rotular 'equilibrio acido-base normal' porque el AG de 30.5 y el HCO3 corregido de 33 revelan un AGMA severo enmascarado por dos procesos alcalinizantes que lo cancelan. La PaCO2 de 24 por debajo de Winter confirma el tercer trastorno (respiratorio).",
+   "perlaClinica": "pH normal + AG elevado = trastorno mixto hasta demostrar lo contrario. Siempre calcular AG y HCO3 corregido aunque el pH parezca normal."
+  }
+ },
+ {
+  "id": "ADV-02-inconsistencia-HH",
+  "dificultad": "adversarial",
+  "categoria": "Inconsistencia interna por Henderson-Hasselbalch (error de muestra)",
+  "contexto": "Paciente postoperatorio estable; el laboratorio reporta pH 7.20 pero PaCO2 y HCO3 son normales (muestra venosa mal rotulada o error de transcripcion).",
+  "labs": {
+   "pH": 7.2,
+   "paco2": 40,
+   "hco3": 24,
+   "na": 140,
+   "cl": 104,
+   "k": 4,
+   "alb": 4,
+   "lactato": 1,
+   "glucosa": 95,
+   "crea": 0.9
+  },
+  "calculos": {
+   "ag": 12,
+   "agCorregido": 12,
+   "deltaRatio": "no aplica (HCO3 normal)",
+   "winterPaCO2": "no aplica",
+   "consistenciaHH": false
+  },
+  "esperado": {
+   "primario": "NINGUNO valido: los datos son internamente incoherentes",
+   "compensacion": "No interpretable",
+   "secundarios": [],
+   "diagnostico": "ERROR DE MUESTRA / inconsistencia analitica: con PaCO2 40 y HCO3 24 el pH calculado por Henderson-Hasselbalch es 7.40 (no 7.20). [H+] implicito por pH 7.20 = 63 nmol/L, pero 24xPaCO2/HCO3 = 40 nmol/L. Discrepancia de 0.20 unidades de pH.",
+   "porQue": "Caso de seguridad: la app DEBE detectar que el triplete pH-PaCO2-HCO3 no satisface Henderson-Hasselbalch (consistenciaHH=false) y advertir error preanalitico en lugar de inventar un diagnostico de 'acidosis sin compensacion'. Es el unico caso donde la inconsistencia ES el punto.",
+   "perlaClinica": "Antes de interpretar, validar coherencia interna: pH y [H+] deben concordar con 24xPaCO2/HCO3. Si no, sospechar muestra venosa, burbuja de aire, o error de transcripcion."
+  }
+ },
+ {
+  "id": "ADV-03-borde-Winter",
+  "dificultad": "adversarial",
+  "categoria": "Compensacion justo en el borde del rango de Winter",
+  "contexto": "Varon de 35 a con diarrea profusa y deshidratacion; gasometria con PaCO2 que cae dentro del rango esperado de Winter, cerca del borde.",
+  "labs": {
+   "pH": 7.28,
+   "paco2": 27,
+   "hco3": 12,
+   "na": 140,
+   "cl": 104,
+   "k": 3.4,
+   "alb": 4,
+   "lactato": 1.2,
+   "glucosa": 100,
+   "crea": 1
+  },
+  "calculos": {
+   "ag": 24,
+   "agCorregido": 24,
+   "deltaRatio": "1.0 (limite bajo de la normalidad 1-2; ΔAG/ΔHCO3 = (24-12)/(24-12))",
+   "winterPaCO2": "24-28",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabolica con AG elevado",
+   "compensacion": "APROPIADA: PaCO2 27 cae dentro del rango de Winter (esperado 26, rango 24-28). El borde inferior es exactamente 24, de modo que una PaCO2 de 24 SEGUIRIA siendo compensacion simple (limite); solo una PaCO2 < 24 indicaria alcalosis respiratoria sobreagregada.",
+   "secundarios": [],
+   "diagnostico": "Acidosis metabolica con AG elevado, simple, con compensacion respiratoria adecuada",
+   "porQue": "Prueba la zona gris de Winter: el caso es SIMPLE (PaCO2 dentro de +-2) pero esta cerca del borde, de modo que un redondeo erroneo o un rango mal codificado haria que la app lo llame mixto. Verifica que la app use +-2 correctamente y no sobrediagnostique un segundo trastorno.",
+   "perlaClinica": "El rango de Winter es +-2; PaCO2 en el borde exacto (24 o 28) sigue siendo compensacion simple. No agregar trastornos respiratorios por diferencias de 1-2 mmHg dentro del rango."
+  }
+ },
+ {
+  "id": "ADV-04-resp-cronica-coef",
+  "dificultad": "adversarial",
+  "categoria": "Acidosis respiratoria cronica: coeficiente 3.5 vs 4 por 10 mmHg",
+  "contexto": "Varon de 68 a con EPOC avanzado, retenedor cronico de CO2, en su basal estable.",
+  "labs": {
+   "pH": 7.34,
+   "paco2": 70,
+   "hco3": 36,
+   "na": 140,
+   "cl": 96,
+   "k": 4.3,
+   "alb": 4,
+   "lactato": 1,
+   "glucosa": 110,
+   "crea": 0.9
+  },
+  "calculos": {
+   "ag": 8,
+   "agCorregido": 8,
+   "deltaRatio": "no aplica (AG normal-bajo)",
+   "winterPaCO2": "no aplica (trastorno primario respiratorio)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis respiratoria cronica",
+   "compensacion": "APROPIADA si se usa coef 4/10. Con PaCO2 70 (dPaCO2 = +30 sobre 40): regla 3.5/10 predice HCO3 esperado 24 + 10.5 = 34.5; regla 4/10 predice 24 + 12 = 36. El HCO3 medido de 36 concuerda con 4/10 (totalmente compensado) pero con 3.5/10 sugeriria una leve alcalosis metabolica agregada (1.5 mEq de exceso).",
+   "secundarios": [],
+   "diagnostico": "Acidosis respiratoria cronica compensada (EPOC), SIN trastorno metabolico agregado si se aplica el coeficiente 4/10",
+   "porQue": "Prueba que el coeficiente importa: con 3.5/10 la app falsamente agregaria 'alcalosis metabolica'; con 4/10 lo clasifica como simple compensado. El caso esta calibrado para caer en ese punto de bifurcacion. Verifica que la app documente que tipica acidosis respiratoria cronica usa 3.5-4/10 y no sobrediagnostique.",
+   "perlaClinica": "En acidosis respiratoria cronica el HCO3 sube 3.5-4 mEq por cada 10 mmHg de PaCO2. Usar el extremo del rango y no etiquetar un segundo trastorno por pocas unidades."
+  }
+ },
+ {
+  "id": "ADV-05-extremo-pH-bajo",
+  "dificultad": "adversarial",
+  "categoria": "Valor extremo pH <7.0 con fatiga respiratoria",
+  "contexto": "Mujer de 24 a con acidosis lactica por shock septico, agotamiento muscular y respiracion claudicante.",
+  "labs": {
+   "pH": 6.93,
+   "paco2": 24,
+   "hco3": 5,
+   "na": 138,
+   "cl": 100,
+   "k": 5.6,
+   "alb": 3.8,
+   "lactato": 14,
+   "glucosa": 130,
+   "crea": 2.3
+  },
+  "calculos": {
+   "ag": 33,
+   "agCorregido": 33.5,
+   "deltaRatio": "1.13",
+   "winterPaCO2": "13.5-17.5",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabolica con AG elevado severa (lactica)",
+   "compensacion": "INAPROPIADA: PaCO2 esperado por Winter es 13.5-17.5, pero el medido es 24 (POR ENCIMA del rango) -> compensacion respiratoria insuficiente = acidosis respiratoria sobreagregada por fatiga/agotamiento ventilatorio.",
+   "secundarios": [
+    "Acidosis respiratoria (fatiga muscular respiratoria)"
+   ],
+   "diagnostico": "Acidosis mixta metabolica (lactica) + respiratoria; pH extremo 6.93 con falla de la compensacion -> emergencia, considerar via aerea/ventilacion",
+   "porQue": "Prueba valores extremos (pH <7.0, HCO3 5) y la trampa de que en acidosis severa la 'compensacion' aparentemente alta (PaCO2 24 puede parecer baja al ojo) en realidad es INSUFICIENTE. La app debe reconocer que un PaCO2 de 24 con HCO3 de 5 significa fatiga respiratoria, no compensacion adecuada.",
+   "perlaClinica": "En acidosis metabolica grave, un PaCO2 que 'no baja lo suficiente' anuncia paro inminente. Comparar siempre con Winter, no asumir compensacion por ver hiperventilacion."
+  }
+ },
+ {
+  "id": "ADV-06-alcalosis-posthipercapnica",
+  "dificultad": "adversarial",
+  "categoria": "Alcalosis metabolica posthipercapnica (post-hipocapnia tras correccion de CO2)",
+  "contexto": "Varon de 72 a con EPOC retenedor cronico, intubado y ventilado, al que se normalizo rapidamente la PaCO2; ahora alcaloemico.",
+  "labs": {
+   "pH": 7.52,
+   "paco2": 46,
+   "hco3": 36,
+   "na": 140,
+   "cl": 88,
+   "k": 3.3,
+   "alb": 4.2,
+   "lactato": 1,
+   "glucosa": 105,
+   "crea": 1
+  },
+  "calculos": {
+   "ag": 16,
+   "agCorregido": 15.5,
+   "deltaRatio": "0.33 (ΔAG=4 / ΔHCO3=+12, usando AG normal 12); 0.5 si se usa AG normal 10. NO informativo de NAGMA: en alcalosis metabolica el ΔHCO3 es POSITIVO, por lo que el delta-ratio convencional (disenado para acidosis con caida de HCO3) no aplica. El AG ligeramente alto (16) con HCO3 elevado refleja alcalemia/contraccion, no una acidosis de AG agregada.",
+   "winterPaCO2": "no aplica (el trastorno primario es alcalosis metabolica, no acidosis metabolica)",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Alcalosis metabolica",
+   "compensacion": "APROPIADA: la respuesta esperada a la alcalosis metabolica es hipoventilacion con ascenso del PaCO2. PaCO2 esperado aprox 0.7 x HCO3 + 20 = 45.2 (+/-5), o equivalentemente 40 + 0.7 x dHCO3 = 40 + 0.7 x 12 = 48.4 (rango aprox 44-52). El PaCO2 medido 46 cae dentro del rango esperado, por lo que la hipoventilacion compensadora es adecuada. (Nota: la formula del caso original '0.7 x dHCO3 + 40 = 48.4' es correcta; el valor 46 medido es algo menor que 48.4 pero dentro de tolerancia +/-2 a 5.)",
+   "secundarios": [],
+   "diagnostico": "Alcalosis metabolica posthipercapnica: el rinon del retenedor cronico mantenia HCO3 elevado y al corregir bruscamente la PaCO2 quedo el exceso de bicarbonato 'huerfano'. Cloro-responsiva (Cl 88 bajo, hipokalemia K 3.3).",
+   "porQue": "Escenario clinico clasico de UCI/anestesia que la app debe nombrar especificamente. Prueba el reconocimiento de alcalosis metabolica con PaCO2 que NO baja (sube como compensacion) y la formula de compensacion de alcalosis metabolica, que muchas apps omiten o confunden con falta de compensacion. Tambien prueba que la app NO marque falsamente un delta-ratio negativo ni una acidosis de AG inexistente.",
+   "perlaClinica": "Tras corregir rapido una hipercapnia cronica, el HCO3 renal elevado persiste dias -> alcalosis posthipercapnica. Corregir lento la PaCO2 y reponer Cl/K. El delta-ratio NO debe calcularse como si fuera una acidosis (ΔHCO3 aqui es positivo)."
+  }
+ },
+ {
+  "id": "ADV-07-triple-pHnormal-albumina",
+  "dificultad": "adversarial",
+  "categoria": "Trastorno triple bajo pH normal + trampa de albumina baja",
+  "contexto": "Cirrotico de 60 a, septico, con diureticos y vomitos; albumina muy baja, pH aparentemente normal.",
+  "labs": {
+   "pH": 7.41,
+   "paco2": 30,
+   "hco3": 19,
+   "na": 142,
+   "cl": 96,
+   "k": 3.2,
+   "alb": 2.5,
+   "lactato": 4.5,
+   "glucosa": 120,
+   "crea": 1.4
+  },
+  "calculos": {
+   "ag": 27,
+   "agCorregido": 30.75,
+   "deltaRatio": "3.75 (>2 -> alcalosis metabolica oculta agregada; con AG sin corregir seria 3.0, igual >2)",
+   "winterPaCO2": "34.5-38.5",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabolica con AG elevado (lactica/septica)",
+   "compensacion": "INAPROPIADA: PaCO2 esperado por Winter 34.5-38.5, medido 30 (POR DEBAJO) -> alcalosis respiratoria agregada. Ademas delta-ratio 3.75 (>2) con AG corregido -> alcalosis metabolica oculta (vomitos/diureticos, K 3.2 concordante).",
+   "secundarios": [
+    "Alcalosis metabolica (vomitos, diureticos)",
+    "Alcalosis respiratoria (sepsis/cirrosis)"
+   ],
+   "diagnostico": "Trastorno TRIPLE con pH normal: AGMA lactico + alcalosis metabolica + alcalosis respiratoria. La albumina de 2.5 enmascara el AG (AG sin corregir 27, corregido 30.75).",
+   "porQue": "Doble trampa: pH normal Y albumina baja. Si la app no corrige el AG por albumina subestima la severidad del AGMA. El delta-ratio es mas robusto con AG corregido (3.75). Verifica que la app: (1) no diga 'normal', (2) corrija AG por albumina, (3) detecte los tres trastornos.",
+   "perlaClinica": "En hipoalbuminemia, cada 1 g/dL de albumina por debajo de 4.0 baja el AG ~2.5 mEq. Sin corregir, un AGMA grave parece leve. Aqui el AGMA ya es franco sin corregir (27), pero la correccion lo eleva a 30.75 y endurece el delta-ratio."
+  }
+ },
+ {
+  "id": "ADV-08-extremo-pH-alto",
+  "dificultad": "adversarial",
+  "contexto": "Mujer de 45 años con crisis de pánico/hiperventilación intensa que además ingirió una sobredosis de salicilatos.",
+  "categoria": "Valor extremo pH >7.6 con AGMA oculto",
+  "labs": {
+   "pH": 7.63,
+   "paco2": 22,
+   "hco3": 22,
+   "na": 140,
+   "cl": 95,
+   "k": 3.5,
+   "alb": 4,
+   "lactato": 2,
+   "glucosa": 105,
+   "crea": 1
+  },
+  "calculos": {
+   "ag": 23,
+   "agCorregido": 23,
+   "deltaRatio": "5.5 (ΔAG=11 / ΔHCO₃=2; HCO₃ casi normal pese a AG muy elevado: delata AGMA oculta sostenida por alcalosis)",
+   "winterPaCO2": "no aplica como chequeo del primario (primario respiratorio); si se trata la AGMA como primaria, la compensación respiratoria esperada bajaría PaCO₂, concordante con la PaCO₂ baja observada",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Alcalosis respiratoria aguda",
+   "compensacion": "inapropiada para un cuadro respiratorio puro: para alcalosis respiratoria aguda dPaCO2=-18 -> dHCO3 esperado=-3.6 -> HCO3 esperado ~20.4. El HCO3 medido (22) está MÁS ALTO que ese 20.4, lo cual es paradójico si hubiera una AGMA bajando HCO₃; la resolución es que coexisten una alcalosis respiratoria + una AGMA, y el AG de 23 lo confirma",
+   "secundarios": [
+    "Acidosis metabólica con AG elevado (intoxicación por salicilatos)"
+   ],
+   "diagnostico": "pH extremo 7.63 por alcalosis respiratoria aguda + acidosis metabólica con AG elevado oculta (cuadro clásico de intoxicación por salicilatos). El HCO₃ normal-bajo con AG de 23 lo delata.",
+   "porQue": "Prueba pH extremo alto (>7.6) y la trampa de que un HCO₃ 'casi normal' (22) con AG muy elevado (23) esconde un AGMA. La app no debe quedarse en 'alcalosis respiratoria pura' por ver alcaloemia; debe calcular AG y detectar el componente metabólico ácido. Delta-ratio 5.5 confirma la incongruencia (HCO₃ mucho más alto del que predeciría una AGMA aislada).",
+   "perlaClinica": "Salicilatos = alcalosis respiratoria + AGMA simultáneas. Un AG elevado con HCO₃ normal y alcaloemia debe disparar la sospecha. Siempre calcular AG aunque domine la alcalosis."
+  }
+ },
+ {
+  "id": "ADV-09-borde-delta-ratio",
+  "dificultad": "adversarial",
+  "categoria": "Delta-ratio en el borde (distinguir AGMA puro de mixto NAGMA/alcalosis)",
+  "contexto": "Varón de 50 años con cetoacidosis alcohólica; gasometría con delta-ratio en zona limítrofe.",
+  "labs": {
+   "pH": 7.3,
+   "paco2": 30,
+   "hco3": 14.5,
+   "na": 140,
+   "cl": 100,
+   "k": 3.8,
+   "alb": 4,
+   "lactato": 3,
+   "glucosa": 90,
+   "crea": 1.1
+  },
+  "calculos": {
+   "ag": 25.5,
+   "agCorregido": 25.5,
+   "deltaRatio": "1.42 (dentro de 1-2: AGMA puro, sin componente NAGMA ni alcalosis agregada)",
+   "winterPaCO2": "27.75-31.75",
+   "consistenciaHH": true
+  },
+  "esperado": {
+   "primario": "Acidosis metabólica con AG elevado",
+   "compensacion": "APROPIADA: PaCO2 esperado por Winter 27.75-31.75, medido 30 dentro del rango -> compensación respiratoria adecuada.",
+   "secundarios": [],
+   "diagnostico": "Acidosis metabólica con AG elevado, simple (cetoacidosis alcohólica), con compensación adecuada. Delta-ratio 1.42 confirma proceso único: la caída del HCO3 se explica por el aumento del AG, sin NAGMA ni alcalosis metabólica agregadas.",
+   "porQue": "Prueba la interpretación del delta-ratio en su zona normal limítrofe (1-2). Si la app usara umbrales mal calibrados (p.ej. <1.5 = mixto), llamaría a este caso erróneamente NAGMA agregado. Verifica que clasifica 1.42 como AGMA puro y NO sobrediagnostique un segundo trastorno metabólico.",
+   "perlaClinica": "Delta-ratio 1-2 = AGMA puro; <1 sugiere NAGMA agregada; >2 sugiere alcalosis metabólica o acidosis respiratoria crónica preexistente. Valores cerca de 1 o de 2 son zona de juicio clínico, no de corte rígido."
+  }
+ }
+]
